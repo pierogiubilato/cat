@@ -12,7 +12,18 @@ endif()
 project ("cat")
 
 # Add source to this project's executable.
-add_executable (cat "src/cat.cpp" "include/cat.h")
+add_executable (cat 
+	"src/cat.cpp" "include/cat.h" 
+	"src/cmd.cpp" "include/cmd.hpp"
+	"src/caf.cpp" "include/caf.hpp"
+	"src/log.cpp" "include/log.hpp"
+
+	"src/data.cpp" "include/data.hpp"
+	"src/pixel.cpp" "include/pixel.hpp"
+	"src/cluster.cpp" "include/cluster.hpp"
+	"src/sensor.cpp" "include/sensor.hpp"
+	 "include/point.hpp"
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET cat PROPERTY CXX_STANDARD 20)

@@ -19,8 +19,13 @@
 // Standard library
 #include <iostream>
 
-// Extra libraries used by the whole application.
-#include "../dependencies/include/rang.hpp"    // Console IO colors.
+// Application units.
+#include "../include/cmd.hpp"
+#include "../include/log.hpp"
 
 
-// TODO: Reference additional headers your program requires here.
+// Main functions.
+void init(cat::cmd&);
+void setup(const cat::cmd&, cat::log&);
+void splash();
+void info(const cat::log&);
