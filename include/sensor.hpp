@@ -29,7 +29,7 @@
 
 // Application units.
 #include "../include/cluster.hpp"
-#include "../include/point.hpp"
+#include "../include/coord.hpp"
 
 // Standard library
 #include <vector>
@@ -45,8 +45,8 @@ public:
 
 	// Special members.
 	sensor(const int&, const int&, const float&, const float&);	//!< Ctor.
-	sensor(const sensor&);		//!< CCtor.
-	~sensor();					//!< Dtor.
+	sensor(const sensor&);			//!< CCtor.
+	~sensor();						//!< Dtor.
 
 	// Operators.
 	sensor& operator=(const sensor&);
@@ -57,6 +57,14 @@ public:
 	inline int rows() const;		//!< Retrieve the number of rows.
 	inline float colPitch() const;	//!< Retrieve the pixel column pitch [arb].
 	inline float rowPitch() const;	//!< Retrieve the pixel row pitch [arb].
+
+	// Position (within a plane)
+	inline coord pos() const;		//!< Retrieve sensor position in a plane.
+	void pos(const coord&);			//!< Set sensor position in a plane.
+
+	// Clusters.
+	void clAdd(const cat::cluster&);//!< Add a cluster to the sensor.
+	long clCount() const;			//!< Returns how many clusters in the sensor.	
 
 protected:
 
@@ -73,7 +81,7 @@ private:
 	float _rowPitch;	// Rows pitch.
 
 	// Physical position.
-	point _pos;			// position (matrix 0, 0 corner).
+	coord _pos;			// position (matrix 0, 0 corner).
 	
 	// Cluster collection.
 	std::vector<cluster> _cluster;

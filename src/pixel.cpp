@@ -18,10 +18,6 @@
 #include "../include/caf.hpp"
 
 
-// Use standard namespace:
-//using namespace std;
-
-
 // *****************************************************************************
 // **                            Special members                              **
 // *****************************************************************************
@@ -88,7 +84,7 @@ std::ostream& operator<<(std::ostream& os, const cat::pixel& px)
 cat::pixel& cat::pixel::operator=(const cat::pixel& px)
 {
     /*! Copy operator. */
-    
+    data::operator=(px);
     
     // Object data copy.
     _col = px._col;
@@ -151,7 +147,7 @@ void cat::pixel::row(const int& row)
 
 
 //______________________________________________________________________________
-int cat::pixel::tsp() const
+long cat::pixel::tsp() const
 {
     /* Returns timestamp. */
     return _tsp;
@@ -159,7 +155,7 @@ int cat::pixel::tsp() const
 
 
 //______________________________________________________________________________
-void cat::pixel::tsp(const int& t)
+void cat::pixel::tsp(const long& t)
 {
     /* Set the timestamp. */
     _tsp = t;

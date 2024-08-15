@@ -1,20 +1,22 @@
 ﻿//------------------------------------------------------------------------------
-// CAT - C++ Analysis Template - Basic data object                            --
+// CAT - C++ Analysis Template - hit data object                              --
 // (C) Piero Giubilato 2011-2024, INFN PD									  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-// [File name]		"data.cpp"
+// [File name]		"log.cpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.0"
+// [Version]		"0.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]	        "13 Aug 2024"
+// [Date]	        "14 Aug 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
 
 // Application units
-#include "../include/data.hpp"
+#include "../include/hit.hpp"
+#include "../include/caf.hpp"
+
 
 
 // *****************************************************************************
@@ -22,20 +24,47 @@
 // *****************************************************************************
 
 //______________________________________________________________________________
-cat::data::data() : _updated(true)
+cat::hit::hit() :
+    cat::data(), 
+    cat::coord(),
+    _t(0),
+    _cluster(NULL)
 {
     /* Default ctor. */
 }
 
 //______________________________________________________________________________
-cat::data::data(const cat::data& d) :  
-    _updated(d._updated), _autoUpdate(d._autoUpdate)
+cat::hit::hit(const coord& p, const long& t) :
+    cat::data(), 
+    cat::coord(p),
+    _t(t),
+    _cluster(NULL)
+{
+    /*! Coordinates and time ctor. */
+}
+
+//______________________________________________________________________________
+cat::hit::hit(const cat::cluster& cl) :
+    cat::data(), 
+    cat::coord(cl.col(), cl.row(), 0),
+    _t(cl.tsp()),
+    _cluster(&cl)
+{
+    /*! Cluster ctor. */
+}
+
+//______________________________________________________________________________
+cat::hit::hit(const cat::hit& h) :
+    cat::data(h),
+    cat::coord(h),
+    _t(h._t),
+    _cluster(h._cluster)
 {
     /*! Copy ctor. */
 }
 
 //______________________________________________________________________________
-cat::data::~data()
+cat::hit::~hit()
 {
     /*! Dtor. Nothing really to do, all members are managed. */
 }
@@ -52,13 +81,32 @@ cat::data::~data()
 
 
 //______________________________________________________________________________
-cat::data& cat::data::operator=(const cat::data& d)
+std::ostream& operator<<(std::ostream& os, const cat::hit& h)
+{
+    // Build (x, y, t) like string.
+    os << "["
+       << static_cast<cat::coord>(h) << cat::caf::rst() 
+       << ", "
+       << cat::caf::fcol(C_HIT_T) << h.t() << cat::caf::rst() 
+       << ", *"
+       << cat::caf::fcol(C_HIT_CL) << h.cluster() << cat::caf::rst() 
+       << "]";
+    
+    // Return.
+    return os;
+}
+
+
+//______________________________________________________________________________
+cat::hit& cat::hit::operator=(const cat::hit& h)
 {
     /*! Copy operator. */
-
+    data::operator=(h);
+    coord::operator=(h);
+    
     // Object data copy.
-    _updated = d._updated;
-    _autoUpdate = d._autoUpdate;
+    _t = h._t;
+    _cluster = h._cluster;
     
     // Return.
     return *this;
@@ -72,32 +120,37 @@ cat::data& cat::data::operator=(const cat::data& d)
 
 
 //______________________________________________________________________________
-bool cat::data::isUp() const
+long cat::hit::t() const
 {
-    /* Returns object status. */
-    return _updated;
+    /* Returns timestamp. */
+    return _t;
 }
 
 
 //______________________________________________________________________________
-bool cat::data::isAuto() const
+void cat::hit::t(const long& t)
 {
-    /* Returns object status. */
-    return _autoUpdate;
+    /* Set the timestamp. */
+    _t = t;
 }
 
 
 //______________________________________________________________________________
-void cat::data::update()
+const cat::cluster* cat::hit::cluster() const
 {
-    /* Set the object as updated. */
-    _updated = true;
+    /* Returns linked cluster pointer. The pointer is made const, as an hit 
+       may derive from a real cluster, but cannot modify it in any way. If no
+       cluster is linked, returns a void pointer.
+       MIND: there is NO GUARANTEE the pointer is valid, this is left to 
+       correct usage of the hit/cluster objects.
+    */
+    return _cluster;
 }
 
 
 //______________________________________________________________________________
-void cat::data::setAuto(const bool& au)
+void cat::hit::cluster(const cat::cluster& cl)
 {
-    /* Set the object auto-update status. */
-    _autoUpdate = au;
+    /* Set the cluster pointer. */
+    _cluster = &cl;
 }

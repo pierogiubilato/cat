@@ -85,7 +85,7 @@ cat::cluster::~cluster()
 cat::cluster& cat::cluster::operator=(const cat::cluster& cl)
 {
     /*! Copy operator. */
-
+    data::operator=(cl);
 
     // Object data copy.
     _col = cl._col;

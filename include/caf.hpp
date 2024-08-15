@@ -127,6 +127,9 @@ namespace cat {
 #define C_GEO_Y cat::caf::col::GREEN
 #define C_GEO_Z cat::caf::col::BLUE
 
+// Hit.
+#define C_HIT_T cat::caf::col::BMAGENTA
+#define C_HIT_CL cat::caf::col::WHITE
 
 
 // Tracks.

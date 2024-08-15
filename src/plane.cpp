@@ -1,12 +1,12 @@
 ﻿//------------------------------------------------------------------------------
-// CAT - C++ Analysis Template - Basic data object                            --
+// CAT - C++ Analysis Template - plane geometrical object                     --
 // (C) Piero Giubilato 2011-2024, INFN PD									  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-// [File name]		"data.cpp"
+// [File name]		"plane.cpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.0"
+// [Version]		"0.1"
 // [Modified by]	"Piero Giubilato"
 // [Date]	        "13 Aug 2024"
 // [Language]		"C++"
@@ -14,7 +14,9 @@
 
 
 // Application units
-#include "../include/data.hpp"
+#include "../include/plane.hpp"
+#include "../include/caf.hpp"
+
 
 
 // *****************************************************************************
@@ -22,20 +24,26 @@
 // *****************************************************************************
 
 //______________________________________________________________________________
-cat::data::data() : _updated(true)
+cat::plane::plane() : _pos(0, 0, 0), _norm(0, 0, 0)
 {
     /* Default ctor. */
 }
 
 //______________________________________________________________________________
-cat::data::data(const cat::data& d) :  
-    _updated(d._updated), _autoUpdate(d._autoUpdate)
+cat::plane::plane(const coord& p, const coord& n) : _pos(p), _norm(n)
+{
+    /*! Plane coordinates ctor. */
+}
+
+//______________________________________________________________________________
+cat::plane::plane(const cat::plane& pl)
+    : _pos(pl._pos), _norm(pl._norm)
 {
     /*! Copy ctor. */
 }
 
 //______________________________________________________________________________
-cat::data::~data()
+cat::plane::~plane()
 {
     /*! Dtor. Nothing really to do, all members are managed. */
 }
@@ -52,13 +60,22 @@ cat::data::~data()
 
 
 //______________________________________________________________________________
-cat::data& cat::data::operator=(const cat::data& d)
+std::ostream& operator<<(std::ostream& os, const cat::plane& pl)
+{
+    // Build (x, y, z) like string.
+    os << "[" << pl.pos() << ", " << pl.norm() << "]";
+    
+    // Return.
+    return os;
+}
+
+
+//______________________________________________________________________________
+cat::plane& cat::plane::operator=(const cat::plane& pl)
 {
     /*! Copy operator. */
-
-    // Object data copy.
-    _updated = d._updated;
-    _autoUpdate = d._autoUpdate;
+    _pos = pl._pos;
+    _norm = pl._norm;
     
     // Return.
     return *this;
@@ -72,32 +89,34 @@ cat::data& cat::data::operator=(const cat::data& d)
 
 
 //______________________________________________________________________________
-bool cat::data::isUp() const
+cat::coord cat::plane::pos() const
 {
-    /* Returns object status. */
-    return _updated;
+    /* Returns the plane posiiton in space. */
+    return _pos;
 }
 
 
 //______________________________________________________________________________
-bool cat::data::isAuto() const
+void cat::plane::pos(const cat::coord& p)
 {
-    /* Returns object status. */
-    return _autoUpdate;
+    /* Set the plane reference position in space. */
+    _pos = p;
 }
 
 
 //______________________________________________________________________________
-void cat::data::update()
+cat::coord cat::plane::norm() const
 {
-    /* Set the object as updated. */
-    _updated = true;
+    /* Returns the plane orientation in space. */
+    return _norm;
 }
 
 
 //______________________________________________________________________________
-void cat::data::setAuto(const bool& au)
+void cat::plane::norm(const cat::coord& n)
 {
-    /* Set the object auto-update status. */
-    _autoUpdate = au;
+    /* Set the plane orientation in space. */
+    _norm = n;
 }
+
+

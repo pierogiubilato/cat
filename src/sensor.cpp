@@ -30,7 +30,8 @@
 cat::sensor::sensor(const int& cs, const int& rs, const float& cp, const float& rp) : 
     data(), 
     _cols(cs), _rows(rs),
-    _colPitch(cp), _rowPitch(rp)
+    _colPitch(cp), _rowPitch(rp),
+    _pos(0, 0, 0)
 {
     /* Default ctor. Makes mandatory to initialize the sensor columns and rows 
        count, as well as the pixel width and height.
@@ -43,7 +44,8 @@ cat::sensor::sensor(const int& cs, const int& rs, const float& cp, const float& 
 cat::sensor::sensor(const sensor& sr) : 
     data(sr), 
     _cols(sr._cols), _rows(sr._rows),
-    _colPitch(sr._colPitch), _rowPitch(sr._rowPitch)
+    _colPitch(sr._colPitch), _rowPitch(sr._rowPitch),
+    _pos(sr._pos)
 {
     /*! Copy ctor. */
 }
@@ -71,13 +73,17 @@ cat::sensor& cat::sensor::operator=(const cat::sensor& sr)
 {
     /*! Copy operator. */
 
-
-    // Object data copy.
+    // properties.
     _cols = sr._cols;
     _rows = sr._rows;
     _colPitch= sr._colPitch;
     _rowPitch = sr._rowPitch;
+    
+    // Position.
+    _pos = sr._pos;
 
+    // Clusters collection.
+    _cluster = sr._cluster;
 
     // Return.
     return *this;
@@ -96,7 +102,9 @@ std::ostream& operator<<(std::ostream& os, const cat::sensor& sr)
     if (!sr.isUp()) os << cat::caf::font(cat::caf::BLINK);
     os << cat::caf::fcol(C_CL_COL) << sr.colPitch() << cat::caf::rst() << ",";
     if (!sr.isUp()) os << cat::caf::font(cat::caf::BLINK);
-    os << cat::caf::fcol(C_CL_ROW) << sr.rowPitch() << cat::caf::rst() << ">]";
+    os << cat::caf::fcol(C_CL_ROW) << sr.rowPitch() << cat::caf::rst() << "> - ";
+    if (!sr.isUp()) os << cat::caf::font(cat::caf::BLINK);
+    os << sr.pos() << cat::caf::rst() << "> - ";
 
     // Return.
     return os;
@@ -139,4 +147,35 @@ float cat::sensor::rowPitch() const
 {
     /* Returns the sensor row pitch (pixel height). */
     return _rowPitch;
+}
+
+
+// _____________________________________________________________________________
+cat::coord cat::sensor::pos() const
+{
+    /* Returns the sensor posiiton in a plane. */
+    return _pos;
+}
+
+
+// _____________________________________________________________________________
+void cat::sensor::pos(const cat::coord& p)
+{
+    /* Set the sensor position in a plane. */
+    _pos = p;
+}
+
+
+// _____________________________________________________________________________
+void cat::sensor::clAdd(const cat::cluster& cl)
+{
+    /* Add a cluster to the sensor. */
+    _cluster.push_back(cl);
+}
+
+// _____________________________________________________________________________
+long cat::sensor::clCount() const
+{
+    /* Retrieve how many cluster into a sensor. */
+    return (long) _cluster.size();
 }

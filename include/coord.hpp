@@ -52,8 +52,8 @@ public:
 	inline void x(const float&);	//!< Set x coordinate.
 	inline float y() const;			//!< Retrieve y coordinate.
 	inline void y(const float&);	//!< Set y coordinate.
-	inline float z() const;			//!< Retrieve time.
-	inline void z(const float&);	//!< Set time.
+	inline float z() const;			//!< Retrieve z coordinate.
+	inline void z(const float&);	//!< Set z coordinate.
 
 protected:
 
