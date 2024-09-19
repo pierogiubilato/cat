@@ -3,33 +3,33 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+
+# Language
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
+# Project properties.
+# -------------------
+
+# Project Name
 project ("cat")
 
-# Add source to this project's executable.
-add_executable (cat 
-	"src/cat.cpp"      "include/cat.h" 
-	"src/cmd.cpp"      "include/cmd.hpp"
-	"src/caf.cpp"      "include/caf.hpp"
-	"src/log.cpp"      "include/log.hpp"
+# As we link dinamically, makes the lib dll already in the source output directory.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-	"src/data.cpp"     "include/data.hpp"
-	"src/pixel.cpp"    "include/pixel.hpp"
-	"src/cluster.cpp"  "include/cluster.hpp"
-	"src/sensor.cpp"   "include/sensor.hpp"
-	"src/coord.cpp"    "include/coord.hpp"
-	"src/plane.cpp"    "include/plane.hpp"
-	"src/layer.cpp"    "include/layer.hpp"
-	"src/hit.cpp"      "include/hit.hpp"
-)
+# The actual proprietary project code. Look at the "../src/CMakeLists.txt" file for details.
+# ------------------------------------------------------------------------------------------
+add_subdirectory(src)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET cat PROPERTY CXX_STANDARD 20)
-endif()
 
-# TODO: Add tests and install targets if needed.
+
+# All the libraries the project depends on. Look at the "../lib/CMakeLists.txt" file for details.
+# -----------------------------------------------------------------------------------------------
+add_subdirectory(lib)
