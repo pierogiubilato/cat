@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-// [File name]		"acServer.cpp"
+// [File name]		"ac_Server.cpp"
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
@@ -13,9 +13,9 @@
 //______________________________________________________________________________
 
 // Application components
-#include "../include/acServer.h"
-#include "../include/acLoop.h"
-#include "../include/rcCore.h"
+#include "acServer.h"
+#include "acLoop.h"
+#include "rcCore.h"
 
 
 // #############################################################################
@@ -27,7 +27,7 @@ namespace cat { namespace ac {
 // *****************************************************************************
 
 //______________________________________________________________________________
-server::server(const Uint16& port, const Uint64& tOut)
+server::server(const Uint32& port, const Uint64& tOut)
 {
 	/* Standard ctor. Initializes the TCP-IP server. 
 	 *	If \c port is not provided it is set by default at 2000. \c tOut if the 
@@ -41,7 +41,7 @@ server::server(const Uint16& port, const Uint64& tOut)
 server::~server() 
 {
 	/* Releases all allocated resources. */
-	Close();
+	close();
 }
 
 
@@ -50,7 +50,7 @@ server::~server()
 // *****************************************************************************
 
 //______________________________________________________________________________
-bool server::init(const Uint16& port, const Uint64& tOut)
+bool server::init(const Uint32& port, const Uint64& tOut)
 {
 	/*! Starts a TCP-IP server. If \c port is not provided it is set by default
 	 *	at 2000. \c tOut if the allowed time with no calls before a Client is 
@@ -63,37 +63,48 @@ bool server::init(const Uint16& port, const Uint64& tOut)
 
 	// Init the SDL_net
 	if (SDLNet_Init() < 0) {
-		std::cout << COL(CAT_COL_ERROR) << "SDLNet_Init: " << SDLNet_GetError() << COL(DEFAULT) << "\n";
+		std::cout << COL(CAT_COL_ERROR) << "SDLNet_Init: " << SDL_GetError() << COL(DEFAULT) << "\n";
 		throw std::runtime_error("SDL_net init failed");
 		return false;
 	}
  
+	// Opening the server for listening.
+	//SDLNet_Server* server = SDLNet_CreateServer(&_client[0].address, port);
+	
+	
 	// Resolving the host using NULL make network interface to listen.
-	if (SDLNet_ResolveHost(&_client[0].IP, NULL, port) < 0) {
-		std::cout << COL(CAT_COL_ERROR) <<  "SDLNet_ResolveHost: " << SDLNet_GetError() << COL(DEFAULT) << "\n";
-		throw std::runtime_error("SDL_net ResolveHost failed");
-		return true;
-	}
+	//SDLNet_Address* addr = SDLNet_ResolveHostname(port.c_str());
+	//if (SDLNet_WaitUntilResolved(addr, -1) == -1) {
+	//	SDL_Log("Failed to lookup %s: %s", port.c_str(), SDL_GetError());
+	//	return true;
+	//}
+		
+	// Resolving the host using NULL make network interface to listen.
+	//if (SDLNet_ResolveHost(&_client[0].IP, NULL, port) < 0) {
+	//	std::cout << COL(CAT_COL_ERROR) <<  "SDLNet_ResolveHost: " << SDL_GetError() << COL(DEFAULT) << "\n";
+	//	throw std::runtime_error("SDL_net ResolveHost failed");
+	//	return true;
+	//}
  
 	// Open a connection with the IP provided (listen on the host's port).
-	_client[0].SD = SDLNet_TCP_Open(&_client[0].IP);
-	if (!_client[0].SD) {
-		std::cout << COL(CAT_COL_ERROR) << "SDLNet_TCP_Open: " << SDLNet_GetError() << COL(DEFAULT) << "\n";
-		throw std::runtime_error("SDL_net TCP_Open failed");
-		return true;
-	}
+	//_client[0].SD = SDLNet_TCP_Open(&_client[0].IP);
+	//if (!_client[0].SD) {
+	//	std::cout << COL(CAT_COL_ERROR) << "SDLNet_TCP_Open: " << SDL_GetError() << COL(DEFAULT) << "\n";
+	//	throw std::runtime_error("SDL_net TCP_Open failed");
+	//	return true;
+	//}
 
 	// Set the server socket as open.
-	_client[0].Status = rc::core::kss_Open;
+//	_client[0].status = rc::core::kss::open;
 	
 	// Set the data timeout (ms).
 	_timeout = tOut;
 
 	// Give infos.
 	std::cout << COL(LWHITE) << "\nServer running\n" << COL(DEFAULT);
-	std::cout << "   Host full name: " << COL(LGREEN) << SDLNet_ResolveIP(&_client[0].IP) << COL(DEFAULT) << "\n";
-	std::cout << "   Listening port: " << COL(LGREEN) << port << COL(DEFAULT) << "\n";
-	std::cout << "   Server address: " << _client[0].IP << "\n";
+//	std::cout << "   Host full name: " << COL(LGREEN) << SDLNet_ResolveIP(&_client[0].IP) << COL(DEFAULT) << "\n";
+//	std::cout << "   Listening port: " << COL(LGREEN) << port << COL(DEFAULT) << "\n";
+//	std::cout << "   Server address: " << _client[0].IP << "\n";
 
 	// Everything fine!
 	return false;
@@ -105,8 +116,8 @@ bool server::close()
 	/*! Closes the Server. */
 
 	// Closes the library.
-	SDLNet_TCP_Close(_client[0].SD);
-	SDLNet_Quit();
+//	SDLNet_TCP_Close(_client[0].SD);
+//	SDLNet_Quit();
 	std::cout << "Server successfully closed\n";
 
 	// Everything fine.
@@ -122,10 +133,10 @@ bool server::clean()
 	for (Uint64 i = 1; i < _client.size(); i++) {
 
 		// If a socket is no more active, close it and free the slot.
-		if (_client[i].Status == rc::core::kss_Close) {
+		if (_client[i].status == rc::core::kss::close) {
 			
-			// Thell the loop this client is no more active.
-			cat::ac::_loop->cmdClient_Del(_client[i].cHnd); 
+			// Tell the loop this client is no more active.
+			cat::ac::_loop->cmdClientDel(_client[i].cHnd); 
 			
 			// Info on the killed connection.
 			if (cat::ag::_verbose >= CAT_VERB_DEF) {
@@ -133,7 +144,7 @@ bool server::clean()
 			}
 
 			// Close and then erase the socket.
-			SDLNet_TCP_Close(_client[i].SD);
+//			SDLNet_TCP_Close(_client[i].SD);
 			_client.erase(_client.begin() + i);
 		}
 	}
@@ -160,15 +171,15 @@ bool server::listen()
 			_client.push_back(clientInfo()); 
 		
 			// Set up the new socket.
-			_client.back().SD = tmpClient.SD;
-			_client.back().IP = *(SDLNet_TCP_GetPeerAddress(tmpClient.SD));
+//			_client.back().SD = tmpClient.SD;
+//			_client.back().IP = *(SDLNet_TCP_GetPeerAddress(tmpClient.SD));
 			_client.back().Status = rc::core::kss_Open; 									
 			_client.back().cHnd = _client.back().IP.port;			
 			
 			// Makes the application loop aware of the new connection. An
 			// univoque Id is passed here, to make the client identification
 			// independent from its position in the socket lists.
-			cat::ac::_Loop->cmdClient_Add(_client.back().cHnd);  
+			cat::ac::_Loop->cmdClientAdd(_client.back().cHnd);  
 
 			// Info on the new connection.
 			if (cat::ag::_verbose >= CAT_VERB_DEF) {
@@ -238,8 +249,8 @@ bool server::parse(const Uint64& cIdx, const char* cBuf, const Uint64& cLen)
 	
 	// Retrieves the data buffer for BEGIN and ADD commands.
 	std::stringstream dataBuf(std::ios::binary | std::ios::out | std::ios::in);	
-	if (cmd == rc::core::kc_Begin || Cmd == rc::core::kc_Add) {
-		Read(cIdx, dataBuf, cArg3);
+	if (cmd == rc::core::kc::begin || Cmd == rc::core::kc::add) {
+		read(cIdx, dataBuf, cArg3);
 	}
 
 	// Issues the commands
@@ -247,14 +258,14 @@ bool server::parse(const Uint64& cIdx, const char* cBuf, const Uint64& cLen)
 	
 	// The EXIT command. Socket end will be make effective by the next call
 	// of the clean function, which happens at first at every server runs.
-	if (cmd == rc::core::kc_Exit) _client[cIdx].Status = rc::core::kss_Close;
+	if (cmd == rc::core::kc::exit) _client[cIdx].status = rc::core::kss::close;
 	
 	// The BEGIN command.
-	if (cmd == rc::core::kc_Begin) {
+	if (cmd == rc::core::kc::begin) {
 		Uint64 sHnd;
 			
 		// Pass the command to the loop.
-		if ((sHnd = cat::ac::_Loop->cmdScene_Begin(_client[cIdx].cHnd, dataBuf)) == 0) {
+		if ((sHnd = cat::ac::_loop->cmdSceneBegin(_client[cIdx].cHnd, dataBuf)) == 0) {
 			if (cat::ag::_verbose >= CAT_VERB_WARN) {
 				std::cout << "Client [" << COL(LGREEN) << _client[cIdx].cHnd << COL(DEFAULT) << "]"
 						  << COL(CAT_COL_WARNING) << " could not star a scene!" 
@@ -274,12 +285,12 @@ bool server::parse(const Uint64& cIdx, const char* cBuf, const Uint64& cLen)
 	}
 
 	// The ADD GP command.
-	if (cmd == rc::core::kc_Add) {
-		return cat::ac::_loop->cmdScene_addGP(_client[cIdx].cHnd, cArg1, dataBuf);
+	if (cmd == rc::core::kc::add) {
+		return cat::ac::_loop->cmdSceneAddGP(_client[cIdx].cHnd, cArg1, dataBuf);
 	}
 
 	// The CLOSE command.
-	if (cmd == rc::core::kc_Close) return cat::ac::_loop->cmdScene_Close(_client[cIdx].cHnd, cArg1);
+	if (cmd == rc::core::kc::close) return cat::ac::_loop->cmdSceneClose(_client[cIdx].cHnd, cArg1);
 
 	// Dummy
 	return false;
@@ -324,17 +335,17 @@ bool Server::run(bool openLoop)
 		Uint64 dataCount = 0;
 		while (true) {
 		
-			// Reads 4 dwords (8 bytes each) as 1 command and 3 parameters, and parse them. 
+			// Reads 4 double words (8 bytes each) as 1 command and 3 parameters, and parse them. 
 			if (SDLNet_TCP_Recv(_client[cIdx].SD, cBuf, (int)cLen) > 0) {
 				
 				// Parse the command.
 				if (parse(cIdx, cBuf, cLen)) break;
 				
-				// Command has been transferredd, increase transfer count.
+				// Command has been transferred, increase transfer count.
 				dataCount += cLen;
 
-				// Increase transfer count by the bufer size associated to 
-				// the command, which is stored into the 4th dword.
+				// Increase transfer count by the buffer size associated to 
+				// the command, which is stored into the 4th double word.
 				dataCount += *(Uint64*)(&cBuf[cLen * 3]);
 											  
 			// If no more data to read, exit this client loop.

@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"16 Sep 2024"
+// [Date]			"19 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -16,20 +16,20 @@
 #if !defined acMain_H
 #define acMain_H
 
-	// Fixed data type are from SDL, so include it.
-	#include "../lib/SDL/include/SDL3/SDL.h"
+// Fixed data type are from SDL, so include it.
+#include <SDL.h>
 
-	// Linear algebra is provided by the GLM library, and used as standard math in Pear.
-	//#include <glm/glm.hpp>
-	//#include <glm/gtc/quaternion.hpp>
-	//#include <glm/gtc/matrix_transform.hpp>
-	//#include <glm/gtc/type_ptr.hpp>
+// Linear algebra is provided by the GLM library.
+#include "glm/glm.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
    
-	// Application globals
-	#include "acGlobal.h"
+// Application globals
+#include "acGlobal.h"
 
-	// Personalized streams are spread through all the application.
-	#include "afStream.h"
+// Personalized streams are spread through all the application.
+#include "afStream.h"
 
 
 // #############################################################################
@@ -38,7 +38,7 @@ namespace cat {
 	// Application global status and switches.
 	namespace ag {
 
-		// Miscs.
+		// Miscellanea.
 		extern Uint32 _verbose;			//!< Verbosity level.
 	
 		// Startup switches.
@@ -68,7 +68,7 @@ namespace cat {
 		class font;
 		extern font*	_font;		//!< Font Facility.
 		class file;
-		extern File*	_file;		//!< File Facility.
+		extern file*	_file;		//!< File Facility.
 	}
 
 // #############################################################################

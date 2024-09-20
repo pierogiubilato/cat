@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // CAT Frame Graphic Primitive class					 					  --
-// (C) Sarah Zalusky, Piero Giubilato 2011-2024, Padova University			  --
+// (C) Piero Giubilato 2011-2024, Padova University							  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"19 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -23,7 +23,7 @@
 // #############################################################################
 namespace cat { namespace gp {
 
-/*! cat::gp::frame creates a frame in 3D. A gp::frame is a drawless gp which
+/*! cat::gp::frame creates a frame in 3D. A gp::frame is a draw-less gp which
  *	holds a ge::ref object which affects all the frame family members. In this
  *	way the transformation set on the ge:rRef object is applied to all the
  *	family hierarchy of the parent frame object.
@@ -60,9 +60,9 @@ class frame: public GP
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
 		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
-		bool Stream(std::stringstream& o, const bool& read = false);
+		bool stream(std::stringstream& o, const bool& read = false);
 		
-		// Public transformation ovelorads.
+		// Public transformation overloads.
 		Frame& trsf(const ge::ref& ref, const bool& inv);				//!< Transform the GP.
 		Frame& trsfIn(const ge::ref& ref) {return trsf(ref, false);}	//!< Transform the GP into ref.	 	
 		Frame& trsfOut(const ge::ref& ref) {return trsf(ref, true);}	//!< Transform the GP from ref.

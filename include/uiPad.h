@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"10 Sep 2024"
+// [Date]			"19 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -17,7 +17,7 @@
 #define uiPad_H
 
 // Application Components
-#include "uiBase.h"
+#include "ui.h"
 //#include "uiWindow.h"
 #include "gpScene.h"
 //#include "uiPadGUI.h"
@@ -44,7 +44,7 @@ namespace pear { namespace ui {
  *	\version 1.2
  *	\date 27 Sep 2024
  */
-class pad: public base 
+class pad
 {
 	private:
 	
@@ -60,12 +60,12 @@ class pad: public base
 		//GLuint _glRenderBuffer[10];		// Specific render buffers.
 		
 		// Initializations functions.
-		bool init_Window(const char* title, const bool& r);
-		bool init_OpenGL();
-		void init_Info() const;
+		bool initWindow(const char* title, const bool& r);
+		bool initOpenGL();
+		void initInfo() const;
 
 		// Misc functions.
-		void title_Draw(const double& timing = 0);
+		void titleDraw(const double& timing = 0);
 		
 	protected:
 	
@@ -88,16 +88,16 @@ class pad: public base
 		
 		// The hosted scene(s)
 		Uint64 _sceneIdx;						// The current scene Idx.
-		std::vector<gp::scene*> _scene;			// The scene database.		
-		std::vector<view*> _view;				// The scene(s) view(s).						
+		std::vector<cat::gp::scene*> _scene;	// The scene database.		
+//		std::vector<view*> _view;				// The scene(s) view(s).						
 		Uint64 _gpsCount;						// Number of GPs in the currently selected scene.
 		Uint64 _gpsSize;						// Total size of the GPs in the currently selected scene.
 	
 		// Drawing/Selection status
 		static const int _selBufferSize = 1024;	// Selection buffer size.
-		//GLuint _selBuffer[_selBufferSize];		// Selection buffer.
+		//GLuint _selBuffer[_selBufferSize];	// Selection buffer.
 		unsigned int _selHits;					// Selection hits.
-		std::vector<gpHnd> _selGPHnd;			// The select primitive/s handle/s.
+		std::vector<cat::gp::GPHnd> _selGPHnd;	// The select primitive/s handle/s.
 		bool _selForceRedraw;					// Force redraw due to selection.
 
 		// Special members
@@ -105,35 +105,35 @@ class pad: public base
 		~pad();
 		
 		// Loop and event handlers.
-		bool evn_Handler();						//!< Events handler.
-		bool evn_System(SDL_Event);				//!< Handles system events.
-		bool evn_Keyboard(SDL_Event);			//!< Handles keyboard events.
-		bool evn_Mouse(SDL_Event);				//!< Handles mouse events.
+		bool evnHandler();						//!< Events handler.
+		bool evnSystem(SDL_Event);					//!< Handles system events.
+		bool evnKeyboard(SDL_Event);				//!< Handles keyboard events.
+		bool evnMouse(SDL_Event);					//!< Handles mouse events.
 		
 		// Selection.
-		void selClear();						//!< Clear any selection.
-		void selAdd(const gpHnd&);				//!< Add a GP to the selection.
-		void selAdd(const std::vector<gpHnd>&);	//!< Add a list of GPs to the selection.
-		void selShow();							//!< Highlight the GPS in the selection vector.
+		void selClear();							//!< Clear any selection.
+		void selAdd(const cat::gp::GPHnd&);			//!< Add a GP to the selection.
+		void selAdd(const std::vector<cat::gp::GPHnd>&);	//!< Add a list of GPs to the selection.
+		void selShow();								//!< Highlight the GPS in the selection vector.
 
 		// Scene(s) management.
-		Uint64 scene_Count();					//!< The number of hosted scenes.
-		gp::scene* scene_Get(gpHnd = 0);		//!< The hosted scene access.
-		gpHnd scene_Add(gp::Scene*);			//!< Sets ownership over a new scene.
-		void scene_Del(gpHnd);					//!< Delete a owned scene.
-		void scene_Sel(gpHnd);					//!< Select the active scene.
+		Uint64 sceneCount();						//!< The number of hosted scenes.
+		cat::gp::scene* sceneGet(cat::gp::GPHnd = 0);	//!< The hosted scene access.
+		cat::gp::GPHnd sceneAdd(cat::gp::scene*);	//!< Sets ownership over a new scene.
+		void sceneDel(cat::gp::GPHnd);				//!< Delete a owned scene.
+		void sceneSel(cat::gp::GPHnd);				//!< Select the active scene.
 				
 		// Pad management.
-		void run(const bool& openLoop = false);	//!< Runs the pad.
-		void refresh();							//!< Refresh the pad.
-		Uint64 size();							//!< Returns the Pad total allocated memory (bytes).
-		Uint64 idx() const;						//!< Returns the pad Idx.
-		void idx(const Uint64&);				//!< Resets the pad Idx.
-		void info() const;						//!< Dumps pad info.
+		void run(const bool& openLoop = false);		//!< Runs the pad.
+		void refresh();								//!< Refresh the pad.
+		Uint64 size();								//!< Returns the Pad total allocated memory (bytes).
+		Uint64 idx() const;							//!< Returns the pad Idx.
+		void idx(const Uint64&);					//!< Resets the pad Idx.
+		void info() const;							//!< Dumps pad info.
 
 		// GL Drawing.
-		virtual bool glDraw();					//!< Graphic redraw.	
-		void glTime();							//!< Graphic timing.
+		virtual bool glDraw();						//!< Graphic redraw.	
+		void glTime();								//!< Graphic timing.
 		size_t glHits(double& minZ, const bool& add = false, const bool& all = false);	//!< Graphic selection.	
 };
 

@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
-// CAT application core Main Application Loop class						  --
-// (C) Piero Giubilato 2011-2013, CERN										  --
+// CAT application core Main Application Loop class							  --
+// (C) Piero Giubilato 2011-2024, Padova University							  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"12 Sep 2024"
-// [Language]		"C++"
+// [Date]			"19 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
@@ -32,10 +32,10 @@ namespace cat { namespace ac {
  *
  *	\author Piero Giubilato
  *	\version 1.1
- *	\date 11 Sep 2024
+ *	\date 19 Sep 2024
  */
 //______________________________________________________________________________
-class loop: public ac
+class loop  //: public ac
 {
 	private:
 		
@@ -43,7 +43,7 @@ class loop: public ac
 		bool _stop;		// Main loop flag.
 				
 		// Managed Pad(s).
-		std::vector<cat::ui::Pad*> _pad; // Pads list.	
+		std::vector<cat::ui::pad*> _pad; // Pads list.	
 		
 		//! Clients-Scenes-Links (CSL). Lists all scenes created by a client.
 		struct CSL {

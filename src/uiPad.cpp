@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // CAT main Graphic User Interface window pad class							  --
-// (C) Piero Giubilato 2011-2013, Padova University                           --
+// (C) Piero Giubilato 2011-2024, Padova University                           --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
@@ -53,9 +53,9 @@ pad::pad(const Uint64& idx, const char* title, const bool& r): _idx(idx)
 	
 	// No scene and views present at startup.
 	_scene.clear();
-	_view.clear();
+//	_view.clear();
 	_scene.push_back(NULL); 
-	_view.push_back(NULL);
+//	_view.push_back(NULL);
 	
 	// Scene status.
 	_gpsCount = 0;
@@ -75,13 +75,13 @@ pad::pad(const Uint64& idx, const char* title, const bool& r): _idx(idx)
 //	GL = new pad_GL(this);
 
 	// Show startup info if requested.
-	if (cat::ag::_stupShowInfo) init_Info();
+	//	if (cat::ag::_stupShowInfo) initInfo();
 }
 
 //______________________________________________________________________________
 pad::~pad() 
 {
-	/*! Realeses all allocated resources. */
+	/*! Releases all allocated resources. */
 
 	// Clear all the scenes. Attention: as the scene #0, the current scene, is 
 	// simply a copy of one of the other scenes pointer, it must NOT be deleted,
@@ -112,20 +112,20 @@ pad::~pad()
 // *****************************************************************************
 
 //______________________________________________________________________________
-bool Pad::init_Window(const char* title, const bool& r)
+bool pad::initWindow(const char* title, const bool& r)
 {
 	/*! Startup the SDL library and open the pad graphic window. */ 
 	
 	// Creates the window.
-	_Window = new Window(title, PEAR_PAD_WIDTH, PEAR_PAD_HEIGHT, r);
-	if (!_Window) return true;
+//	_window = new window(title, CAT_PAD_WIDTH, CAT_PAD_HEIGHT, r);
+	if (!_window) return true;
 
 	// Everything ok.
 	return false;
 }
 
 //______________________________________________________________________________
-bool Pad::init_OpenGL()
+bool pad::initOpenGL()
 {
 	/*! A general OpenGL initialization function.  Sets all of the initial
 	 *	gl parameters. We call this right after our OpenGL window is created
@@ -133,48 +133,48 @@ bool Pad::init_OpenGL()
 	 */
 
 	// General Properties 	
-	glViewport(0, 0, _Window->Width(), _Window->Height());		// Set Viewport to window size. 
-	glDepthRange(0.0, 100.0);				// Set Depth Range (important for depth-picking). 
-	glEnable(GL_DEPTH_TEST);				// Enables Depth Testing.
-	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading.
-	glEnable (GL_BLEND); 					// Enables Blending (For Transparent Effects). 
-	glEnable(GL_NORMALIZE); 				// Enable Automatically normalized normal vectors.   
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Enables Blending w/ Alpha Value.    
+//	glViewport(0, 0, _window->width(), _window->height());		// Set Viewport to window size. 
+//	glDepthRange(0.0, 100.0);				// Set Depth Range (important for depth-picking). 
+//	glEnable(GL_DEPTH_TEST);				// Enables Depth Testing.
+//	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading.
+//	glEnable (GL_BLEND); 					// Enables Blending (For Transparent Effects). 
+//	glEnable(GL_NORMALIZE); 				// Enable Automatically normalized normal vectors.   
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Enables Blending w/ Alpha Value.    
 	
 	// Reset matrixes.
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);	
-	glLoadIdentity();
+//	glMatrixMode(GL_PROJECTION);
+//	glLoadIdentity();
+//	glMatrixMode(GL_MODELVIEW);	
+//	glLoadIdentity();
 
 	// Retrieves OpenGL status.
-	glGetIntegerv(GL_AUX_BUFFERS, &_glAuxFrameBufCount);	// Available auxiliary framebuffers.
+//	glGetIntegerv(GL_AUX_BUFFERS, &_glAuxFrameBufCount);	// Available auxiliary framebuffers.
 
 	// If OpenGL Version >= 1.5, create a support framebuffer.
-	if (GLEW_VERSION_3_0) {
+//	if (GLEW_VERSION_3_0) {
 		
 		// Kill previous in case.
-		glDeleteFramebuffers(10, _glFrameBuffer);
-		glDeleteRenderbuffers(10, _glFrameBuffer);
+//		glDeleteFramebuffers(10, _glFrameBuffer);
+//		glDeleteRenderbuffers(10, _glFrameBuffer);
 		
 		// Creates the color and depth render buffers.
-		glGenRenderbuffers(2, _glRenderBuffer);
-		glBindRenderbuffer(GL_RENDERBUFFER, _glRenderBuffer[0]);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, _Window->Width(), _Window->Height());
-		glBindRenderbuffer(GL_RENDERBUFFER, _glRenderBuffer[1]);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, _Window->Width(), _Window->Height());
+//		glGenRenderbuffers(2, _glRenderBuffer);
+//		glBindRenderbuffer(GL_RENDERBUFFER, _glRenderBuffer[0]);
+//		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, _Window->Width(), _Window->Height());
+//		glBindRenderbuffer(GL_RENDERBUFFER, _glRenderBuffer[1]);
+//		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, _Window->Width(), _Window->Height());
 
 		// Creates the frame buffer.
-		glGenFramebuffers(1, &_glFrameBuffer[0]);
-		glBindFramebuffer(GL_FRAMEBUFFER, _glFrameBuffer[0]);
+//		glGenFramebuffers(1, &_glFrameBuffer[0]);
+//		glBindFramebuffer(GL_FRAMEBUFFER, _glFrameBuffer[0]);
 		
 		// Attach the renderbuffer to the framebuffer.
-		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _glRenderBuffer[0]);
-		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _glRenderBuffer[1]);
+//		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _glRenderBuffer[0]);
+//		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _glRenderBuffer[1]);
 		
 		// By default bind the drawing buffer to the window one.	
-		glEnable(GL_DEPTH_TEST);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+//		glEnable(GL_DEPTH_TEST);
+//		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
  
 	// Everything ok.
@@ -182,36 +182,36 @@ bool Pad::init_OpenGL()
 }
 
 //______________________________________________________________________________
-void Pad::init_Info() const
+void pad::initInfo() const
 {
 	/*! Give a little info about the graphic environment of the pad. */
 	
 	// Show OpenGL info.
-	std::cout << COL(LWHITE) << "\nOpenGL\n" << COL(DEFAULT);
-	std::cout << "   Vendor:   " << glGetString(GL_VENDOR) << "\n";
-	std::cout << "   Version:  " << glGetString(GL_VERSION) << "\n";
-	std::cout << "   Renderer: " << glGetString(GL_RENDERER) << "\n";
-	std::cout << "   Shading:  " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
+//	std::cout << COL(LWHITE) << "\nOpenGL\n" << COL(DEFAULT);
+//	std::cout << "   Vendor:   " << glGetString(GL_VENDOR) << "\n";
+//	std::cout << "   Version:  " << glGetString(GL_VERSION) << "\n";
+//	std::cout << "   Renderer: " << glGetString(GL_RENDERER) << "\n";
+//	std::cout << "   Shading:  " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
 	//std::cout << "  Extens.:   " << glGetString(GL_EXTENSIONS) << "\n";
 
 	// Retrieve names stack size.
-	GLint param; 
-	glGetIntegerv(GL_MAX_NAME_STACK_DEPTH, &param);
-	std::cout << "   Name max stack: " << param << "\n";
-	glGetIntegerv(GL_MAX_MODELVIEW_STACK_DEPTH, &param);
-	std::cout << "   Modelview max stack: " << param << "\n";
-	glGetIntegerv(GL_MAX_PROJECTION_STACK_DEPTH, &param);
-	std::cout << "   Projection max stack: " << param << "\n";
-	glGetIntegerv(GL_MAX_CLIP_PLANES, &param);
-	std::cout << "   Clip planes max: " << param << "\n";
+//	GLint param; 
+//	glGetIntegerv(GL_MAX_NAME_STACK_DEPTH, &param);
+//	std::cout << "   Name max stack: " << param << "\n";
+//	glGetIntegerv(GL_MAX_MODELVIEW_STACK_DEPTH, &param);
+//	std::cout << "   Modelview max stack: " << param << "\n";
+//	glGetIntegerv(GL_MAX_PROJECTION_STACK_DEPTH, &param);
+//	std::cout << "   Projection max stack: " << param << "\n";
+//	glGetIntegerv(GL_MAX_CLIP_PLANES, &param);
+//	std::cout << "   Clip planes max: " << param << "\n";
 
 	// Frambuffers.
-	glGetIntegerv(GL_AUX_BUFFERS, &param);
-	std::cout << "   Auxiliary Framebuffers: " << param << "\n";
+//	glGetIntegerv(GL_AUX_BUFFERS, &param);
+//	std::cout << "   Auxiliary Framebuffers: " << param << "\n";
 }
 
 //______________________________________________________________________________
-void Pad::title_Draw(const double& timing)
+void pad::titleDraw(const double& timing)
 {
 	/*! Sets the pad window title, with eventual scene name and timing info. */
 	
@@ -220,16 +220,16 @@ void Pad::title_Draw(const double& timing)
 	title << std::setiosflags(std::ios::fixed) << std::setprecision(2);
 	
 	// Adds application name.
-	title << PEAR_VER_TITLE;
+	title << CAT_VER_TITLE;
 	
 	// Adds scene name (in case).
-	if (_scene[0]) title << " - " << _scene[0]->Name();
+	if (_scene[0]) title << " - " << _scene[0]->name();
 	
 	// Adds timing (in case).
 	if (timing > 0) title << " (" << timing << " ms/frame)";
 	
 	// Updates window.
-	_Window->Title(title.str());
+//	_window->title(title.str());
 }
 
 
@@ -238,7 +238,7 @@ void Pad::title_Draw(const double& timing)
 // *****************************************************************************
 
 //______________________________________________________________________________
-bool Pad::evn_Handler()
+bool pad::evnHandler()
 {
 	/*! Processes the SDL provided events queue. This function actually handles
 	 *	all the keyboard, system and mouse inputs to the program. 
@@ -251,16 +251,16 @@ bool Pad::evn_Handler()
 	while(SDL_PollEvent(&evn)) {
 			
 		// Tweak Bar.
-		if (GUI->evnBar(evn)) continue;
+//		if (GUI->evnBar(evn)) continue;
 					
 		// System.
-		if (evn_System(evn)) return true;
+		if (evnSystem(evn)) return true;
 
 		// Keyboard.
-		if (evn_Keyboard(evn)) return true;
+		if (evnKeyboard(evn)) return true;
 		
 		// Mouse.
-		if (GUI->evnMouse(evn)) return true;
+		if (GUI>evnMouse(evn)) return true;
 		
 	} // End of event queue LOOP.
 	
@@ -269,7 +269,7 @@ bool Pad::evn_Handler()
 }
 
 //______________________________________________________________________________
-bool Pad::evn_System(SDL_Event evn)
+bool pad::evnSystem(SDL_Event evn)
 {
 	/*! Handles system events. */
   	
@@ -283,19 +283,19 @@ bool Pad::evn_System(SDL_Event evn)
 		if (evn.window.event == SDL_WINDOWEVENT_RESIZED) {
 			
 			// Get latest window size.
-			_Window->Swap();
+			_window->swap();
 			
 			// Reset the OpenGL context for the new size.
-			init_OpenGL();
+			initOpenGL();
 			
 			// Reset the TwBar for the new size.
-			GUI->updateTwBar();
+//			GUI->updateTwBar();
 
 			// Updates the mouse utilities
-			GUI->updateMouse();
+//			GUI->updateMouse();
  
 			// Updates the layout.
-			GUI->LayoutSet();
+//			GUI->LayoutSet();
 		}
 
 		// Minimized.
@@ -310,7 +310,7 @@ bool Pad::evn_System(SDL_Event evn)
 }
 
 //______________________________________________________________________________
-bool Pad::evn_Keyboard(SDL_Event evn)
+bool pad::evnKeyboard(SDL_Event evn)
 {
 	/*! Handles keyboard events. */
   	if(evn.type == SDL_KEYDOWN) {
@@ -339,7 +339,7 @@ bool Pad::evn_Keyboard(SDL_Event evn)
 // *****************************************************************************
 
 //______________________________________________________________________________		
-gp::Scene* Pad::scene_Get(Uint64 sIdx)
+cat::gp::scene* pad::sceneGet(Uint64 sIdx)
 {
 	/*! Returns the scene identified by \c sIdx. If \c sIdx is omitted, or out of
 	 *	range, the current active scene will be returned. Note that \c sIdx=0 
@@ -351,7 +351,7 @@ gp::Scene* Pad::scene_Get(Uint64 sIdx)
 }
 
 //______________________________________________________________________________
-Uint64 Pad::scene_Count()
+Uint64 pad::sceneCount()
 {
 	/*! Return the number of scene in the Pad. This number accounts for all the
 	 *	hosted scenes but not for the active scene (scene #0), so the number
@@ -361,7 +361,7 @@ Uint64 Pad::scene_Count()
 }
 
 //______________________________________________________________________________
-Uint64 Pad::scene_Add(gp::Scene* scene)
+Uint64 pad::sceneAdd(cat::gp::scene* scene)
 {
 	/*! Adds a scene to the Pad. Mind that Pad will take ownership over the 
 	 *	scene, i.e. it will delete it or tamper with it at will. The scene 
@@ -374,11 +374,11 @@ Uint64 Pad::scene_Add(gp::Scene* scene)
 	_scene.push_back(scene);
 	
 	// Create a view and link it to the pad.
-	_View.push_back(new View(this)); 
+//	_view.push_back(new view(this)); 
 	
 	// If this is the only scene (the first one added), select it.
 	if (_scene.size() == 2) {
-		scene_Sel(1);
+		sceneSel(1);
 	}
 
 	// Updates the bars.
@@ -389,7 +389,7 @@ Uint64 Pad::scene_Add(gp::Scene* scene)
 }
 
 //______________________________________________________________________________
-void Pad::scene_Del(Uint64 sIdx)
+void pad::sceneDel(Uint64 sIdx)
 {
 	/*! Deletes a sene. Scene #0 cannot be deleted. */
 	
@@ -400,25 +400,25 @@ void Pad::scene_Del(Uint64 sIdx)
 	delete _scene[sIdx];
 	delete _View[sIdx];
 	_scene.erase(_scene.begin() + sIdx);
-	_View.erase(_View.begin() + sIdx);
+//	_view.erase(_view.begin() + sIdx);
 
 	// If no more scenes, reset the current scene.
 	if (_scene.size() == 1) {
 		_scene[0] = NULL;
-		_View[0] = NULL;
+//		_view[0] = NULL;
 		_sceneIdx = 0;
 	}
 
 	// If the deleted scene was the curretly selected one, change
 	// the current selection to the first scene in the list.
-	if (_sceneIdx == sIdx && _scene.size() > 1) scene_Sel(1);
+	if (_sceneIdx == sIdx && _scene.size() > 1) sceneSel(1);
 
 	// Updates the bars.
-	Refresh();
+	refresh();
 }
 
 //______________________________________________________________________________
-void Pad::scene_Sel(Uint64 sIdx)
+void pad::scene_Sel(Uint64 sIdx)
 {
 	/*! Selects a scene, making it the active (displayed) one. Scene #0 cannot 
 	 *	be seleted, i.e. selecting it makes nothing, as scene #0 is by default 
@@ -426,38 +426,39 @@ void Pad::scene_Sel(Uint64 sIdx)
 	 */
 	if (sIdx > 0 && sIdx < _scene.size()) {
 		_scene[0] = _scene[sIdx];
-		_View[0] = _View[sIdx];
+//		_view[0] = _view[sIdx];
 		_sceneIdx = sIdx;
 	}
 
 	// Reset current selection.
-	_SelGPHnd.clear();
+	_selGPHnd.clear();
 
 	// Updates the bars.
-	Refresh();
-
+	refresh();
 }
+
+
 
 // *****************************************************************************
 // **						Public Members Pad Management					  **
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 Pad::Idx() const 
+Uint64 pad::idx() const 
 {
 	/*! Retrieves the pad Idx. */
-	return _Idx;
+	return _idx;
 }
 
 //______________________________________________________________________________
-void Pad::Idx(const Uint64& Idx) 
+void pad::idx(const Uint64& Idx) 
 {
 	/*! Assigns the pad Idx. */
-	_Idx = Idx;
+	_idx = idx;
 }
 
 //______________________________________________________________________________
-Uint64 Pad::Size()
+Uint64 pad::size()
 {
 	/*! Returns the Pad's amount of allocated memory in bytes. It also stores
 	 *	the result in \c _Size for internal purposes.
@@ -477,16 +478,16 @@ Uint64 Pad::Size()
 }
 
 //______________________________________________________________________________
-void Pad::Run(const bool& openLoop) 
+void pad::run(const bool& openLoop) 
 {
-	/*! Main pad loop, handles the event and referesh the display. If 
+	/*! Main pad loop, handles the event and refresh the display. If 
 	 *	\c openLoop is set to \c true, it just runs one loop and then exit,
 	 *	but retaining the full current status ready for the next Run call.
 	 *	Resize and other window events are managed by the event handler routine.
 	 */
 	
 	// While an explicit quit is called.
-	while(!evn_Handler()) {
+	while(!evnHandler()) {
 		
 		// Redraw the Scene.
 		if(glDraw()) break;
@@ -496,7 +497,7 @@ void Pad::Run(const bool& openLoop)
 		if(GUI->glDraw()) break;
 		
 		// Show updated graphic in Pad window.
-		_Window->Swap();
+		_window->swap();
 		
 		// It not continuos, just exit for this time.
 		if (openLoop) break;
@@ -504,29 +505,30 @@ void Pad::Run(const bool& openLoop)
 }
 
 //______________________________________________________________________________
-void Pad::Refresh() 
+void pad::refresh() 
 {
 	/*! Refreshes the Pad and the bars. */
 	
 	// Calculate its own size
-	Size();
+	size();
 	
 	// Update current scene info
 	if (_scene[0]) {
-		_GPsCount = _scene[0]->gp_Count(); 
-		_GPsSize = _scene[0]->Size();
+		_GPsCount = _scene[0]->gpCount(); 
+		_GPsSize = _scene[0]->size();
 	}
 
 	// The Main bar is always refreshed
-	GUI->updateBars();
+//	GUI->updateBars();
 }
 
 //______________________________________________________________________________
-void Pad::Info() const
+void pad::info() const
 {
 	/*! Provide pad infos (mostly SDL and OpenGL status). */
-	init_Info();
+	initInfo();
 }
+
 
 
 // *****************************************************************************
@@ -534,61 +536,61 @@ void Pad::Info() const
 // *****************************************************************************
 
 //______________________________________________________________________________
-void Pad::SelClear() 
+void pad::selClear() 
 {
-	/*! Unselect all the selected GPS and clear the selection vector. */
+	/*! Unselect all the selected GPs and clear the selection vector. */
 	
 	// Check for the scene.
 	if (!_scene[0]) return;
 
 	// Releases the selected GPs.
-	for (size_t i = 0; i < _SelGPHnd.size(); i++) {
-		GP* gp = _scene[0]->gp_Get(_SelGPHnd[i]);
+	for (size_t i = 0; i < _selGPHnd.size(); i++) {
+		GP* gp = _scene[0]->gp_Get(_selGPHnd[i]);
 		if(gp) gp->modeSelected(false);
 	}
 
 	// Now clear the selection vector.
-	_SelGPHnd.clear();
-	_SelForceRedraw = false;
+	_selGPHnd.clear();
+	_selForceRedraw = false;
 
 	// Updates the interface.
-	GUI->evnSelect(_SelGPHnd); 
+	GUI->evnSelect(_selGPHnd); 
 }
 
 //______________________________________________________________________________
-void Pad::SelAdd(const GPHnd& gpHnd) 
+void pad::selAdd(const cat::gp::GPHnd& gpHnd) 
 {
 	/*! Add to the selection vector. */
 	
 	// Check if already present.
-	for (size_t i = 0; i < _SelGPHnd.size(); i++) {
-		if (gpHnd == _SelGPHnd[i]) return;
+	for (size_t i = 0; i < _selGPHnd.size(); i++) {
+		if (gpHnd == _selGPHnd[i]) return;
 	}
 
 	// Add.
-	_SelGPHnd.push_back(gpHnd);
+	_selGPHnd.push_back(gpHnd);
 }
 
 //______________________________________________________________________________
-void Pad::SelAdd(const std::vector<GPHnd>& sel) 
+void pad::selAdd(const std::vector<cat::gp::GPHnd>& sel) 
 {
 	/*! Add to the selection vector. */
 	
 	// Check if not already present and add.
 	size_t i, j;
 	for (i = 0; i < sel.size(); i++) {
-		for (j = 0; j <_SelGPHnd.size(); j++) {
-			if (sel[i] == _SelGPHnd[j]) break;
+		for (j = 0; j <_selGPHnd.size(); j++) {
+			if (sel[i] == _selGPHnd[j]) break;
 		}
-		if (j == _SelGPHnd.size())	{
-			_SelGPHnd.push_back(sel[i]); 	
+		if (j == _selGPHnd.size())	{
+			_selGPHnd.push_back(sel[i]); 	
 			//_scene[0]->gp_Get(sel[i])->modeSelected(true);
 		}
 	}
 }
 
 //______________________________________________________________________________
-void Pad::SelShow() 
+void pad::selShow() 
 {
 	/*! Switch the selected option for all the GPs stored into the selection
 	 *	vector. This allow to not highlight selected items, yet having them
@@ -596,16 +598,16 @@ void Pad::SelShow()
 	 */
 	
 	// Check if not already present and add.
-	for (size_t i = 0; i < _SelGPHnd.size(); i++) {
-		_scene[0]->gp_Get(_SelGPHnd[i])->modeSelected(true);
+	for (size_t i = 0; i < _selGPHnd.size(); i++) {
+		_scene[0]->gpGet(_selGPHnd[i])->modeSelected(true);
 	}
 	
 	// We have highlighted objects potentially on modification,
 	// so force the redraw to see real-time updates.
-	_SelForceRedraw = true;
+	_selForceRedraw = true;
 
 	// Updates the interface.
-	GUI->evnSelect(_SelGPHnd); 
+//	GUI->evnSelect(_selGPHnd); 
 }
 
 
@@ -614,89 +616,91 @@ void Pad::SelShow()
 // *****************************************************************************
 
 //______________________________________________________________________________
-bool Pad::glDraw()
+bool pad::glDraw()
 {
 	/*! This is THE pad main DRAWING function, the one which actually manages
-	 *	to continuosly redraw the selected scene. */
+	 *	to continually redraw the selected scene. */
 
 	// Check if there is anything to display...
 	if (!_sceneIdx) return false;
 	if (!_scene[0]) return false;
 
 	// Anti-aliasing on following objects.
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_POINT_SMOOTH);
+//	glEnable(GL_LINE_SMOOTH);
+//	glEnable(GL_POINT_SMOOTH);
 
 	// Blending mode.
-	glEnable (GL_BLEND);
-	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	glEnable (GL_BLEND);
+//	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Pivot reference to the view for the current scene.
-	View* view = _View[0];
+//	view* view = _view[0];
 	
 	// If OpenGL >= 3.0, enforce the auxiliary buffer as drawing target.
-	if (GLEW_VERSION_3_0) {
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _glFrameBuffer[0]);
-	}
+//	if (GLEW_VERSION_3_0) {
+//		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _glFrameBuffer[0]);
+//	}
 
 	// Highlight selected GPs if selection is confirmed for displaying.	
-	if (GUI->MousePick().StatusGet() == GUI->MousePick().kPk_Confirmed) {
-		SelShow();
-		GUI->MousePick().StatusStep();
-	}
+//	if (GUI->MousePick().StatusGet() == GUI->MousePick().kPk_Confirmed) {
+//		selShow();
+//		GUI->mousePick().StatusStep();
+//	}
 
 	// Sets the view. Perform a selection rendering if picking is active.
-	if (GUI->MousePick().StatusGet() == GUI->MousePick().kPk_Started) {
-
-		GUI->MousePick().StatusStep();	// Updates current picking status.
-		glSelectBuffer(_SelBufferSize, _SelBuffer);	// Init selection buffer.
-		
-		// Initializes selection mode. 	
-		glRenderMode(GL_SELECT);
-		glInitNames();
-		glPushName(0);
-
-		// Set the special picking view.
-		view->glSet(GUI->MouseBall(), true);  
-		view->NeedRedraw(true);		
+//	if (GUI->MousePick().StatusGet() == GUI->MousePick().kPk_Started) {
+//
+//		GUI->MousePick().StatusStep();	// Updates current picking status.
+//		glSelectBuffer(_SelBufferSize, _SelBuffer);	// Init selection buffer.
+//		
+//		// Initializes selection mode. 	
+//		glRenderMode(GL_SELECT);
+//		glInitNames();
+//		glPushName(0);
+//
+//		// Set the special picking view.
+//		view->glSet(GUI->MouseBall(), true);  
+//		view->needRedraw(true);		
 
 	// Otherwise is a normal rendering.
-	} else view->glSet(GUI->MouseBall()); 
+	} else {
+//		view->glSet(GUI->MouseBall());
+	}
 		
 	// Do the actual redraw. Always if no GL_3.0, when needed otherwise.
-	if (!GLEW_VERSION_3_0 || view->NeedRedraw() || _scene[0]->modeNeedRedraw() || _SelForceRedraw) {
+//	if (!GLEW_VERSION_3_0 || view->NeedRedraw() || _scene[0]->modeNeedRedraw() || _SelForceRedraw) {
 		
 		// Start redraw timing.
-		glTime();
+//		glTime();
 	
 		// Anyway clears the screen and the depth buffer.
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Renders non trasparent objects first. 
-		for (Uint64 i = 1; i < _scene[0]->gp_Size(); i++) {
-			GP* gp = _scene[0]->gp_Get(i); 
-			if (gp) if (!(gp->glAlpha())) gp->glDisplay();
-		}
+//		for (Uint64 i = 1; i < _scene[0]->gp_Size(); i++) {
+//			GP* gp = _scene[0]->gp_Get(i); 
+//			if (gp) if (!(gp->glAlpha())) gp->glDisplay();
+//		}
 			
 		// Renders transparent objects then.
-		for (Uint64 i = 1; i < _scene[0]->gp_Size(); i++) {
-			GP* gp = _scene[0]->gp_Get(i); 
-			if (gp) if ((gp->glAlpha())) gp->glDisplay();
-		}
+//		for (Uint64 i = 1; i < _scene[0]->gp_Size(); i++) {
+//			GP* gp = _scene[0]->gp_Get(i); 
+//			if (gp) if ((gp->glAlpha())) gp->glDisplay();
+//		}
 
 		// Reset the scene redrawing necessity.
-		_scene[0]->modeNeedRedraw(false); 
+//		_scene[0]->modeNeedRedraw(false); 
 		
 		// Stop timing.
-		glTime();
-	}
+//		glTime();
+//	}
 	
 	// Reset the stack matrixes. VERY important!
-	view->glReset(); 
+//	view->glReset(); 
 
 	// Returns always to render mode. Stores anyway 
 	// the size of the selection buffer in _SelHits.
-	_SelHits = glRenderMode(GL_RENDER);
+//	_SelHits = glRenderMode(GL_RENDER);
 		
 	// Copy the auxiliary framebuffer into the window one.
 	if (GLEW_VERSION_3_0) {
@@ -729,13 +733,13 @@ bool Pad::glDraw()
 }
 
 //______________________________________________________________________________
-void Pad::glTime()
+void pad::glTime()
 {
 	/*! Simply timing info about the rendering time */
 	
 	// Stop.
-	if (_tmrTimer.Running()) {
-		_tmrTimer.Stop();
+	if (_tmrTimer.running()) {
+		_tmrTimer.stop();
 
 	// Start.
 	} else {
@@ -744,24 +748,24 @@ void Pad::glTime()
 		if (_tmrCycle == _tmrCycleCount) {
 		
 			// Calculate average frame time in ms.
-			double avg = std::floor(100.0f * _tmrTimer.Elapsed_ms() / (double)_tmrCycleCount) / 100.0f;
+			double avg = std::floor(100.0f * _tmrTimer.elapsed_ms() / (double)_tmrCycleCount) / 100.0f;
 		
 			// Update title.
-			title_Draw(avg);
+			titleDraw(avg);
 
 			// Reset.
-			_tmrTimer.Reset();
+			_tmrTimer.reset();
 			_tmrCycle = 0;
 		}
-		_tmrTimer.Start();
+		_tmrTimer.start();
 	}
 
 	// Reset
-	_SelHits = 0;
+	_selHits = 0;
 }
 
 //______________________________________________________________________________
-size_t Pad::glHits(double& minZ, const bool& add, const bool& all)
+size_t pad::glHits(double& minZ, const bool& add, const bool& all)
 {
 	/*! Parses the selection buffer and retrieves which object/s has/have been 
 	 *	selected. Selected objects will be loaded to the _SelGPHnd vector, adding
@@ -769,15 +773,15 @@ size_t Pad::glHits(double& minZ, const bool& add, const bool& all)
 	 *	vector from scratch if \c 'add' is set to false (default).
 	 *	The \c 'all' switch tells whether to include in the selection vector only
 	 *	the topmost primitive found in the hit list. If false (default) only the
-	 *	topomost primitive is added to the selection vector, otherwise all the 
+	 *	topmost primitive is added to the selection vector, otherwise all the 
 	 *	primitives are added to the vector.
 	 *	The function returns the size of the selection vector as argument, and 
 	 *	loads into \c 'minZ' the viewport Z value of the closest found item.
 	 */
 
 	// Store an old vector.
-	std::vector<GPHnd> oldGPHnd = _SelGPHnd;
-	std::vector<GPHnd> newGPHnd;
+	std::vector<cat::gp::GPHnd> oldGPHnd = _selGPHnd;
+	std::vector<cat::gp::GPHnd> newGPHnd;
 
 	// Prepare to search Buffer 
 	int hitHnd = 0;				// 'Picked' GP handle.
@@ -785,7 +789,7 @@ size_t Pad::glHits(double& minZ, const bool& add, const bool& all)
 	float gMin = 0;				// Global minimum for the selection.	
 
 	// Search! Loop over each hit, and every element in the hit buffer.
-	for (size_t i = 0; i < _SelHits; i++) {
+	for (size_t i = 0; i < _selHits; i++) {
 			
 		// How many names for this hits.
 		GLuint names = *ptr; ptr++;
@@ -846,8 +850,8 @@ size_t Pad::glHits(double& minZ, const bool& add, const bool& all)
 	//}
 
 	// Reset the selection vector in case.
-	if (!add) SelClear();
-	SelAdd(newGPHnd);
+	if (!add) selClear();
+	selAdd(newGPHnd);
 	
 	// Returns how many GP are in the selection vector.
 	return newGPHnd.size();	

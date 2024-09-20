@@ -8,12 +8,12 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
-// [Language]		"C++"
+// [Date]			"20 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
-#if !defined acGlobal_H
+#if!defined acGlobal_H
 #define acGlobal_H
 
 	// Standard libraries
@@ -23,12 +23,14 @@
 	#include <stdexcept>
 
 
+
 	// -------------------------
 	// -- Application Version --
 	// -------------------------
 	#define CAT_VER_MAJOR 0					//!< Release major.
 	#define CAT_VER_MINOR 1					//!< Release minor.
 	#define CAT_VER_TITLE "CAT 0.1 gamma"	//!< Release title.
+
 
 
 	// ------------------------------------
@@ -42,25 +44,26 @@
 	// Mac OsX:	
 	
 	/*! Application path. */
-	#define CAT_PATH_MAXLEN 1024	//!< Maximum path length.
-	#define CAT_PATH_FONTS "/fonts"	//!< Maximum path length.
+	#define CAT_PATH_MAXLEN 1024				//!< Maximum path length.
+	#define CAT_PATH_FONTS "/resources/fonts"	//!< Maximum path length.
 
 	/*! Sets the default Pad windows appearance. */
 	#define CAT_PAD_WIDTH 1024		//!< Pad width.
-	#define CAT_PAD_HEIGHT 768		//!< Pad height.
+	constexpr auto CAT_PAD_HEIGHT = 768		//!< Pad height.;
 
 	/*! Net default parameters. */
 	// ...	
 	// ...
+
+
 
 	// ---------------------------------------------------
 	// -- Global .h which needs environment definitions --
 	// ---------------------------------------------------
 
 	// Using personalized Console.
-	#ifndef  afConsole_H
-		#include "afConsole.h"
-	#endif
+	#include "afConsole.h"
+
 
 
 	// ------------------------------------------
@@ -72,6 +75,7 @@
 	//#define CAT_TYPE_SIZE_FLOAT sizeof(float);
 
 
+
 	// ----------------------------
 	// -- Default fonts elements --
 	// ----------------------------
@@ -80,6 +84,7 @@
 	#define CAT_FONT_DEF_STYLE "regular"	//!< Default font style.
 	#define CAT_FONT_DEF_SIZE_PT 18			//!< Default font size (points).
 	#define CAT_FONT_DEF_SIZE_PX 10			//!< Default font size (pixels).
+
 
 
 	// ------------------------------------------
@@ -93,7 +98,7 @@
 	#define CAT_COL_ERROR LRED				//!< Error.
 
 	/*! Sets default dump number precision. */
-	#define CAT_DUMP_PREC_DEFAULT 2			//!< Dafault decimals.
+	#define CAT_DUMP_PREC_DEFAULT 2			//!< Default decimals.
 	#define CAT_DUMP_PREC_GEOMETRY 4		//!< Geometric figures decimals.
 	#define CAT_DUMP_PREC_COLOR 3			//!< Color channel decimals.
 

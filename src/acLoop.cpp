@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
-// [Language]		"C++"
+// [Date]			"19 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 

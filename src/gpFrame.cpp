@@ -1,24 +1,24 @@
 //------------------------------------------------------------------------------
-// PEAR Frame GP class														  --
-// (C) Piero Giubilato 2011-2013, CERN										  --
+// CAT frame Graphic Primitive class										  --
+// (C) Piero Giubilato 2011-2024, Padova University							  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-// [File name]		"pear_gp_Frame.cpp"
+// [File name]		"gpFrame.cpp"
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"04 Sep 2011"
-// [Language]		"C++"
+// [Date]			"19 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 
 // Application components.
-#include "pear_gp_Frame.h"
+#include "gpFrame.h"
 
 
 // #############################################################################
-namespace pear { namespace gp {
+namespace cat { namespace gp {
 
 
 // *****************************************************************************
@@ -26,7 +26,7 @@ namespace pear { namespace gp {
 // *****************************************************************************
 
 //______________________________________________________________________________
-Frame::Frame()
+frame::frame()
 {
 	/*! Frame constructor with the provided dimensions width (\c xW ), 
 	 *	length (\c yL ) and height (\c zH ). By default the box is 
@@ -34,29 +34,29 @@ Frame::Frame()
 	 */
 	
 	// Reset the reference.
-	_Ref;
+	_ref;
 }
 
 //______________________________________________________________________________
-Frame::Frame(const go::Point& p0, const go::Vector& a0)
+frame::frame(const ge::point& p0, const ge::vector& a0)
 {
 	/*! Frame constructor with the frame reference origin set at \c p0 and the
-	 *	frame rotateb by \c a0 around the XYZ axis in this order. */
+	 *	frame rotated by \c a0 around the XYZ axis in this order. */
 	
 	// Set inner reference.
-	_Ref.p0(p0);
-	_Ref.a0(a0); 
+	_ref.p0(p0);
+	_ref.a0(a0); 
 }
 
 //______________________________________________________________________________
-Frame::Frame(const go::Point& p0, const go::Vector& v0, const double& a)
+frame::frame(const ge::point& p0, const ge::vector& v0, const double& a)
 {
 	/*! Frame constructor with the frame reference origin set at \c p0 and the
-	 *	frame rotateb along the \c v0 axis of \c a angle counterclockwise. */
+	 *	frame rotated along the \c v0 axis of \c a angle counterclockwise. */
 	
 	// Set inner reference.
-	_Ref.p0(p0);
-	_Ref.v0(v0, a); 
+	_ref.p0(p0);
+	_ref.v0(v0, a); 
 }
 
 	
@@ -65,28 +65,28 @@ Frame::Frame(const go::Point& p0, const go::Vector& v0, const double& a)
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 Frame::Type() const
+Uint64 frame::type() const
 {
 	/*! Returns a numeric identification. */
-	return GP::Type() + GP::kgp_Frame;
+	return GP::type() + GP::ktype::frame;
 }
 
 //______________________________________________________________________________
-Uint64 Frame::Version() const
+Uint64 frame::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
 }
 
 //______________________________________________________________________________
-std::string Frame::Stem() const
+std::string frame::stem() const
 {
 	/*! Returns a string identification. */
-	return "Frame";
+	return "frame";
 }
 
 //______________________________________________________________________________
-size_t Frame::Size(const bool& dynamic) const
+size_t frame::size(const bool& dynamic) const
 {
 	/*! Returns the complete (full static + full dynamic) allocated space for 
 	 *	the GP if \c dynamic = false, the default call. If \c dynamic = true,
@@ -95,47 +95,47 @@ size_t Frame::Size(const bool& dynamic) const
 	 */
 	
 	// Get dynamically allocated size.
-	size_t tSize = GP::Size(true);
+	size_t tSize = GP::size(true);
 	
 	// Returns.
 	if (dynamic) return tSize;
 	else return sizeof(*this) + tSize;	
 }
 //______________________________________________________________________________
-void Frame::Dump(const Uint64& ind) const
+void frame::dump(const Uint64& ind) const
 {
 	/*! Send out all the box data. */
 	std::string pad(ind, ' ');
 	std::cout << pad << "[";
-	GP::Dump();
+	GP::dump();
 	std::cout << " ]\n";
 	pad.append(ind, ' ');
-	_Ref.Dump();
+	_ref.dump();
 	std::cout << "\n";
 }
 
 //______________________________________________________________________________
-bool Frame::Stream(std::stringstream& o, const bool& read)
+bool frame::stream(std::stringstream& o, const bool& read)
 {
 	/*! Streams the primitive. */
 
 	// Streams the parent.
-	if(GP::Stream(o, read)) return true;
+	if(GP::stream(o, read)) return true;
 		
 	// Streams the vertexes
-	_Ref.Stream(o, read);
+	_ref.stream(o, read);
 	
-	// Everythig fine.
+	// Everything fine.
 	return false;
 }
 
 //______________________________________________________________________________
-Frame& Frame::Trsf(const go::Ref& rf, const bool& inv)
+frame& frame::trsf(const ge::ref& rf, const bool& inv)
 {
 	/*! Transforms the frame coordinates applying the rf transformation directly
 	 *	if inv = false, and by applying the inverse transformation if inv = true. 
 	 */
-	//for (unsigned int i = 0; i < 8; i++) rf.Trsf(_Vtx[i], inv);
+	//for (unsigned int i = 0; i < 8; i++) rf.trsf(_vtx[i], inv);
 	
 	return *this;
 }	
@@ -146,11 +146,13 @@ Frame& Frame::Trsf(const go::Ref& rf, const bool& inv)
 // *****************************************************************************
 
 //______________________________________________________________________________
-go::Ref Frame::Ref() const
+ge::ref frame::ref() const
 {
 	/*! Returns the inner reference. */
-	return _Ref;
+	return _ref;
 }
+
+
 
 // *****************************************************************************
 // **							  Drawing functions							  **
@@ -163,10 +165,10 @@ go::Ref Frame::Ref() const
 // object to make the changes effective. The object is actually drawn through 
 // the GP::glDisplay() function, which uses the faster display list made by the 
 // GP::gpBuild() every time it is called.
-#ifdef PEAR_SERVER
+#ifdef CAT_SERVER
 
 //______________________________________________________________________________
-void Frame::glTrsfApply()
+void frame::glTrsfApply()
 {
 	/*! The gp::Frame purpose is THIS member! It sets the OpenGL model view
 	 *	matrix to make effective on the present drawing pipeline the embedded 
@@ -178,20 +180,20 @@ void Frame::glTrsfApply()
 	GP::glTrsfApply(); 
 
 	// Push the current model matrix.
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
+//	glMatrixMode(GL_MODELVIEW);
+//	glPushMatrix();
 
 	// Apply the transformations.
-	glScalef(_Ref.s0().X(), _Ref.s0().Y(), _Ref.s0().Z());
-	glTranslatef(_Ref.p0().X(), _Ref.p0().Y(), _Ref.p0().Z());
-	glRotated(_Ref.vA() * 57.295779513, _Ref.v0().X(), _Ref.v0().Y(), _Ref.v0().Z());	
+//	glScalef(_Ref.s0().X(), _Ref.s0().Y(), _Ref.s0().Z());
+//	glTranslatef(_Ref.p0().X(), _Ref.p0().Y(), _Ref.p0().Z());
+//	glRotated(_Ref.vA() * 57.295779513, _Ref.v0().X(), _Ref.v0().Y(), _Ref.v0().Z());	
 	
 	//std::cout << _Ref.vA() << ", " << _Ref.v0() << "\n";
 	//std::cout << "APPLYING Frame Trsf:  " << Name() << "\n";
 }
 
 //______________________________________________________________________________
-void Frame::glTrsfReset()
+void frame::glTrsfReset()
 {
 	/*! Reset the model matrix transformation applied by glTrsfApply. These two
 	 *	member function must always be called in tandem to avoid messing up the
@@ -201,8 +203,8 @@ void Frame::glTrsfReset()
 	 */
 
 	// Restore the previous model matrix.
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
+//	glMatrixMode(GL_MODELVIEW);
+//	glPopMatrix();
 	//std::cout << "RESETTING Frame Trsf: " << Name() << "\n";
 
 	// Family call.
@@ -210,7 +212,7 @@ void Frame::glTrsfReset()
 }
 
 //______________________________________________________________________________
-void Frame::glDrawSel()
+void frame::glDrawSel()
 {
 	/*! Draws the selection skeleton. */
 
@@ -219,7 +221,7 @@ void Frame::glDrawSel()
 }
 
 //______________________________________________________________________________
-void Frame::glDraw()
+void frame::glDraw()
 {
 	/*! Basically here we draw nothing, but we affect the OpenGL model transform
 	 *	matrix! */
@@ -229,7 +231,7 @@ void Frame::glDraw()
 }
 
 //______________________________________________________________________________
-void Frame::glDrawEnd()
+void frame::glDrawEnd()
 {
 	// Complete drawing operations.
 	GP::glDrawEnd(); 

@@ -23,12 +23,12 @@
 #include "gpEmpty.h"
 #include "gpFrame.h"
 #include "gpPoint.h"
-//#include "pear_gp_Line.h"
-//#include "pear_gp_Polygon.h"
-//#include "pear_gp_Box.h"
-//#include "pear_gp_Tube.h"
-//#include "pear_gp_Sphere.h"
-//#include "pear_gp_Label.h"
+#include "gpLine.h"
+#include "gpPolygon.h"
+#include "gpBox.h"
+#include "gpTube.h"
+#include "gpSphere.h"
+#include "gpLabel.h"
 
 
 //##############################################################################

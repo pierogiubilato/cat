@@ -8,17 +8,17 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
 // Application components.
-#include "../include/acMain.h"
-//#include "ui_Splash.h"
-#include "../include/acServer.h"
-#include "../include/acLoop.h"
-//#include "afFile.h"
-//#include "afFont.h"
+#include "acMain.h"
+#include "uiSplash.h"
+#include "acServer.h"
+#include "acLoop.h"
+#include "afFile.h"
+#include "afFont.h"
 
 // Standard
 #include <direct.h>

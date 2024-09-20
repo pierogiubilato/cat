@@ -17,23 +17,22 @@
 #define acServer_H
 
 // Application components
-#include "../include/ac.h"
+//#include "ac.h"
+
+// SDL tcp/ip services. 
+#include "SDL_net.h"
 
 // Standard components.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// SDL tcp/ip services.
-//#include "../lib/SDL/include/SDL3/SDL_net.h"
-#include "../lib/SDL/include/SDL3/SDL.h"
-
 
 // #############################################################################
 namespace cat { namespace ac {
 
-//! Pear server
-/*! cat::ac::Server is the TCP-IP server used to collect drawing commands from
+//! CAT server
+/*! cat::ac::server is the TCP-IP server used to collect drawing commands from
  *	the client(s). If a port number is not provided at instantiation, the 
  *  default value 2000 will be used.
  *	Once started the server checks for incoming connection request every time
@@ -44,30 +43,30 @@ namespace cat { namespace ac {
  *
  *	\author Piero Giubilato
  *	\version 1.q
- *	\date 15 Sep 2024
+ *	\date 19 Sep 2024
  */
 //______________________________________________________________________________
-class server: public ac 
+class server 
 {
 	private:
 		
 		// Socket info structure.
 		struct clientInfo {
-			TCPsocket SD;		// Socket descriptor.	 
-			IPaddress IP;		// Resolved IP.
-			Uint32 Status;		// Socket status.
-			Uint32 cHnd;		// The socket personal Handle.
+			Uint32 SD;				// DUMMY <- Socket descriptor.	 
+			Uint32 IP;				// DUMMY <- Resolved IP.
+			Uint32 status;			// Socket status.
+			Uint32 cHnd;			// The socket personal Handle.
 		};
 
-		// Sockets list
-		std::vector<ClientInfo> _client;	// Sockets list
+		// Sockets list.
+		std::vector<clientInfo> _client;	// Sockets list
 		
-		// Buffers
+		// Buffers.
 		std::vector<char> _buffer;	// Actual data buffer.
 		Uint64 _timeout;			// Connection timeout in ms.
 						
-		// Server		
-		bool init(const Uint16&, const Uint64& tOut);	//!< Init the server.
+		// Server actions.
+		bool init(const Uint32&, const Uint64& tOut);	//!< Init the server.
 		bool close();				//!< Close the server.
 		bool listen();				//!< Listen for new clients.
 		bool clean();				//!< Clean closed clients.
@@ -79,7 +78,7 @@ class server: public ac
 	public:
 
 		// Special members
-		server(const Uint16& port = 2000, const Uint64& tOut = 100); 
+		server(const Uint32& port = 0, const Uint64& tOut = 100);
 		~server();
 
 		// Server
@@ -92,19 +91,19 @@ class server: public ac
 // *****************************************************************************
 
 //______________________________________________________________________________
-inline std::ostream& operator<<(std::ostream& o, const IPaddress ip)
+inline std::ostream& operator<<(std::ostream& o, const Uint32& ip)
 {
 	/*! Overloads the standard output operator << for an IPaddress object. */
 	
 	// The IP
-	o << COL(LGREEN) << ((ip.host >> 0) & 255) << COL(DEFAULT) << ".";
-	o << COL(LGREEN) << ((ip.host >> 8) & 255) << COL(DEFAULT) << ".";
-	o << COL(LGREEN) << ((ip.host >> 16) & 255)	<< COL(DEFAULT) << ".";
-	o << COL(LGREEN) << ((ip.host >> 24) & 255) << COL(DEFAULT); 
+//	o << COL(LGREEN) << ((ip.host >> 0) & 255) << COL(DEFAULT) << ".";
+//	o << COL(LGREEN) << ((ip.host >> 8) & 255) << COL(DEFAULT) << ".";
+//	o << COL(LGREEN) << ((ip.host >> 16) & 255)	<< COL(DEFAULT) << ".";
+//	o << COL(LGREEN) << ((ip.host >> 24) & 255) << COL(DEFAULT); 
 	
 	// The port
 	o << ", ";
-	o << COL(LGREEN) << ip.port << COL(DEFAULT); 
+//	o << COL(LGREEN) << ip.port << COL(DEFAULT); 
 
 	// Done!
 	return o;
