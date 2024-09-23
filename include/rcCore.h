@@ -8,26 +8,28 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
 // Overloading check
-#if !defined r_Core_H
+#if !defined rcCore_H
 #define rcCore_H
+
+// Prevents windows.h including winsock.h
+#if defined(_WIN32) || defined(_WIN64)
+#define _WINSOCKAPI_
+#endif
+
+// SDL net for the socket controls.
+#include <SDL_net.h>
 
 // Application components.
 #include "gtTools.h"
 #include "gpScene.h"
-#include "gdRef.h"
-b
-// Prevents windows.h including winsock.h
-#if defined(_WIN32) || defined(_WIN64)
-	#define _WINSOCKAPI_
-#endif
+#include "geRef.h"
 
-// SDL net for the socket controls.
-#include <../lib/SDL/include/SDL3/SDL.h>
+
 
 
 // *****************************************************************************
@@ -68,7 +70,7 @@ namespace cat { namespace rc {
 
 	
 	//! Client verbosity constants.
-	enum class kv : Uint32 {
+	enum class kVerb : Uint64 {
 		null,
 		error,
 		warn,
@@ -76,7 +78,7 @@ namespace cat { namespace rc {
 	};
 
 	//! Commands constants.
-	enum class kc : Uint32 {
+	enum class kCmd : Uint64 {
 		clear,
 		begin,
 		add,
@@ -87,7 +89,7 @@ namespace cat { namespace rc {
 	};
 
 	//! Connection status constants.
-	enum class kss : Uint32 {
+	enum class kStatus : Uint64 {
 		null,
 		close,
 		open,
@@ -106,7 +108,7 @@ namespace cat { namespace rc {
  *
  *	\author Piero Giubilato
  *	\version 1.1
- *	\date 17 Sep 2024
+ *	\date 23 Sep 2024
  */
 class core 
 {
@@ -120,8 +122,8 @@ class core
 		Uint64 _status;							// Connection status.
 		
 		// Connection.
-		IPaddress _IP;							// Server address.
-		TCPsocket _SD;							// Socket descriptor.
+		//IPaddress _IP;							// Server address.
+		//TCPsocket _SD;							// Socket descriptor.
  		Uint64 _OPS;							// Optimal Packet Size (bytes).
 
 		// Drawing elements and flags.

@@ -1,42 +1,44 @@
 //------------------------------------------------------------------------------
-// PEAR Remote Client, include this file into your application				  --
-// (C) Piero Giubilato 2011-2013, CERN										  --
+// CAT Remote Client, include this file into your application				  --
+// (C) Piero Giubilato 2011-2024, Padova University							  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
 // [File name]		"pear_RC.h"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.0"
+// [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"30 Aug 2011"
-// [Language]		"C++"
+// [Date]			"23 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
-#if !defined pear_RC_H
-#define pear_RC_H
+#if !defined RC_H
+#define RC_H
 
-#include "pear_rc_Macros.h"
+#include "rcMacros.h"
 
 // #############################################################################
-namespace pear { namespace rc {
+namespace cat { namespace rc {
 
-//! Pear rc::RC
-/*! pear::rc::RC is the class which is accessible to the user. It is the class 
+//! cat rc::RC
+/*! cat::rc::RC is the class which is accessible to the user. It is the class 
  *	to instantiate in order to open a connection with the server and start
  *	drawing your scene!
  *
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 30 Aug 2011
+ *	\date 23 Sep 2024
  */
-class RC: public Macros 
+class RC: public macros 
 {
 	public:
 
 	// Special members.
-	PEAR_API PEAR_CALL RC(const char* host, const Uint16& port, const Uint64& verb = 0)
-					   :Macros(host, port, verb) {;}; 
+	CAT_API CAT_CALL RC(const char* host, 
+						const Uint16& port, 
+						const Uint64& verb = 0)
+					    : macros(host, port, verb) {;}; 
 };
 
 // #############################################################################

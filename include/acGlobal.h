@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -85,7 +85,7 @@
 	/*! Sets the default colors for general communications. Color codes are
 		defined in the pear_Console.h file.*/
 	#define CAT_COL_OK LGREEN				//!< Ok.
-	#define CAL_COL_WARNING LYELLOW			//!< Warning.
+	#define CAT_COL_WARNING LYELLOW			//!< Warning.
 	#define CAT_COL_ERROR LRED				//!< Error.
 
 	/*! Sets default dump number precision. */

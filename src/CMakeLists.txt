@@ -30,8 +30,8 @@ endif()
 # The main target executable.
 add_executable (cat 
 	"../src/acMain.cpp"
+	"../src/acServer.cpp"
 	#"../src/acLoop.cpp"
-	#"../src/acServer.cpp"
 	#"../src/uiPad.cpp"
 	#"../src/uiWindow.cpp"
 	#"../src/uiSplash.cpp"

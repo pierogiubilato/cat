@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -32,18 +32,18 @@ namespace cat { namespace gt {
 // **							The basic pear GT							  **
 // *****************************************************************************
 
-/*! pear::gt::GT is the base class for all pear graphic tools. A graphic tool 
+/*! cat::gt::GT is the base class for all pear graphic tools. A graphic tool 
  *  is anything which perform actions or affect the properties of a graphic 
  *	primitive, like a brush, a pen, a font, etc... This class is a very basic 
  *	container and just provides virtual interface.
  *
  *	\author Piero Giubilato
  *	\version 1.1
- *	\date 17 Sep 2024
+ *	\date 23 Sep 2024
 */
 
 //______________________________________________________________________________
-class GT
+class GT : public CO
 {
 	private:   
 		
@@ -63,7 +63,7 @@ class GT
 		
 };
 
- #############################################################################
+// #############################################################################
 }} // Close namespaces
 
 
@@ -119,7 +119,7 @@ class fill: public GT
 	float color[4]; 
 	
 	//! Default ctor.
-	Fill() {
+	fill() {
 		active = true;
 		color[0] = color[1] = color[2] = 0.5f; color[3] = 1;
 	}
@@ -137,7 +137,7 @@ class material: public GT
 	float shininess;
 
 	//! Default ctor.
-	Material() {
+	material() {
 		active = false;
 		ambient[0] =  ambient[1] =  ambient[2] = 0.7f;  ambient[3] = 1;
 		diffuse[0] =  diffuse[1] =  diffuse[2] = 0.7f;  diffuse[3] = 1;
@@ -158,7 +158,7 @@ class inherit: public GT
 	bool ref;
 
 	//! Default ctor.
-	Inherit() {
+	inherit() {
 		enabled = true;
 		visibility = true;
 		alpha = true;
@@ -176,7 +176,7 @@ class font: public GT
 	Uint32 size;			//!< Font size.
 
 	//! Default ctor.
-	Font() {
+	font() {
 		family = "";		//!< Use default font.
 		style = "";			//!< Use default style.
 		size = 0;			//!< Use default size.
@@ -195,7 +195,7 @@ class trsf: public GT
 	trsf() {
 		pos.x = pos.y = pos.z = 0;
 		rot.a = rot.b = rot.g = 0;
-		scale.x = scale.y = acale.z = 1;
+		scale.x = scale.y = scale.z = 1;
 	}
 };
 

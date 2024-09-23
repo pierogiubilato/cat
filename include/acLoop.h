@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -32,7 +32,7 @@ namespace cat { namespace ac {
  *
  *	\author Piero Giubilato
  *	\version 1.1
- *	\date 20 Sep 2024
+ *	\date 23 Sep 2024
  */
 //______________________________________________________________________________
 class loop  //: public ac
@@ -47,7 +47,7 @@ class loop  //: public ac
 		
 		//! Clients-Scenes-Links (CSL). Lists all scenes created by a client.
 		struct CSL {
-			Uint64 cHnd;				//!< Client handle.   
+			std::string cHnd;			//!< Client handle.   
 			std::vector<Uint64>	sHnd;	//!< Handle of the iTh scene.
 		};
 
@@ -63,17 +63,17 @@ class loop  //: public ac
 		~loop();
 
 		// Application Commands.
-		void cmdAppRun();					//!< Starts the main application loop.
-		bool cmdAppQuit(const Uint64&);	//!< Application Exit.
+		void cmdAppRun();						//!< Starts the main application loop.
+		bool cmdAppQuit(const Uint64&);			//!< Application Exit.
 
 		// Client Commands.
-		bool cmdClientAdd(const Uint64&);	//!< Add a new connected client.
-		bool cmdClientDel(const Uint64&);	//!< Remove a client.
+		bool cmdClientAdd(const std::string&);	//!< Add a new connected client.
+		bool cmdClientDel(const std::string&);	//!< Remove a client.
 		
 		// Scene Commands.
-		Uint64 cmdSceneBegin(const Uint64&, std::stringstream&);				//!< Starts a new scene.
-		bool cmdSceneClose(const Uint64&, const Uint64&);						//!< Closes an existing scene.
-		bool cmdSceneAddGP(const Uint64&, const Uint64&, std::stringstream&);	//!< Adds a GP to a scene.
+		Uint64 cmdSceneBegin(const std::string&, std::stringstream&);				//!< Starts a new scene.
+		bool cmdSceneClose(const std::string&, const Uint64&);						//!< Closes an existing scene.
+		bool cmdSceneAddGP(const std::string&, const Uint64&, std::stringstream&);	//!< Adds a GP to a scene.
 
 		// Application elements access.
 		ui::pad* padGet(const Uint64& = 1);	//!< Returns pointer to pIdx pad.	 

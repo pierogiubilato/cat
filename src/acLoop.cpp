@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -33,7 +33,7 @@ loop::loop(): _stop(false)
 	/* Standard ctor. */
 
 	// Resets the pad and the CTS vectors.
-//	_pad.clear();
+	_pad.clear();
 	_client.clear();
 	
 	// The first pad is by default associated to the server, so it is just 
@@ -117,11 +117,11 @@ bool loop::cmdAppQuit(const Uint64& pIdx)
 // *****************************************************************************
 
 //______________________________________________________________________________
-bool loop::cmdClientAdd(const Uint64& cHnd)
+bool loop::cmdClientAdd(const std::string& cHnd)
 {
 	/*! Adds the client \c cHnd to the client list.	*/
 	
-	// Add the client
+	// Add the client.
 	_client.push_back(CSL());
 	_client.back().cHnd = cHnd;
 	
@@ -140,7 +140,7 @@ bool loop::cmdClientAdd(const Uint64& cHnd)
 }
 
 //______________________________________________________________________________
-bool loop::cmdClientDel(const Uint64& cHnd)
+bool loop::cmdClientDel(const std::string& cHnd)
 {
 	/*! Remove the client \c cHnd from the client list.	*/
 	
@@ -150,7 +150,7 @@ bool loop::cmdClientDel(const Uint64& cHnd)
 		if (_client[cIdx].cHnd == cHnd) break;
 	}
 	
-	// If bot a valid result, return.
+	// If both a valid result, return.
 	if (cIdx == _client.size()) return true;
 
 	// Delete the client from the list
@@ -172,7 +172,7 @@ bool loop::cmdClientDel(const Uint64& cHnd)
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 loop::cmdSceneBegin(const Uint64& cHnd, std::stringstream& cBuf)
+Uint64 loop::cmdSceneBegin(const std::string& cHnd, std::stringstream& cBuf)
 {
 	/*! Begins a new scene. \c cHnd is the caller client Handle, while
 	 *	\c cBuf contains the stream which describe the scene to create.
@@ -205,7 +205,7 @@ Uint64 loop::cmdSceneBegin(const Uint64& cHnd, std::stringstream& cBuf)
 }
 
 //______________________________________________________________________________
-bool loop::cmdSceneClose(const Uint64& cHnd, const Uint64& sIdx)
+bool loop::cmdSceneClose(const std::string& cHnd, const Uint64& sIdx)
 {
 	/*! Closes scene \c sIdx of the \c cHnd scene list. */
 	if (cat::ag::_verbose >= CAT_VERB_FULL) {
@@ -233,7 +233,7 @@ bool loop::cmdSceneClose(const Uint64& cHnd, const Uint64& sIdx)
 }
 
 //______________________________________________________________________________
-bool loop::cmdSceneAddGP(const Uint64& cHnd, const Uint64& sIdx, std::stringstream& buf)
+bool loop::cmdSceneAddGP(const std::string& cHnd, const Uint64& sIdx, std::stringstream& buf)
 {
 	/*! Adds a GP to the scene \c sIdx of the \c cHnd Client scene list. \c cBuf 
 		is the stream containing the GP description. Returns false if no errors 
