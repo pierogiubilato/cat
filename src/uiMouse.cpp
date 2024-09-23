@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -332,47 +332,51 @@ bool mousePicker::process(unsigned int &_pickedFlags)
 	 */ 
 	
 	///* Restore normal rendering mode */
-	//glMatrixMode(GL_PROJECTION); 
-	//glPopMatrix();
-	//glMatrixMode(GL_MODELVIEW); // Return to model view 
-	//glFlush();
-	//hits = glRenderMode(GL_RENDER); // Return to render mode 
-	//
-	//// Prepare to search Buffer 
-	//float Zmin; 			// Minimum Depth  
-	//int Name; int Flag = 0; // 'Picked' Name and Flags   
-	//GLuint names, *ptr;		// Name and buffer elements
-	//ptr = (GLuint *) buffer;
-	//
-	//// Search! Loop over each hit, and every element in the hit buffer.
-	//unsigned int i, j;
-	//for (i = 0; i < hits; i++) { // Each hit   
-	//		names = *ptr; ptr++; 						// Get first Buffer element: Hit Number
-	//		float z1 = (float) *ptr/0x7fffffff; ptr++; 	// Second Buffer Element: minZ
-	//		ptr++; 										// Third Buffer Element: maxZ
-	//		
-	//		for (j = 0; j < names; j++) {  // Loop over each name 
-	//			int nm = (int)*ptr; ptr++; // Fourth Buffer Element: Object Name
-	//			
-	//			// Check which hit is minimum, discarding last name in the stack
-	//			if((i == 0 || z1 < Zmin) && i != fabs((float)hits - 1) ){
-	//				Zmin = z1;	// Set the new Minimum 
-	//				Name = nm;	// Store name of the object
-	//				Flag = 1; 	// Flag object as 'selected'			
-	//			}		
-	//		}
-	//}
-	//
-	//// If an object was identified  
-	//if (Flag) {
-	//	_pickedFlags = Name; 
-	//	return 1; // Return successful find! 
-	//
-	//// No object was found 
-	//} else {
-	//	_pickedFlags = 0; 
-	//	return 0; // Return Null result 
-	//}
+	glMatrixMode(GL_PROJECTION); 
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW); // Return to model view 
+	glFlush();
+	hits = glRenderMode(GL_RENDER); // Return to render mode 
+	
+	// Prepare to search Buffer 
+	float zMin; 			// Minimum Depth  
+	int name; int flag = 0; // 'Picked' Name and Flags   
+	GLuint names, *ptr;		// Name and buffer elements
+	ptr = (GLuint *) buffer;
+	
+	// Search! Loop over each hit, and every element in the hit buffer.
+	unsigned int i, j;
+	for (i = 0; i < hits; i++) { // Each hit   
+			names = *ptr; 
+			ptr++; 						// Get first Buffer element: Hit Number
+			float z1 = (float) *ptr/0x7fffffff; 
+			ptr++; 						// Second Buffer Element: minZ
+			ptr++; 						// Third Buffer Element: maxZ
+			
+			// Loop over each name.
+			for (j = 0; j < names; j++) {  
+				int nm = (int)*ptr; 
+				ptr++;				// Fourth Buffer Element: Object Name
+				
+				// Check which hit is minimum, discarding last name in the stack
+				if((i == 0 || z1 < zMin) && i != fabs((float)hits - 1) ) {
+					zMin = z1;	// Set the new Minimum 
+					name = nm;	// Store name of the object
+					flag = 1; 	// Flag object as 'selected'			
+				}		
+			}
+	}
+	
+	// If an object was identified  
+	if (flag) {
+		_pickedFlags = name; 
+		return 1; // Return successful find! 
+	
+	// No object was found 
+	} else {
+		_pickedFlags = 0; 
+		return 0; // Return Null result 
+	}
 	return 0;
 }	
 

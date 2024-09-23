@@ -18,14 +18,12 @@
 #define af_H
 
 // Application components.
-#include "acMain.h"
+//#include "acMain.h"
 
-// OpenGL data types are used in many parts.
-#include "glew/glew.h"
 
 
 // #############################################################################
-namespace cat {
+//namespace cat {
 
 // *****************************************************************************
 // **							Types and Structures						  **
@@ -45,18 +43,18 @@ namespace cat {
  */
 
 //______________________________________________________________________________
-class af
-{
-	private:   
+//class af
+//{
+//	private:   
 	
-	protected:
+//	protected:
 	
-	public:
+//	public:
 		
-};
+//};
 
 // #############################################################################
-} // Close namespace
+//} // Close namespace
 
 // Overloading check
 #endif

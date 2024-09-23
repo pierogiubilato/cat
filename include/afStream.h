@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"afStream.h"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.1"
+// [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"10 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"C++"
 // [Project]		"PEAR"
 //______________________________________________________________________________
@@ -16,9 +16,6 @@
 // Overloading check
 #ifndef afStream_H
 #define afStream_H
-
-// SDL for variable definitions.
-#include "../lib/SDL/include/SDL3/SDL.h"
 
 // Standard components
 #include <iostream>
@@ -72,31 +69,31 @@ template <typename T> bool value(T& t, const std::string& s, std::ios_base& (*f)
 // *****************************************************************************
 
 //______________________________________________________________________________
-template<typename T> void write(std::stringstream& o, const T& v)
+template<typename T> void inline write(std::stringstream& o, const T& v)
 {
 	/*! Write to stream, default types. */
 	o.write((char*)&v, sizeof(v));
 }
 	
 //______________________________________________________________________________
-template<> inline void write<std::string>(std::stringstream& o, const std::string& s)
+template<> void inline write<std::string>(std::stringstream& o, const std::string& s)
 {
 	/* Write to stream, string type. */
-	Uint64 l = s.size();			// Writes the length of the string.
+	size_t l = s.size();				// Writes the length of the string.
 	o.write((char*)&l, sizeof(l));	// Writes the string characters.
 	o.write(s.c_str(), l);
 }
 
 //______________________________________________________________________________
-template<typename T> void write(std::stringstream& o, const std::vector<T>& v)
+template<typename T> void inline write(std::stringstream& o, const std::vector<T>& v)
 {
 	/*! Write to stream, vector of default types. */
 	size_t s = sizeof(T);			// Size of the data type.
-	Uint64 l = v.size();			// Vector length.
+	size_t l = v.size();				// Vector length.
 	o.write((char*)&l, sizeof(l));	// Writes the length of the vector.
 	
 	// Writes the vector elements.
-	for (Uint64 i = 0; i < v.size(); i++) o.write((char*)&v[i], s);
+	for (auto i = 0; i < v.size(); i++) o.write((char*)&v[i], s);
 }
 
 
@@ -105,17 +102,17 @@ template<typename T> void write(std::stringstream& o, const std::vector<T>& v)
 // *****************************************************************************
 
 //______________________________________________________________________________
-template<typename T> void read(std::stringstream& o, T& v)
+template<typename T> void inline read(std::stringstream& o, T& v)
 {
 	/*! Read from stream, default types. */
 	o.read((char*)&v, sizeof(v));
 }
 
 //______________________________________________________________________________
-template<> inline void read<std::string>(std::stringstream& o, std::string& s)
+template<> void inline read<std::string>(std::stringstream& o, std::string& s)
 {	
 	/*! Read from stream, string type. */
-	Uint64 l = 0;				
+	size_t l = 0;
 	o.read((char*)&l, sizeof(l));	// Reads the length of the string.
 	char* swap = new char[l];
 	o.read(swap, l);				// Reads the string characters.
@@ -124,17 +121,18 @@ template<> inline void read<std::string>(std::stringstream& o, std::string& s)
 }
 		
 //______________________________________________________________________________
-template<typename T> void read(std::stringstream& o, std::vector<T>& v)
+template<typename T> void inline read(std::stringstream& o, std::vector<T>& v)
 {
 	/*! Read from stream, vector of default types. */
 	size_t s = sizeof(T);			// Size of the vector elements.
-	Uint64 l = 0;					// Length of the vector
+	size_t l = 0;			// Length of the vector
 	o.read((char*)&l, sizeof(l));	// Reads the length of the vector.
-	for (Uint64 i = 0; i < l; i++) {
+	for (size_t i = 0; i < l; i++) {
 		v.push_back(0);
 		o.read((char*)&v[i], s);
 	}
 }
+
 
 
 // *****************************************************************************
@@ -142,29 +140,29 @@ template<typename T> void read(std::stringstream& o, std::vector<T>& v)
 // *****************************************************************************
 
 //______________________________________________________________________________
-template<typename T> void rw(std::stringstream& o, const T& v, const bool& read)
+template<typename T> void inline rw(std::stringstream& o, T& v, const bool& rd)
 {
 	/*! Read/Write from/to stream, default types. */
-	(read) ? read<T>(o, (T&)v) : 
-			 write<T>(o, (T&)v);
+	(rd) ?	read<T>(o, v) : 
+			write<T>(o, v);
 }
 
 //______________________________________________________________________________
-template<> inline void rw<std::string>(std::stringstream& o, const std::string& s, 
-									   const bool& read)
+template<> void inline rw<std::string>(std::stringstream& o, std::string& s,
+									   const bool& rd)
 {
 	/* Read/Write from/to stream, string type. */
-	(read) ? read<std::string>(o, (std::string&)s) : 
-			 write<std::string>(o, (std::string&)s);
+	(rd) ?	read< std::string >(o, s) : 
+			write< std::string >(o, s);
 }
 
 //______________________________________________________________________________
-template<typename T> void rw(std::stringstream& o, const std::vector<T>& v,
-							 const bool& read)
+template<typename T> void inline rw(std::stringstream& o, std::vector<T>& v,
+									const bool& rd)
 {
 	/* Read/Write from/to stream, vector of standard types. */
-	(read) ? read<std::vector<T> >(o, (std::vector<T>&)s) : 
-			 write<std::vector<T> >(o, (std::vector<T>&)s);
+	(rd) ?	read< std::vector<T> >(o, v) : 
+			write< std::vector<T> >(o, v);
 }
 
 

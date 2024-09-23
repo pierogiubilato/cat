@@ -6,7 +6,7 @@
 //______________________________________________________________________________
 // [File name]		"afTimer.h"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.0"
+// [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
 // [Date]			"20 Sep 2024"
 // [Language]		"c++"
@@ -83,7 +83,7 @@ class timer //: public AF
 		{
 			// Store the current time.
 			#if defined(_WIN32) || defined(_WIN64)
-				QueryPerformancecounter(&_timing.count);
+				QueryPerformanceCounter(&_timing.count);
 				_startTimeUS = _timing.count.QuadPart * (1000000.0 / _timing.frequency.QuadPart);
 			#else
 				gettimeofday(&_timing.count, NULL);
@@ -99,7 +99,7 @@ class timer //: public AF
 		{
 			// Grab the current time.
 			#if defined(_WIN32) || defined(_WIN64)
-				QueryPerformancecounter(&_timing.count);
+				QueryPerformanceCounter(&_timing.count);
 				_endTimeUS = _timing.count.QuadPart * (1000000.0 / _timing.frequency.QuadPart);
 			#else
 				gettimeofday(&_timing.count, NULL);
@@ -116,7 +116,7 @@ class timer //: public AF
 		{
 			// Reset timing counters.
 			#if defined(_WIN32) || defined(_WIN64)
-				QueryPerformancefrequency(&_timing.frequency);
+				QueryPerformanceFrequency(&_timing.frequency);
 				_timing.count.QuadPart = 0;
 			#else
 				_timing.count.tv_sec = _timing.count.tv_usec = 0;
@@ -137,7 +137,7 @@ class timer //: public AF
 			// Grab timing on the fly if not stopped.
 			if(!_stopped) {
 				#if defined(_WIN32) || defined(_WIN64)
-					QueryPerformancecounter(&_timing.count);
+					QueryPerformanceCounter(&_timing.count);
 					_endTimeUS = _timing.count.QuadPart * (1000000.0 / _timing.frequency.QuadPart);
 				#else
 					gettimeofday(&_timing.count, NULL);

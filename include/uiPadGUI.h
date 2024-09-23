@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -95,11 +95,11 @@ class padGUI //: public UI
 		void updateBarView();							//!< Updates the view bar.
 		void updateBarSpot(const bool&);				//!< Updates the popup view bar.
 		void updateBarScene();							//!< Updates the scene bar.
-		void updateBarGP(GPHnd gpHnd = 0);				//!< Updates the GP bar.
+		void updateBarGP(gp::GPHnd gpHnd = 0);			//!< Updates the GP bar.
 		void updateBarHelp();							//!< Updates the help bar.
 		void updateMouse();								//!< Updates the mouse.	
 
-		// Layoutting.
+		// Layout functions.
 		Uint32 layoutGet() const;						//!< Get current layout mode.
 		void layoutSet(const Uint32& mode = 0);			//!< Set/Update layout/mode.
 		void layoutSet2(const Uint32& snap = 10);		//!< Set/Update layout/mode.
@@ -107,7 +107,7 @@ class padGUI //: public UI
 		// Events handlers.
 		bool evnBar(SDL_Event evn);						//!< Handles Bar events.
 		bool evnMouse(SDL_Event);						//!< Handles mouse events.
-		bool evnSelect(const std::vector<GPHnd>&);		//!< External selection events.
+		bool evnSelect(const std::vector<gp::GPHnd>&);	//!< External selection events.
 
 		//! Reference to mouse arc ball status.
 		cat::ui::mouseBall& mouseBall() {return _mArcBall;}

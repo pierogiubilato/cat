@@ -8,17 +8,23 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"16 Sep 2024"
-// [Language]		"C++"
+// [Date]			"20 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
 #if !defined uiWindow_H
 #define uiWindow_H
 
-// Application components
-#include <ui.h>
+// STL.
+#include <string>
 
+// GLAD bindings. To be included BEFORE SDL.
+#include "glad.h"
+
+// SDL library.
+#include "SDL.h"
+//#include "SDL_opengl.h"
 
 // #############################################################################
 // Open namespaces
@@ -31,17 +37,16 @@ namespace cat { namespace ui {
  *
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 16 Sep 2024
+ *	\date 20 Sep 2024
  */
 //______________________________________________________________________________
-class window: public ui 
+class window //: public ui 
 {
 	private:
 		
 		// General window properties
 		int _width;
-		int _H
-			height;
+		int _height;
 		bool _resized;
 		std::string _title;
 		SDL_Window* _window;

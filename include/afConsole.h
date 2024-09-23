@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"C++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -63,17 +63,19 @@
 #ifndef afConsole_H
 #define afConsole_H
 
+// STL.
+#include <ostream>
+
 
 // All subsequent statements are valid for Windows systems
 // _____________________________________________________________________________
 #if defined(_WIN32) || defined(_WIN64)
-//#ifdef PEAR_WIN
 	
 	// This library calls many others windows libs.
 	#ifndef _WINDOWS_
 		#include <windows.h>
 	#endif
-		
+
 	// Color constants definitions
 	enum COL {
 		FG		= 0,

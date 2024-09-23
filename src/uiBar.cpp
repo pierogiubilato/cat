@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"08 Aug 2012"
+// [Date]			"21 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -31,17 +31,17 @@ namespace cat { namespace ui {
 bar::bar() //: _TwBar(0)
 {
 	/*! Default ctor. */
-	_Group.clear();
-	_GroupOld.clear();
+	_group.clear();
+	_groupOld.clear();
 }
 
 //______________________________________________________________________________
-bar::bar(TwBar* twBar): _TwBar(twBar)
-{
-	/*! Constructor with a TwBar reference. */
-	_Group.clear();
-	_GroupOld.clear();
-}
+//bar::bar(TwBar* twBar): _TwBar(twBar)
+//{
+//	/*! Constructor with a TwBar reference. */
+//	_group.clear();
+//	_groupOld.clear();
+//}
 
 //______________________________________________________________________________
 bar::~bar() 
@@ -60,113 +60,113 @@ bar::~bar()
 // *****************************************************************************
 
 //______________________________________________________________________________
-void bar::Clear()
+void bar:cClear()
 {
 	/*! Clear the TwBar from all components (var, groups, buttons,...) */
 //	TwRemoveAllVars(_TwBar);
-	_Group.clear();
+	_group.clear();
 }
 
 //______________________________________________________________________________
-void bar::StatusSave()
+void bar::statusSave()
 {
 	/*! Save the current status (the abstract one, not the one of the underlying 
 	 *	TwBar) for later use. The status is saved ONLY if there is at least one
 	 *	registered group, otherwise the currently saved status will remain. */
-	if (_Group.size()) _GroupOld = _Group;
+	if (_group.size()) _groupOld = _group;
 }
 
 //______________________________________________________________________________
-void bar::StatusLoad()
+void bar::statusLoad()
 {
 	/*! Load the saved abstract status. It does NOT apply the loaded status
-	 *	to the liked TwBar. To enforce that call StatusSet afther this call.
+	 *	to the liked TwBar. To enforce that call StatusSet after this call.
 	 *	The load will happen ONLY if a saved status is actually present. */
-	if (_GroupOld.size()) _Group = _GroupOld; 
+	if (_groupOld.size()) _group = _groupOld; 
 }
 
 //______________________________________________________________________________
-void bar::StatusGet()
+void bar::statusGet()
 {
 	/*! Retrieve the current status of the underlying TwBar. It saves all the 
 	 *	present groups and their present status (open, visible, ...). */
-	for (size_t i = 0; i < _Group.size(); i++) {
-//		TwGetParam(_TwBar, _Group[i].name.c_str(), "opened", TW_PARAM_INT32, 1, &_Group[i].open);	
+	for (size_t i = 0; i < _group.size(); i++) {
+//		TwGetParam(_TwBar, _group[i].name.c_str(), "opened", TW_PARAM_INT32, 1, &_group[i].open);	
 	}
 }
 
 //______________________________________________________________________________
-void bar::StatusSet()
+void bar::statusSet()
 {
 	/*! Apply the last stored status to the underlying TwBar. It tryes to 
 	 *	match the stored groups and, in case of matches, put them in the stored
 	 *	status (open, active, ...). */
-	for (size_t i = 0; i < _Group.size(); i++) {
-//		TwSetParam(_TwBar, _Group[i].name.c_str(), "opened", TW_PARAM_INT32, 1, &_Group[i].open);	
+	for (size_t i = 0; i < _group.size(); i++) {
+//		TwSetParam(_TwBar, _group[i].name.c_str(), "opened", TW_PARAM_INT32, 1, &_group[i].open);	
 	}
 }
 
 //______________________________________________________________________________
-void bar::StatusMatch()
+void bar::statusMatch()
 {
 	/*! Try to match the status of the current Bar with the saved one. This 
 	 *	function does NOT apply the resulting status to the linked TwBar. To
 	 *	enforce that call the StatusSet() function after this call. 
 	 */
-	for (size_t i = 0; i < _GroupOld.size(); i++) {
-		for (size_t j = 0; j < _Group.size(); j++) {
-			if (_GroupOld[i].name == _Group[j].name) {
-				_Group[j] = _GroupOld[i];
+	for (size_t i = 0; i < _groupOld.size(); i++) {
+		for (size_t j = 0; j < _group.size(); j++) {
+			if (_groupOld[i].name == _group[j].name) {
+				_group[j] = _groupOld[i];
 			}
 		}
 	}
 }
  
 //______________________________________________________________________________
-void bar::StatusMatch(const Bar& ref)
+void bar::statusMatch(const bar& ref)
 {
 	/*! Try to match the status of the current Bar with the one of the passed
 	 *	\c bar reference. This function does NOT apply the resulting status to 
 	 *	the linked TwBar. To enforce that call the StatusSet() function after 
 	 *	this call. 
 	 */
-	for (size_t i = 0; i < ref._Group.size(); i++) {
-		for (size_t j = 0; j < _Group.size(); j++) {
-			if (ref._Group[i].name == _Group[j].name) {
-				_Group[j] = ref._Group[i];
+	for (size_t i = 0; i < ref._group.size(); i++) {
+		for (size_t j = 0; j < _group.size(); j++) {
+			if (ref._group[i].name == _group[j].name) {
+				_group[j] = ref._group[i];
 			}
 		}
 	}
 }
 
 //______________________________________________________________________________
-void bar::StatusDump()
+void bar::statusDump()
 {
 	/*! Dump the current bar status (mostly a debug routine). */
-	for (size_t i = 0; i < _Group.size(); i++) {
-		std::cout << _Group[i].name << ": " << _Group[i].open << "\n";	
+	for (size_t i = 0; i < _group.size(); i++) {
+		std::cout << _group[i].name << ": " << _group[i].open << "\n";	
 	}
 }
 
 //______________________________________________________________________________
-void bar::GroupAdd(const std::string& name, const int& enable, const int& open)
+void bar::groupAdd(const std::string& name, const int& enable, const int& open)
 {
 	/*! Add a group to the current bar, setting its name and its status. */
-	_Group.push_back(BarGroup(name, enable, open));
+	_group.push_back(barGroup(name, enable, open));
 }
 
 //______________________________________________________________________________
-void bar::GroupAdd(const std::string& name, const int& enable)
+void bar::groupAdd(const std::string& name, const int& enable)
 {
 	/*! Add a group to the current bar, setting its name and its status. */
-	_Group.push_back(BarGroup(name, enable, false));
+	_group.push_back(barGroup(name, enable, false));
 }
 
 //______________________________________________________________________________
-void bar::GroupAdd(const std::string& name)
+void bar::groupAdd(const std::string& name)
 {
 	/*! Add a group to the current bar, setting its name and its status. */
-	_Group.push_back(BarGroup(name, true, false));
+	_group.push_back(barGroup(name, true, false));
 }
 
 
@@ -194,7 +194,7 @@ void bar::GroupAdd(const std::string& name)
 //}
 
 //______________________________________________________________________________
-void bar::SortByXY(const std::vector<Bar>& barList, std::vector<Bar>& barSorted)
+void bar::sortByXY(const std::vector<bar>& barList, std::vector<bar>& barSorted)
 {
 	/*	Sorts a given \c 'barList' of Bar objects by their x and y position,
 	 *	using the western standard of (x <, y <) ordering. Returns the ordered
@@ -203,56 +203,56 @@ void bar::SortByXY(const std::vector<Bar>& barList, std::vector<Bar>& barSorted)
 	 *	Only NON iconified bars are considered by this routine.
 	 */
 
-	// Position pivots.
-	Uint32* pos	= new Uint32[barList.size() * 2];
-	
-	// Retrieves bars position.
-	for (int i = 0; i < barList.size(); i++) {
-//		TwGetParam(barList[i]._TwBar, NULL, "position", TW_PARAM_INT32, 2, &pos[i * 2]);
-	}
-	
-	// Consider the non-iconified and visible bars only.
-	std::vector<int> barIdx;
-	for (int i = 0; i < barList.size(); i++) {
-			
-		// Get bar iconification status.
-		Uint32 icon, visible = 0;
-//		TwGetParam(barList[i]._TwBar, NULL, "iconified", TW_PARAM_INT32, 1, &icon);
-//		TwGetParam(barList[i]._TwBar, NULL, "visible", TW_PARAM_INT32, 1, &visible);
-		
-		// Bar is on full display, consider it!
-		if (!icon && visible) {
-			//std::cout << "Added bar TwIdx: " << i << "\n";
-			barIdx.push_back(i);
-		}
-	}
-
-	// Orders the bar by left-top order.
-	bool swapped = true;
-	while (swapped) {
-		
-			// Reset swapping.
-			swapped = false;
-		
-			// Swapping cycle
-			for (int i = 1; i < barIdx.size(); i++) {
-			
-				// Get references.
-				int xA = barIdx[i - 1] * 2 + 0; int yA = barIdx[i - 1] * 2 + 1;
-				int xB = barIdx[i] * 2 + 0; int yB = barIdx[i] * 2 + 1;
-		
-				// Check and swap in case.
-				if ((pos[xA] > pos[xB]) || (pos[xA] == pos[xB] && pos[yA] > pos[yB])) {
-					int swap = barIdx[i];
-					barIdx[i] = barIdx[i - 1];
-					barIdx[i - 1] = swap;
-					swapped = true;
-				}
-		}
-	}
-
-	// Fills the output vector.
-	for (unsigned int i = 0; i < barIdx.size(); i++) barSorted.push_back(barList[barIdx[i]]); 
+//	// Position pivots.
+//	Uint32* pos	= new Uint32[barList.size() * 2];
+//	
+//	// Retrieves bars position.
+//	for (int i = 0; i < barList.size(); i++) {
+////		TwGetParam(barList[i]._TwBar, NULL, "position", TW_PARAM_INT32, 2, &pos[i * 2]);
+//	}
+//	
+//	// Consider the non-iconified and visible bars only.
+//	std::vector<int> barIdx;
+//	for (int i = 0; i < barList.size(); i++) {
+//			
+//		// Get bar iconification status.
+//		Uint32 icon, visible = 0;
+////		TwGetParam(barList[i]._TwBar, NULL, "iconified", TW_PARAM_INT32, 1, &icon);
+////		TwGetParam(barList[i]._TwBar, NULL, "visible", TW_PARAM_INT32, 1, &visible);
+//		
+//		// Bar is on full display, consider it!
+//		if (!icon && visible) {
+//			//std::cout << "Added bar TwIdx: " << i << "\n";
+//			barIdx.push_back(i);
+//		}
+//	}
+//
+//	// Orders the bar by left-top order.
+//	bool swapped = true;
+//	while (swapped) {
+//		
+//			// Reset swapping.
+//			swapped = false;
+//		
+//			// Swapping cycle
+//			for (int i = 1; i < barIdx.size(); i++) {
+//			
+//				// Get references.
+//				int xA = barIdx[i - 1] * 2 + 0; int yA = barIdx[i - 1] * 2 + 1;
+//				int xB = barIdx[i] * 2 + 0; int yB = barIdx[i] * 2 + 1;
+//		
+//				// Check and swap in case.
+//				if ((pos[xA] > pos[xB]) || (pos[xA] == pos[xB] && pos[yA] > pos[yB])) {
+//					int swap = barIdx[i];
+//					barIdx[i] = barIdx[i - 1];
+//					barIdx[i - 1] = swap;
+//					swapped = true;
+//				}
+//		}
+//	}
+//
+//	// Fills the output vector.
+//	for (unsigned int i = 0; i < barIdx.size(); i++) barSorted.push_back(barList[barIdx[i]]); 
 }
 		
 // #############################################################################

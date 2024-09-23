@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // CAT Graphics User Interface (GUI) user interface pad class                 --
-// (C) Piero Giubilato 2011-2024, University of Padova                        --
+// (C) Piero Giubilato 2011-2024, Padova University		                      --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -16,28 +16,34 @@
 #if !defined uiPad_H
 #define uiPad_H
 
+// SDL library (used to create the window).
+#include "SDL.h"
+
+// GLAD bindings (used to manage the display frame buffers).
+#include "glad.h"
+
 // Application Components
-#include "ui.h"
-//#include "uiWindow.h"
+//#include "ui.h"
+#include "uiWindow.h"
 #include "gpScene.h"
-//#include "uiPadGUI.h"
-//#include "uiPadGL.h"
-//#include "uiView.h"
-//#include "afTimer.h"
+#include "uiPadGUI.h"
+#include "uiPadGL.h"
+#include "uiView.h"
+#include "afTimer.h"
 
 // AntTweakBar
 //#include "AntTweakBar/AntTweakBar.h"
 
 
 // #############################################################################
-namespace pear { namespace ui {
+namespace cat { namespace ui {
 
 //! Basic graphic interface
-/*! A pear::ui::Pad handles a graphic display, an OpenGL layer and also manages 
- *	the user interaction. It uses a pear::Window class as base window, and it 
- *	puts an OpeGL viewport on it. Events management is handled through the SDL
+/*! A cat::ui::pad handles a graphic display, an OpenGL layer and also manages 
+ *	the user interaction. It uses a cat::Window class as base window, and it 
+ *	puts an OpenGL viewport on it. Events management is handled through the SDL
  *	routines.
- *	The Pad hosts a vector of gps::scene, with the number 0 used as a pivot 
+ *	The pad hosts a vector of gp::scene, with the number 0 used as a pivot 
  *	element made equal to the actually displayed one.
  *
  *	\author Piero Giubilato
@@ -49,22 +55,22 @@ class pad
 	private:
 	
 		// The personal timer used to check speed.
-		//pear::af::timer _tmrTimer;
-		//pear::af::timer _tmrTimer2;
+		af::timer _tmrTimer;
+		af::timer _tmrTimer2;
 		Uint32 _tmrCycle;
 		Uint32 _tmrCycleCount;
 
 		// OpenGL status.
-		//GLint _glAuxFrameBufCount;		// Available auxiliary frame buffers.
-		//GLuint _glFrameBuffer[10];		// Specific frame buffers.
-		//GLuint _glRenderBuffer[10];		// Specific render buffers.
+		GLint _glAuxFrameBufCount;		// Available auxiliary frame buffers.
+		GLuint _glFrameBuffer[10];		// Specific frame buffers.
+		GLuint _glRenderBuffer[10];		// Specific render buffers.
 		
 		// Initializations functions.
-		bool initWindow(const char* title, const bool& r);
+		bool initWindow(const char* title, const bool& r) const;
 		bool initOpenGL();
 		void initInfo() const;
 
-		// Misc functions.
+		// Miscellanea functions.
 		void titleDraw(const double& timing = 0);
 		
 	protected:
@@ -72,13 +78,13 @@ class pad
 	public:
 	
 		// Handles to the graphic elements.
-		//Window* _Window;
-		//SDL_GLContext _GLContext;
+		window* _window;
+		SDL_GLContext _GLContext;
 		//std::vector<TwBar*> _TwBar;
 		
 		// Modules
-		//pad_GUI* GUI;							//!< Pad's personal user interface.
-		//pad_GL* GL;								//!< Pad's personal raster drawing primitives.
+		padGUI* _GUI;							//!< Pad's personal user interface.
+		padGL* _GL;								//!< Pad's personal raster drawing primitives.
 
 		// Status and properties
 		Uint64 _idx;							// Main loop assigned identifier.
@@ -89,13 +95,13 @@ class pad
 		// The hosted scene(s)
 		Uint64 _sceneIdx;						// The current scene Idx.
 		std::vector<cat::gp::scene*> _scene;	// The scene database.		
-//		std::vector<view*> _view;				// The scene(s) view(s).						
-		Uint64 _gpsCount;						// Number of GPs in the currently selected scene.
-		Uint64 _gpsSize;						// Total size of the GPs in the currently selected scene.
+		std::vector<view*> _view;				// The scene(s) view(s).						
+		Uint64 _GPsCount;						// Number of GPs in the currently selected scene.
+		Uint64 _GPsSize;						// Total size of the GPs in the currently selected scene.
 	
 		// Drawing/Selection status
 		static const int _selBufferSize = 1024;	// Selection buffer size.
-		//GLuint _selBuffer[_selBufferSize];	// Selection buffer.
+		GLuint _selBuffer[_selBufferSize];	// Selection buffer.
 		unsigned int _selHits;					// Selection hits.
 		std::vector<cat::gp::GPHnd> _selGPHnd;	// The select primitive/s handle/s.
 		bool _selForceRedraw;					// Force redraw due to selection.
@@ -112,16 +118,16 @@ class pad
 		
 		// Selection.
 		void selClear();							//!< Clear any selection.
-		void selAdd(const cat::gp::GPHnd&);			//!< Add a GP to the selection.
-		void selAdd(const std::vector<cat::gp::GPHnd>&);	//!< Add a list of GPs to the selection.
+		void selAdd(const gp::GPHnd&);				//!< Add a GP to the selection.
+		void selAdd(const std::vector<gp::GPHnd>&);	//!< Add a list of GPs to the selection.
 		void selShow();								//!< Highlight the GPS in the selection vector.
 
 		// Scene(s) management.
 		Uint64 sceneCount();						//!< The number of hosted scenes.
-		cat::gp::scene* sceneGet(cat::gp::GPHnd = 0);	//!< The hosted scene access.
-		cat::gp::GPHnd sceneAdd(cat::gp::scene*);	//!< Sets ownership over a new scene.
-		void sceneDel(cat::gp::GPHnd);				//!< Delete a owned scene.
-		void sceneSel(cat::gp::GPHnd);				//!< Select the active scene.
+		gp::scene* sceneGet(gp::GPHnd = 0);			//!< The hosted scene access.
+		gp::GPHnd sceneAdd(gp::scene*);				//!< Sets ownership over a new scene.
+		void sceneDel(gp::GPHnd);					//!< Delete a owned scene.
+		void sceneSel(gp::GPHnd);					//!< Select the active scene.
 				
 		// Pad management.
 		void run(const bool& openLoop = false);		//!< Runs the pad.

@@ -8,28 +8,28 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
-// [Language]		"C++"
+// [Date]			"20 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
 #if !defined acMain_H
 #define acMain_H
 
-// Fixed data type are from SDL, so include it.
-#include <SDL.h>
+// STL.
+#include <string>
 
-// Linear algebra is provided by the GLM library.
-#include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
-   
+// SDL (used also for numeric types).
+//#include "SDL.h"
+//#include "SDL_opengl.h"
+
 // Application globals
 #include "acGlobal.h"
 
+
+
 // Personalized streams are spread through all the application.
-#include "afStream.h"
+//#include "afStream.h"
 
 
 // #############################################################################
@@ -39,7 +39,7 @@ namespace cat {
 	namespace ag {
 
 		// Miscellanea.
-		extern Uint32 _verbose;			//!< Verbosity level.
+		extern int _verbose;			//!< Verbosity level.
 	
 		// Startup switches.
 		extern bool _stupShowInfo;		//!< Show general info.
@@ -51,8 +51,8 @@ namespace cat {
 		extern std::string _pathFonts;	//!< The font directory path.
 	
 		// Screen.
-		extern Uint32 _screenDPIX;		//!< The screen resolution.
-		extern Uint32 _screenDPIY;		//!< The screen resolution.
+		extern int _screenDPIX;		//!< The screen resolution.
+		extern int _screenDPIY;		//!< The screen resolution.
 	} 
 	
 	// Application Core (AC) services.

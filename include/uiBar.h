@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -41,13 +41,13 @@ class barGroup: public UI
 		int open;													 
 	
 	//! Name ctor.
-	BarGroup(const std::string& s): name(s), enable(1), open(1) {};
+	barGroup(const std::string& s): name(s), enable(1), open(1) {};
 	
 	//! Name and enable ctor.
-	BarGroup(const std::string& s, const int& e): name(s), enable(e), open(1) {};
+	barGroup(const std::string& s, const int& e): name(s), enable(e), open(1) {};
 	
 	//! Name, enable and open ctor.
-	BarGroup(const std::string& s, const int& e, const int& o): name(s), enable(e), open(o) {};
+	barGroup(const std::string& s, const int& e, const int& o): name(s), enable(e), open(o) {};
 };
 
 //______________________________________________________________________________
@@ -57,19 +57,19 @@ class barGroup: public UI
  *
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 09 Aug 2011
+ *	\date 21 Sep 2024
  */
 class bar: public UI 
 {
 	private:
 
-		std::vector<BarGroup> _GroupOld;	// Old groups container.
+		std::vector<barGroup> _groupOld;	// Old groups container.
 
 	public:
 		
 		// Storage elements.
 //		TwBar* _TwBar; 
-		std::vector<BarGroup> _Group;		// Bar groups container.
+		std::vector<barGroup> _group;	// Bar groups container.
 	
 		// Special members.
 		bar();
@@ -77,28 +77,28 @@ class bar: public UI
 		~bar();
 
 		// Bar commands.
-		void Clear();					//!< Clear the bars from all components.
+		void clear();					//!< Clear the bars from all components.
 
 		// Status commands.
-		void StatusSave();				//!< Saves the current status.
-		void StatusLoad();				//!< Makes the saved status current.
-		void StatusGet();				//!< Get the current TwBar status.
-		void StatusSet();				//!< Set the current status to the TwBar.
-		void StatusDump();				//!< Dump the current bar status.
-		void StatusMatch();				//!< Match the bar status with the saved one.
-		void StatusMatch(const Bar&);	//!< Match the bar status with a reference.
+		void statusSave();				//!< Saves the current status.
+		void statusLoad();				//!< Makes the saved status current.
+		void statusGet();				//!< Get the current TwBar status.
+		void statusSet();				//!< Set the current status to the TwBar.
+		void statusDump();				//!< Dump the current bar status.
+		void statusMatch();				//!< Match the bar status with the saved one.
+		void statusMatch(const bar&);	//!< Match the bar status with a reference.
 
 		//! Adds a group (name only).
-		void GroupAdd(const std::string& name);
+		void groupAdd(const std::string& name);
 		
 		//! Adds a group (name and enable status). 
-		void GroupAdd(const std::string& name, const int& enable);
+		void groupAdd(const std::string& name, const int& enable);
 		
 		//! Adds a group (name plus enable and open status). 
-		void GroupAdd(const std::string& name, const int& enable, const int& open);	
+		void groupAdd(const std::string& name, const int& enable, const int& open);	
 
 		// GUI utilities.
-		static void SortByXY(const std::vector<Bar>&, std::vector<Bar>&);
+		static void sortByXY(const std::vector<bar>&, std::vector<bar>&);
 //		static TwBar* PickTop();
 
 };

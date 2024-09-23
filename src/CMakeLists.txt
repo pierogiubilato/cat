@@ -22,48 +22,49 @@ endif()
 #	"src/hit.cpp"      "include/hit.hpp"
 #)
 
-
-# CAT build - Main application target executable.
+# ----------------------------------------------------------------------------------------------------------------------
+# BUILDING - Main application target executable.
 # ----------------------------------------------------------------------------------------------------------------------
 
 
 # The main target executable.
 add_executable (cat 
-
-	"../src/acMain.cpp"		"../include/acMain.h"
-	"../src/acLoop.cpp"		"../include/acLoop.h"
-	"../src/acServer.cpp"	"../include/acServer.h"
+	"../src/acMain.cpp"
+	#"../src/acLoop.cpp"
+	#"../src/acServer.cpp"
+	#"../src/uiPad.cpp"
+	#"../src/uiWindow.cpp"
+	#"../src/uiSplash.cpp"
 )
 
 # Add its own sources to this project's executable.
-target_include_directories(cat PRIVATE "../include")
+target_include_directories(cat PRIVATE "../include/")
 
 # The SDL library is used by the CAT application, but build independently.
-target_include_directories(cat PRIVATE "../lib/SDL/include/SDL3")
+target_include_directories(cat PRIVATE "../lib/SDL/include/SDL3/")
 
 # The SDL_net library is built within the CAT application. Check which
 # actual path to include depending on the used branch (SDL2 or Main)
 #target_include_directories(cat PRIVATE "../lib/SDL_net/include")
-target_include_directories(cat PRIVATE "../lib/SDL_net/include/SDL3_net")
+target_include_directories(cat PRIVATE "../lib/SDL_net/include/SDL3_net/")
 
 # The GLAD OpenGL loader facility is included into the main server build.
 # Check and update it accordingly to the standard evolution.
-target_include_directories(cat PRIVATE "../lib/glad/include/glad")
+target_include_directories(cat PRIVATE "../lib/glad/include/")
+target_include_directories(cat PRIVATE "../lib/glad/include/glad/")
 
 # The GLM lilbary (Open GL math) is used for all 3D calculations.
-target_include_directories(cat PRIVATE "../lib/glm")
+target_include_directories(cat PRIVATE "../lib/glm/")
 
 # The FreetYpe lilbary is used to handle fonts. It is used
 # as pre-built binaries, so make sure to link accordingly
 # the environment you compile within.
-target_include_directories(cat PRIVATE "../lib/freetype/include")
-
+target_include_directories(cat PRIVATE "../lib/freetype/include/")
 
 # CAT server final executable sources.
-target_sources(cat PRIVATE 
+#target_sources(cat PRIVATE 
 	#"../src/acMain.cpp"		"../include/acMain.h"
-
-)
+#)
 
 # Dear ImGUI is built within the CAT application.
 target_include_directories(cat PRIVATE "../lib/imgui/")
@@ -82,11 +83,24 @@ target_sources(cat PRIVATE
 	"../lib/imgui/backends/imgui_impl_sdlrenderer3.cpp" "../lib/imgui/backends/imgui_impl_sdlrenderer3.h"
 )
 
-# CAT link - Link the application to externally built libraries (see the '../lib/CMakeLists.txt' for details).
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# LINKING - Link the application to externally built libraries (see the '../lib/CMakeLists.txt' for details).
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Add link to externally built libraries.
+
+# Add link to externally built libraries.
+message(STATUS "CAT: defining SDL own-built library dependencies...")
 target_link_libraries(cat PRIVATE SDL)
+
+
+# FreeType library
+message(STATUS "CAT defining FreeType pre-compiled library dependencies...")
+# TODO: pre-compiled library selection based on system
+target_link_libraries(cat PRIVATE freetype)
+
 
 
 # CMake version check.

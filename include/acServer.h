@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -19,13 +19,15 @@
 // Application components
 //#include "ac.h"
 
-// SDL tcp/ip services. 
-#include "SDL_net.h"
-
 // Standard components.
+#include <vector>
+#include <string>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <sstream>
+
+// SDL tcp/ip services. 
+#include "SDL_net.h"
 
 
 // #############################################################################
@@ -42,8 +44,8 @@ namespace cat { namespace ac {
  *	cat_Client.h file.   
  *
  *	\author Piero Giubilato
- *	\version 1.q
- *	\date 19 Sep 2024
+ *	\version 1.1
+ *	\date 20 Sep 2024
  */
 //______________________________________________________________________________
 class server 

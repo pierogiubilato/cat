@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -17,8 +17,12 @@
 #if !defined geCoord_H
 #define geCoord_H
  
+// STL.
+#include<iomanip>
+
 // Application components
 #include "ge.h"
+#include "afConsole.h"
 
 // The coordinate storage precision. Use the most suitable data type.
 #define GECP float
@@ -65,7 +69,7 @@ class coord: public GE
 		virtual ~coord();								//!< Standard Dtor.
 			
 		// Default access public members.
-		Uint64 type() const;							//!< Returns GP type.
+		oType type() const;								//!< Returns GP type.
 		Uint64 version() const;							//!< Returns GP version.
 		std::string stem() const;						//!< Returns GP stem name.
 		size_t size() const;							//!< Returns GP size in bytes.
@@ -75,7 +79,7 @@ class coord: public GE
 		bool stream(std::stringstream& o, const bool& read = false);
 		
 		// Specific support members.
-		unsigned char coord::precisionGet() const;		//!< Retrieves dump precision.
+		unsigned char precisionGet() const;				//!< Retrieves dump precision.
 
 		// Operator=
 		coord& operator = (const coord&);				//<! Copy operator.
@@ -132,7 +136,7 @@ class coord: public GE
 		// Binary arithmetic operators for coord<U>
 		coord friend operator + (const coord& lo, const coord& ro) {return coord(lo) += ro;}	//<! + operator with coord.
 		coord friend operator - (const coord& lo, const coord& ro) {return coord(lo) -= ro;}		//<! - operator with coord.
-		double friend operator * (const coord& lo, const coord& ro) {return lo.Dot(ro);}		//<! * Scalar products.
+		double friend operator * (const coord& lo, const coord& ro) {return lo.dot(ro);}		//<! * Scalar products.
 	
 		// Magnitudes
 		double mag2() const;						//!< Returns the magnitude square.
@@ -219,7 +223,7 @@ class point: public coord
 		point(const point& p):coord(p) {;}
 		point(const coord& c):coord(c) {;}
 		point(const double& s):coord(s) {;}
-		Uint64 type() const {return ktype::point;}
+		oType type() const {return oType::gePoint;}
 		std::string stem() const {return "Point";}
 };
 
@@ -240,7 +244,7 @@ class vector: public coord
 		vector(const point& p):coord(p) {;}
 		vector(const coord& c):coord(c) {;}
 		vector(const double& s):coord(s) {;}
-		Uint64 type() const {return ktype::vector;}
+		oType type() const {return oType::geVector;}
 		std::string stem() const {return "Vector";}
 };
 

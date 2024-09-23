@@ -8,9 +8,13 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"24 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
+
+// STL.
+#include <iostream>
+#include <stdexcept>
 
 // Application components
 #include "uiWindow.h"
@@ -41,25 +45,30 @@ window::window(const char* title, const int& w, const int& h, const bool& r,
 	Uint32 flag = SDL_WINDOW_OPENGL;
 	if (r) flag = flag | SDL_WINDOW_RESIZABLE;
 
-	// Check for start position.
-	int pX, pY;
-	if (x < 0) pX = SDL_WINDOWPOS_CENTERED;
-	if (y < 0) pY = SDL_WINDOWPOS_CENTERED;
+	// *** TO BE REMOVED *** Check for start position.
+	//int pX, pY;
+	//if (x < 0) pX = SDL_WINDOWPOS_CENTERED;
+	//if (y < 0) pY = SDL_WINDOWPOS_CENTERED;
+
+	// Setup Open GL correct version.
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 	// Set up the window.
-	_window = SDL_CreateWindow(title, pX, pY, w, h, flag);	
+	_window = SDL_CreateWindow(title, w, h, flag);
 	if (!_window) throw std::runtime_error("SDL_CreateWindow failed");
 
 	// Enable SDL handling unicode and key-repeat.
-//***	SDL_EnableUNICODE(1);
-//***	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+	//SDL_EnableUNICODE(1);
+	//SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 	
-
 	// Create a renderer.
-	_renderer = SDL_CreateRenderer(_window, 0, 0);
+	_renderer = SDL_CreateRenderer(_window, NULL);
 
 	// Create an OpenGL context.
-	init_OpenGL();
+	initOpenGL();
 
 	// Store values.
 	_width = w;
@@ -72,7 +81,7 @@ window::window(const char* title, const int& w, const int& h, const bool& r,
 window::~window() 
 {
 	/* Destroys the window and releases the allocated resources. */
-	SDL_GL_DeleteContext(_GLContext);
+	SDL_GL_DestroyContext(_GLContext);
 	SDL_DestroyRenderer(_renderer);
 	SDL_DestroyWindow(_window);
 }
@@ -82,26 +91,31 @@ window::~window()
 bool window::initOpenGL()
 {
 	/*! Creates the OpenGL context to be drawn on the SDL graphic window. */ 
-	
+
 	// Delete OpenGL Context in case.
-	if (_GLContext) SDL_GL_DeleteContext(_GLContext);
+	if (_GLContext) SDL_GL_DestroyContext(_GLContext);
 
 	// Create an OpenGL context for SDL.
 	_GLContext = SDL_GL_CreateContext(_window);
 	if (!_GLContext) throw std::runtime_error("SDL_GL_CreateContext failed");
 
-	// Set refresh interval to match the monitor one
+	// Set refresh interval to match the monitor one.
 	SDL_GL_SetSwapInterval(1);
-
+		
 	// Initialize the GL Extention Library.
-//	GLenum err = glewInit();
-//	std::cout << err << "\n";
-//	if (GLEW_OK != err) {
-//		std::cout << COL(PEAR_COL_ERROR) 
-//				  << "pear: GLEW initialization failed\n" 
-//				  << COL(DEFAULT);
-//		return true;
-//	}
+	//int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress(0));
+	int version = gladLoadGL();
+	//printf("GL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+	
+	// Initialize the GL Extention Library.
+	//GLenum err = gladLoadGL();
+	//std::cout << err << "\n";
+	//if (GLEW_OK != err) {
+	//	std::cout << COL(CAT_COL_ERROR) 
+	//			  << "cat: GLAD initialization failed\n" 
+	//			  << COL(DEFAULT);
+	//	return true;
+	//}
 
 	// Everything ok.
 	return false;
@@ -128,7 +142,7 @@ void window::swap()
 }
 
 //______________________________________________________________________________
-void Window::title(const std::string& title)
+void window::title(const std::string& title)
 {
 	/*! Sets the window title. */
 	_title = title; 

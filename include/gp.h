@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.3"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -111,31 +111,31 @@ class GP : public cat::CO
 {
 	public:
 
-		// The different GP (Graphic Primitive) types.
-		enum class ktype : Uint32 {
-			null = 0,
-			base = 1,
-			stroked = 2,	// | These are layer GPs, i.e. GPs 
-			filled = 4,		// | providing specific properties
-			fonted = 8,		// | to others GPS.
-			scene = 16,
-			frame = 32,
-			material = 64,
-			palette = 128,
-			point = 256,
-			line = 512,
-			polygon = 1024,
-			box = 2048,
-			tube = 4096,
-			cylinder = 8192,
-			cone = 16384,
-			sphere = 32768,
-			label = 65536
-			//131072,262144,524288, 1048576
-		};
+		//// The different GP (Graphic Primitive) types.
+		//enum class ktype : Uint32 {
+		//	null = 0,
+		//	base = 1,
+		//	stroked = 2,	// | These are layer GPs, i.e. GPs 
+		//	filled = 4,		// | providing specific properties
+		//	fonted = 8,		// | to others GPS.
+		//	scene = 16,
+		//	frame = 32,
+		//	material = 64,
+		//	palette = 128,
+		//	point = 256,
+		//	line = 512,
+		//	polygon = 1024,
+		//	box = 2048,
+		//	tube = 4096,
+		//	cylinder = 8192,
+		//	cone = 16384,
+		//	sphere = 32768,
+		//	label = 65536
+		//	//131072,262144,524288, 1048576
+		//};
 
 		//! Status mode constants.
-		enum class kmode : Uint32 {
+		enum class kMode : Uint32 {
 			null = 0,
 			visible = 1,	//! GP is visible.
 			frozen = 2,		//! GP is frozen.
@@ -147,7 +147,7 @@ class GP : public cat::CO
 		};
 
 		//! Inheritance mode constants.
-		enum class kinhr : Uint32 {
+		enum class kInhr : Uint32 {
 			null = 0,
 			enable = 1,		//! Inheritance On/Off.
 			visible = 2,	//! Inherits visibility status.
@@ -157,7 +157,7 @@ class GP : public cat::CO
 		};
 
 		// Alignment constants.
-		enum class kal : Uint32 {
+		enum class kAlign : Uint32 {
 			null = 0,
 			horLeft = 1,
 			horMid = 2,
@@ -181,7 +181,7 @@ class GP : public cat::CO
 		GP* build(const Uint64&) const;			//!< Builds a new GP object.	
 
 		// Default interface public members, overload cat::CO class.
-		Uint64 type() const;					//!< Returns GP type.
+		oType type() const;						//!< Returns GP object type.
 		Uint64 version() const;					//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		void dump(const Uint64 & = 0) const;	//!< Dumps GP data.

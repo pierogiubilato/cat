@@ -6,15 +6,15 @@
 //______________________________________________________________________________
 // [File name]		"uiPad.cpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.0"
+// [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
 // Application components
 #include "uiPad.h"
-//#include "uiSplash.h"
+#include "uiSplash.h"
 
 
 // #############################################################################
@@ -36,16 +36,16 @@ pad::pad(const Uint64& idx, const char* title, const bool& r): _idx(idx)
 	_title = title;	
 
 	// OpenGL status.
-//	_glAuxFrameBufCount = 0;
-//	for (int i = 0; i < 10; i++) {
-//		_glFrameBuffer[i] = 0;
-//		_glRenderBuffer[i] = 0;
-//	}
+	_glAuxFrameBufCount = 0;
+	for (int i = 0; i < 10; i++) {
+		_glFrameBuffer[i] = 0;
+		_glRenderBuffer[i] = 0;
+	}
 
 	// Timing.
-//	_tmrTimer.Reset();
-//	_tmrCycle = 0;
-//	_tmrCycleCount = 10;
+	_tmrTimer.reset();
+	_tmrCycle = 0;
+	_tmrCycleCount = 10;
 
 	// Here the pivot Scene (scene #0) is added. It is always assumed to be
 	// present, as all the controls in the pad link to it.
@@ -53,9 +53,9 @@ pad::pad(const Uint64& idx, const char* title, const bool& r): _idx(idx)
 	
 	// No scene and views present at startup.
 	_scene.clear();
-//	_view.clear();
+	_view.clear();
 	_scene.push_back(NULL); 
-//	_view.push_back(NULL);
+	_view.push_back(NULL);
 	
 	// Scene status.
 	_gpsCount = 0;
@@ -65,17 +65,17 @@ pad::pad(const Uint64& idx, const char* title, const bool& r): _idx(idx)
 	_selForceRedraw = false;
 	
 	// Init the window which hosts the pad.
-//	if (init_Window(title, r)) throw std::runtime_error("Window initialization failed.");
+	if (initWindow(title, r)) throw std::runtime_error("Window initialization failed.");
 	
 	// Init the OpenGL library.
-//	if (init_OpenGL()) throw std::runtime_error("OpenGL initialization failed.");
+	if (initOpenGL()) throw std::runtime_error("OpenGL initialization failed.");
 	
 	// Init the pad modules.
-//	GUI = new pad_GUI(this);
-//	GL = new pad_GL(this);
+	_GUI = new padGUI(this);
+	_GL = new padGL(this);
 
 	// Show startup info if requested.
-	//	if (cat::ag::_stupShowInfo) initInfo();
+	if (ag::_stupShowInfo) initInfo();
 }
 
 //______________________________________________________________________________
@@ -93,14 +93,14 @@ pad::~pad()
 	_scene[0] = 0;
 	
 	// Delete the associate modules.
-//	delete GUI;
-//	delete GL;
+	delete _GUI;
+	delete _GL;
 
 	// Release OpenGL framebuffers.
-//	if (GLEW_VERSION_3_0) {
-//		glDeleteFramebuffers(10, _glFrameBuffer);
-//		glDeleteRenderbuffers(10, _glFrameBuffer);
-//	}
+	if (GLEW_VERSION_3_0) {
+		glDeleteFramebuffers(10, _glFrameBuffer);
+		glDeleteRenderbuffers(10, _glFrameBuffer);
+	}
 
 	// Delete the pad graphic window.
 	delete _window;
@@ -112,7 +112,7 @@ pad::~pad()
 // *****************************************************************************
 
 //______________________________________________________________________________
-bool pad::initWindow(const char* title, const bool& r)
+bool pad::initWindow(const char* title, const bool& r) const
 {
 	/*! Startup the SDL library and open the pad graphic window. */ 
 	
@@ -133,48 +133,48 @@ bool pad::initOpenGL()
 	 */
 
 	// General Properties 	
-//	glViewport(0, 0, _window->width(), _window->height());		// Set Viewport to window size. 
-//	glDepthRange(0.0, 100.0);				// Set Depth Range (important for depth-picking). 
-//	glEnable(GL_DEPTH_TEST);				// Enables Depth Testing.
-//	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading.
-//	glEnable (GL_BLEND); 					// Enables Blending (For Transparent Effects). 
-//	glEnable(GL_NORMALIZE); 				// Enable Automatically normalized normal vectors.   
-//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Enables Blending w/ Alpha Value.    
+	glViewport(0, 0, _window->width(), _window->height());		// Set Viewport to window size. 
+	glDepthRange(0.0, 100.0);				// Set Depth Range (important for depth-picking). 
+	glEnable(GL_DEPTH_TEST);				// Enables Depth Testing.
+	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading.
+	glEnable (GL_BLEND); 					// Enables Blending (For Transparent Effects). 
+	glEnable(GL_NORMALIZE); 				// Enable Automatically normalized normal vectors.   
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Enables Blending w/ Alpha Value.    
 	
 	// Reset matrixes.
-//	glMatrixMode(GL_PROJECTION);
-//	glLoadIdentity();
-//	glMatrixMode(GL_MODELVIEW);	
-//	glLoadIdentity();
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);	
+	glLoadIdentity();
 
 	// Retrieves OpenGL status.
-//	glGetIntegerv(GL_AUX_BUFFERS, &_glAuxFrameBufCount);	// Available auxiliary framebuffers.
+	glGetIntegerv(GL_AUX_BUFFERS, &_glAuxFrameBufCount);	// Available auxiliary framebuffers.
 
 	// If OpenGL Version >= 1.5, create a support framebuffer.
-//	if (GLEW_VERSION_3_0) {
+	if (GLEW_VERSION_3_0) {
 		
 		// Kill previous in case.
-//		glDeleteFramebuffers(10, _glFrameBuffer);
-//		glDeleteRenderbuffers(10, _glFrameBuffer);
+		glDeleteFramebuffers(10, _glFrameBuffer);
+		glDeleteRenderbuffers(10, _glFrameBuffer);
 		
 		// Creates the color and depth render buffers.
-//		glGenRenderbuffers(2, _glRenderBuffer);
-//		glBindRenderbuffer(GL_RENDERBUFFER, _glRenderBuffer[0]);
-//		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, _Window->Width(), _Window->Height());
-//		glBindRenderbuffer(GL_RENDERBUFFER, _glRenderBuffer[1]);
-//		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, _Window->Width(), _Window->Height());
+		glGenRenderbuffers(2, _glRenderBuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, _glRenderBuffer[0]);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, _window->width(), _window->height());
+		glBindRenderbuffer(GL_RENDERBUFFER, _glRenderBuffer[1]);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, _window->width(), _window->height());
 
 		// Creates the frame buffer.
-//		glGenFramebuffers(1, &_glFrameBuffer[0]);
-//		glBindFramebuffer(GL_FRAMEBUFFER, _glFrameBuffer[0]);
+		glGenFramebuffers(1, &_glFrameBuffer[0]);
+		glBindFramebuffer(GL_FRAMEBUFFER, _glFrameBuffer[0]);
 		
-		// Attach the renderbuffer to the framebuffer.
-//		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _glRenderBuffer[0]);
-//		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _glRenderBuffer[1]);
+		// Attach the render buffer to the framebuffer.
+		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _glRenderBuffer[0]);
+		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _glRenderBuffer[1]);
 		
 		// By default bind the drawing buffer to the window one.	
-//		glEnable(GL_DEPTH_TEST);
-//		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glEnable(GL_DEPTH_TEST);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
  
 	// Everything ok.
@@ -187,27 +187,27 @@ void pad::initInfo() const
 	/*! Give a little info about the graphic environment of the pad. */
 	
 	// Show OpenGL info.
-//	std::cout << COL(LWHITE) << "\nOpenGL\n" << COL(DEFAULT);
-//	std::cout << "   Vendor:   " << glGetString(GL_VENDOR) << "\n";
-//	std::cout << "   Version:  " << glGetString(GL_VERSION) << "\n";
-//	std::cout << "   Renderer: " << glGetString(GL_RENDERER) << "\n";
-//	std::cout << "   Shading:  " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
-	//std::cout << "  Extens.:   " << glGetString(GL_EXTENSIONS) << "\n";
+	std::cout << COL(LWHITE) << "\nOpenGL\n" << COL(DEFAULT);
+	std::cout << "   Vendor:   " << glGetString(GL_VENDOR) << "\n";
+	std::cout << "   Version:  " << glGetString(GL_VERSION) << "\n";
+	std::cout << "   Renderer: " << glGetString(GL_RENDERER) << "\n";
+	std::cout << "   Shading:  " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
+	std::cout << "  Extens.:   " << glGetString(GL_EXTENSIONS) << "\n";
 
 	// Retrieve names stack size.
-//	GLint param; 
-//	glGetIntegerv(GL_MAX_NAME_STACK_DEPTH, &param);
-//	std::cout << "   Name max stack: " << param << "\n";
-//	glGetIntegerv(GL_MAX_MODELVIEW_STACK_DEPTH, &param);
-//	std::cout << "   Modelview max stack: " << param << "\n";
-//	glGetIntegerv(GL_MAX_PROJECTION_STACK_DEPTH, &param);
-//	std::cout << "   Projection max stack: " << param << "\n";
-//	glGetIntegerv(GL_MAX_CLIP_PLANES, &param);
-//	std::cout << "   Clip planes max: " << param << "\n";
+	GLint param; 
+	glGetIntegerv(GL_MAX_NAME_STACK_DEPTH, &param);
+	std::cout << "   Name max stack: " << param << "\n";
+	glGetIntegerv(GL_MAX_MODELVIEW_STACK_DEPTH, &param);
+	std::cout << "   Modelview max stack: " << param << "\n";
+	glGetIntegerv(GL_MAX_PROJECTION_STACK_DEPTH, &param);
+	std::cout << "   Projection max stack: " << param << "\n";
+	glGetIntegerv(GL_MAX_CLIP_PLANES, &param);
+	std::cout << "   Clip planes max: " << param << "\n";
 
 	// Frambuffers.
-//	glGetIntegerv(GL_AUX_BUFFERS, &param);
-//	std::cout << "   Auxiliary Framebuffers: " << param << "\n";
+	glGetIntegerv(GL_AUX_BUFFERS, &param);
+	std::cout << "   Auxiliary Framebuffers: " << param << "\n";
 }
 
 //______________________________________________________________________________
@@ -229,7 +229,7 @@ void pad::titleDraw(const double& timing)
 	if (timing > 0) title << " (" << timing << " ms/frame)";
 	
 	// Updates window.
-//	_window->title(title.str());
+	_window->title(title.str());
 }
 
 
@@ -260,7 +260,7 @@ bool pad::evnHandler()
 		if (evnKeyboard(evn)) return true;
 		
 		// Mouse.
-		if (GUI>evnMouse(evn)) return true;
+		if (_GUI->evnMouse(evn)) return true;
 		
 	} // End of event queue LOOP.
 	
@@ -289,13 +289,13 @@ bool pad::evnSystem(SDL_Event evn)
 			initOpenGL();
 			
 			// Reset the TwBar for the new size.
-//			GUI->updateTwBar();
+			_GUI->updateTwBar();
 
 			// Updates the mouse utilities
-//			GUI->updateMouse();
+			_GUI->updateMouse();
  
 			// Updates the layout.
-//			GUI->LayoutSet();
+			_GUI->LayoutSet();
 		}
 
 		// Minimized.
@@ -382,7 +382,7 @@ Uint64 pad::sceneAdd(cat::gp::scene* scene)
 	}
 
 	// Updates the bars.
-	Refresh();
+	refresh();
 	
 	// Returns the current scene.
 	return _scene.size() - 1;
@@ -398,7 +398,7 @@ void pad::sceneDel(Uint64 sIdx)
 
 	// Delete scene and associated view.
 	delete _scene[sIdx];
-	delete _View[sIdx];
+	delete _view[sIdx];
 	_scene.erase(_scene.begin() + sIdx);
 //	_view.erase(_view.begin() + sIdx);
 
@@ -409,7 +409,7 @@ void pad::sceneDel(Uint64 sIdx)
 		_sceneIdx = 0;
 	}
 
-	// If the deleted scene was the curretly selected one, change
+	// If the deleted scene was the currently selected one, change
 	// the current selection to the first scene in the list.
 	if (_sceneIdx == sIdx && _scene.size() > 1) sceneSel(1);
 
@@ -418,10 +418,10 @@ void pad::sceneDel(Uint64 sIdx)
 }
 
 //______________________________________________________________________________
-void pad::scene_Sel(Uint64 sIdx)
+void pad::sceneSel(Uint64 sIdx)
 {
 	/*! Selects a scene, making it the active (displayed) one. Scene #0 cannot 
-	 *	be seleted, i.e. selecting it makes nothing, as scene #0 is by default 
+	 *	be selected, i.e. selecting it makes nothing, as scene #0 is by default 
 	 *	the currently selected scene. 
 	 */
 	if (sIdx > 0 && sIdx < _scene.size()) {
@@ -451,7 +451,7 @@ Uint64 pad::idx() const
 }
 
 //______________________________________________________________________________
-void pad::idx(const Uint64& Idx) 
+void pad::idx(const Uint64& idx) 
 {
 	/*! Assigns the pad Idx. */
 	_idx = idx;
@@ -469,11 +469,11 @@ Uint64 pad::size()
 	
 	// Sums over all the scenes.
 	for (Uint64 i = 0; i < _scene.size(); i++) {
-		if(_scene[i]) tSize += _scene[i]->Size();
+		if(_scene[i]) tSize += _scene[i]->size();
 	}
 	
 	// Well done!
-	_Size = tSize;
+	_size = tSize;
 	return tSize;
 }
 
@@ -494,12 +494,12 @@ void pad::run(const bool& openLoop)
 		
 		// Repaint the GUI. GUI is painted on the front buffer, so the back
 		// color buffer always old the "clean" scene picture.
-		if(GUI->glDraw()) break;
+		if(_GUI->glDraw()) break;
 		
 		// Show updated graphic in Pad window.
 		_window->swap();
 		
-		// It not continuos, just exit for this time.
+		// It not continuous, just exit for this time.
 		if (openLoop) break;
 	}
 }
@@ -545,7 +545,7 @@ void pad::selClear()
 
 	// Releases the selected GPs.
 	for (size_t i = 0; i < _selGPHnd.size(); i++) {
-		GP* gp = _scene[0]->gp_Get(_selGPHnd[i]);
+		gp::GP* gp = _scene[0]->gpGet(_selGPHnd[i]);
 		if(gp) gp->modeSelected(false);
 	}
 
@@ -554,7 +554,7 @@ void pad::selClear()
 	_selForceRedraw = false;
 
 	// Updates the interface.
-	GUI->evnSelect(_selGPHnd); 
+	//_GUI->evnSelect(_selGPHnd);   ?????????????????????????????????????????????????
 }
 
 //______________________________________________________________________________
@@ -572,7 +572,7 @@ void pad::selAdd(const cat::gp::GPHnd& gpHnd)
 }
 
 //______________________________________________________________________________
-void pad::selAdd(const std::vector<cat::gp::GPHnd>& sel) 
+void pad::selAdd(const std::vector<gp::GPHnd>& sel) 
 {
 	/*! Add to the selection vector. */
 	
@@ -584,7 +584,7 @@ void pad::selAdd(const std::vector<cat::gp::GPHnd>& sel)
 		}
 		if (j == _selGPHnd.size())	{
 			_selGPHnd.push_back(sel[i]); 	
-			//_scene[0]->gp_Get(sel[i])->modeSelected(true);
+			_scene[0]->gpGet(sel[i])->modeSelected(true);
 		}
 	}
 }
@@ -607,7 +607,7 @@ void pad::selShow()
 	_selForceRedraw = true;
 
 	// Updates the interface.
-//	GUI->evnSelect(_selGPHnd); 
+	// _GUI->evnSelect(_selGPHnd); ?????????????????????????????????????????????????????
 }
 
 
@@ -626,94 +626,94 @@ bool pad::glDraw()
 	if (!_scene[0]) return false;
 
 	// Anti-aliasing on following objects.
-//	glEnable(GL_LINE_SMOOTH);
-//	glEnable(GL_POINT_SMOOTH);
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_POINT_SMOOTH);
 
 	// Blending mode.
-//	glEnable (GL_BLEND);
-//	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable (GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Pivot reference to the view for the current scene.
-//	view* view = _view[0];
+	view* view = _view[0];
 	
 	// If OpenGL >= 3.0, enforce the auxiliary buffer as drawing target.
-//	if (GLEW_VERSION_3_0) {
-//		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _glFrameBuffer[0]);
-//	}
+	if (GLEW_VERSION_3_0) {
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _glFrameBuffer[0]);
+	}
 
 	// Highlight selected GPs if selection is confirmed for displaying.	
-//	if (GUI->MousePick().StatusGet() == GUI->MousePick().kPk_Confirmed) {
-//		selShow();
-//		GUI->mousePick().StatusStep();
-//	}
+	if (_GUI->mousePick().statusGet() == _GUI->mousePick().kPk::confirmed) {
+		selShow();
+		_GUI->mousePick().statusStep();
+	}
 
 	// Sets the view. Perform a selection rendering if picking is active.
-//	if (GUI->MousePick().StatusGet() == GUI->MousePick().kPk_Started) {
-//
-//		GUI->MousePick().StatusStep();	// Updates current picking status.
-//		glSelectBuffer(_SelBufferSize, _SelBuffer);	// Init selection buffer.
-//		
-//		// Initializes selection mode. 	
-//		glRenderMode(GL_SELECT);
-//		glInitNames();
-//		glPushName(0);
-//
-//		// Set the special picking view.
-//		view->glSet(GUI->MouseBall(), true);  
-//		view->needRedraw(true);		
+	if (_GUI->mousePick().statusGet() == _GUI->mousePick().kPk::started) {
+
+		_GUI->mousePick().statusStep();	// Updates current picking status.
+		glSelectBuffer(_selBufferSize, _selBuffer);	// Init selection buffer.
+		
+		// Initializes selection mode. 	
+		glRenderMode(GL_SELECT);
+		glInitNames();
+		glPushName(0);
+
+		// Set the special picking view.
+		view->glSet(_GUI->mouseBall(), true);  
+		view->needRedraw(true);		
 
 	// Otherwise is a normal rendering.
 	} else {
-//		view->glSet(GUI->MouseBall());
+		view->glSet(_GUI->mouseBall());
 	}
 		
 	// Do the actual redraw. Always if no GL_3.0, when needed otherwise.
-//	if (!GLEW_VERSION_3_0 || view->NeedRedraw() || _scene[0]->modeNeedRedraw() || _SelForceRedraw) {
+	if (!GLEW_VERSION_3_0 || view->needRedraw() || _scene[0]->modeNeedRedraw() || _selForceRedraw) {
 		
 		// Start redraw timing.
-//		glTime();
+		glTime();
 	
 		// Anyway clears the screen and the depth buffer.
-//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		// Renders non trasparent objects first. 
-//		for (Uint64 i = 1; i < _scene[0]->gp_Size(); i++) {
-//			GP* gp = _scene[0]->gp_Get(i); 
-//			if (gp) if (!(gp->glAlpha())) gp->glDisplay();
-//		}
+		// Renders non transparent objects first. 
+		for (Uint64 i = 1; i < _scene[0]->gpSize(); i++) {
+			gp::GP* gp = _scene[0]->gpGet(i); 
+			if (gp) if (!(gp->glAlpha())) gp->glDisplay();
+		}
 			
 		// Renders transparent objects then.
-//		for (Uint64 i = 1; i < _scene[0]->gp_Size(); i++) {
-//			GP* gp = _scene[0]->gp_Get(i); 
-//			if (gp) if ((gp->glAlpha())) gp->glDisplay();
-//		}
+		for (Uint64 i = 1; i < _scene[0]->gpSize(); i++) {
+			gp::GP* gp = _scene[0]->gp_Get(i); 
+			if (gp) if ((gp->glAlpha())) gp->glDisplay();
+		}
 
 		// Reset the scene redrawing necessity.
-//		_scene[0]->modeNeedRedraw(false); 
+		_scene[0]->modeNeedRedraw(false); 
 		
 		// Stop timing.
-//		glTime();
-//	}
+		glTime();
+	}
 	
 	// Reset the stack matrixes. VERY important!
-//	view->glReset(); 
+	view->glReset(); 
 
 	// Returns always to render mode. Stores anyway 
 	// the size of the selection buffer in _SelHits.
-//	_SelHits = glRenderMode(GL_RENDER);
+	_selHits = glRenderMode(GL_RENDER);
 		
 	// Copy the auxiliary framebuffer into the window one.
 	if (GLEW_VERSION_3_0) {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, _glFrameBuffer[0]);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glBlitFramebuffer(0, 0, _Window->Width(), _Window->Height(), 
-						  0, 0, _Window->Width(),  _Window->Height(),
+		glBlitFramebuffer(0, 0, _window->width(), _window->height(), 
+						  0, 0, _window->width(),  _window->height(),
 						  GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
 	// If any picking action, process and end it.
-	if (GUI->MousePick().StatusGet() == GUI->MousePick().kPk_Rendered) {
+	if (_GUI->mousePick().statusGet() == _GUI->mousePick().kPk::rendered) {
 		std::cout << "glDraw: Processing picking list\n";
 		
 		// Processes the hits buffer. If there is an hit, stores the minZ
@@ -725,7 +725,7 @@ bool pad::glDraw()
 
 		// Updates scene redrawn and picking status. 		
 		_scene[0]->modeNeedRedraw(true);
-		GUI->MousePick().StatusStep();
+		_GUI->mousePick().statusStep();
 	}		
 	
 	// Everything ok.
@@ -780,12 +780,12 @@ size_t pad::glHits(double& minZ, const bool& add, const bool& all)
 	 */
 
 	// Store an old vector.
-	std::vector<cat::gp::GPHnd> oldGPHnd = _selGPHnd;
-	std::vector<cat::gp::GPHnd> newGPHnd;
+	std::vector<gp::GPHnd> oldGPHnd = _selGPHnd;
+	std::vector<gp::GPHnd> newGPHnd;
 
 	// Prepare to search Buffer 
 	int hitHnd = 0;				// 'Picked' GP handle.
-	GLuint* ptr = _SelBuffer;	// Pointer to buffer element.
+	GLuint* ptr = _selBuffer;	// Pointer to buffer element.
 	float gMin = 0;				// Global minimum for the selection.	
 
 	// Search! Loop over each hit, and every element in the hit buffer.

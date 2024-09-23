@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -20,7 +20,7 @@
 
 // #############################################################################
 // Open namespaces
-namespace CAT { namespace ac {
+namespace cat { namespace ac {
 
 
 // *****************************************************************************
@@ -38,24 +38,24 @@ loop::loop(): _stop(false)
 	
 	// The first pad is by default associated to the server, so it is just 
 	// a non-existent virtual pad (reserved for future use).
-//	_pad.push_back(0);
+	_pad.push_back(0);
 
 	// This is the main Pad, the one used to display and interact.
 	try {
-//		_pad.push_back(new CAT::ui::Pad(0, CAT_VER_TITLE, true));
+		_pad.push_back(new ui::pad(0, CAT_VER_TITLE, true));
  	}
 	catch (...) {
-//		std::cout << "Error instantiating the main Pad...\n";
+		std::cout << "Error instantiating the main Pad...\n";
 	}
 }
 
 //______________________________________________________________________________
-Loop::~Loop() 
+loop::~loop() 
 {
-	/* Realeses all allocated resources. */
+	/* Releases all allocated resources. */
 
 	// Kills all the pad(s).
-//	for (Uint64 i = 0; i < _pad.size(); i++) delete _pad[i];
+	for (Uint64 i = 0; i < _pad.size(); i++) delete _pad[i];
 
 }
 
@@ -71,7 +71,7 @@ Loop::~Loop()
 // *****************************************************************************
 
 //______________________________________________________________________________
-void Loop::cmdAppRun() 
+void loop::cmdAppRun() 
 {
 	/* Runs the application main loop. */
 
@@ -81,11 +81,11 @@ void Loop::cmdAppRun()
 		// Pad(s) run. Give the focus once to every active pad. Note we skip
 		// the server virtual pad.
 		for (Uint64 i = 1; i < _pad.size(); i++) {
-//			if (_pad[i]) _pad[i]->Run(true); // Run a single loop.
+			if (_pad[i]) _pad[i]->run(true); // Run a single loop.
 		}
 
 		// Server run.
-		cat::ac::_server->Run(true);
+		cat::ac::_server->run(true);
 	}
 }
 
@@ -130,9 +130,9 @@ bool loop::cmdClientAdd(const Uint64& cHnd)
 	
 	// Info	(This kind of info is handled by the server)
 	if (cat::ag::_verbose >= CAT_VERB_FULL) {
-		//std::cout << "Client " << COL(LGREEN) << cHnd << COL(DEFAULT) 
-		//		  << " added. Active clients: " << COL(LCYAN) 
-		//		  << _client.size() << COL(DEFAULT) << "\n";
+		std::cout << "Client " << COL(LGREEN) << cHnd << COL(DEFAULT) 
+				  << " added. Active clients: " << COL(LCYAN) 
+				  << _client.size() << COL(DEFAULT) << "\n";
 	}
 	
 	// Everything fine.
@@ -157,10 +157,10 @@ bool loop::cmdClientDel(const Uint64& cHnd)
 	_client.erase(_client.begin() + cIdx);
 	
 	// Info (This kind of info is handled by the server)
-	if (CAT::ag::_verbose >= CAT_VERB_FULL) {
-		//std::cout << "Client " << COL(LGREEN) << cHnd << COL(DEFAULT) 
-		//		  << " removed. Active clients: " << COL(LCYAN) 
-		//		  << _client.size() << COL(DEFAULT) << "\n";
+	if (cat::ag::_verbose >= CAT_VERB_FULL) {
+		std::cout << "Client " << COL(LGREEN) << cHnd << COL(DEFAULT) 
+				  << " removed. Active clients: " << COL(LCYAN) 
+				  << _client.size() << COL(DEFAULT) << "\n";
 	}
 		
 	// Everything fine.
@@ -185,19 +185,19 @@ Uint64 loop::cmdSceneBegin(const Uint64& cHnd, std::stringstream& cBuf)
 	if (cIdx >= _client.size()) return true;
 	
 	// Add the scene to the main pad and load it.
-//	Uint64 sHnd = _pad[1]->scene_Add(new gp::Scene());
-// 	_pad[1]->scene_Get(sHnd)->Stream(cBuf, true);
+	Uint64 sHnd = _pad[1]->sceneAdd(new gp::scene());
+ 	_pad[1]->sceneGet(sHnd)->stream(cBuf, true);
 	
 	// Stores the new link which associates the calling Client with this Scene.
-//	_client[cIdx].sHnd.push_back(sHnd);
+	_client[cIdx].sHnd.push_back(sHnd);
 
 	// If it is the only scene in the pad, select it!
-//	if (_pad[1]->scene_Count() == 1) _pad[1]->scene_Sel(1);  
+	if (_pad[1]->sceneCount() == 1) _pad[1]->sceneSel(1);  
 
 	// Info
 	if (cat::ag::_verbose >= CAT_VERB_FULL) {
-//		std::cout << "Added scene [" << COL(LWHITE) << sHnd << COL(DEFAULT) 
-//				  << "] from client [" << COL(LGREEN) << cHnd << COL(DEFAULT) << "]\n";
+		std::cout << "Added scene [" << COL(LWHITE) << sHnd << COL(DEFAULT) 
+				  << "] from client [" << COL(LGREEN) << cHnd << COL(DEFAULT) << "]\n";
 	}
 	
 	// Everything fine.
@@ -205,7 +205,7 @@ Uint64 loop::cmdSceneBegin(const Uint64& cHnd, std::stringstream& cBuf)
 }
 
 //______________________________________________________________________________
-bool Loop::cmdSceneClose(const Uint64& cHnd, const Uint64& sIdx)
+bool loop::cmdSceneClose(const Uint64& cHnd, const Uint64& sIdx)
 {
 	/*! Closes scene \c sIdx of the \c cHnd scene list. */
 	if (cat::ag::_verbose >= CAT_VERB_FULL) {
@@ -223,17 +223,17 @@ bool Loop::cmdSceneClose(const Uint64& cHnd, const Uint64& sIdx)
 
 	// Retrieve the actual scene Handle and pointer.
 	Uint64 sHnd = _client[cIdx].sHnd[sIdx];
-//	gp::scene* sPtr = _pad[1]->scene_Get(sHnd);
+	gp::scene* sPtr = _pad[1]->sceneGet(sHnd);
 	
 	// Dump the scene (debug).
-	//sPtr->Dump();
+	//sPtr->dump();
 
 	// Deletes the scene from the main Pad.
 	return false;
 }
 
 //______________________________________________________________________________
-bool Loop::cmdSceneAddGP(const Uint64& cHnd, const Uint64& sIdx, std::stringstream& buf)
+bool loop::cmdSceneAddGP(const Uint64& cHnd, const Uint64& sIdx, std::stringstream& buf)
 {
 	/*! Adds a GP to the scene \c sIdx of the \c cHnd Client scene list. \c cBuf 
 		is the stream containing the GP description. Returns false if no errors 
@@ -251,16 +251,16 @@ bool Loop::cmdSceneAddGP(const Uint64& cHnd, const Uint64& sIdx, std::stringstre
 
 	// Retrieve the actual scene Handle and pointer.
 	Uint64 sHnd = _client[cIdx].sHnd[sIdx];
-//	gp::scene* sPtr = _pad[1]->scene_Get(sHnd);
+	gp::scene* sPtr = _pad[1]->sceneGet(sHnd);
 	
 	// Adds the GP to the selected scene and refresh it.
-//	sPtr->gp_Add(buf);  	
-//	_pad[1]->Refresh();
+	sPtr->gpAdd(buf);  	
+	_pad[1]->refresh();
 	
 	// Info
 	if (cat::ag::_verbose >= CAT_VERB_FULL) {
-//		std::cout << "GP added to scene [" << COL(LWHITE) << sHnd << COL(DEFAULT)
-//				  << "] from client [" << COL(LGREEN) << cHnd << COL(DEFAULT) << "]\n";
+		std::cout << "GP added to scene [" << COL(LWHITE) << sHnd << COL(DEFAULT)
+				  << "] from client [" << COL(LGREEN) << cHnd << COL(DEFAULT) << "]\n";
    	}
 	
 	// Everything fine.
@@ -268,12 +268,12 @@ bool Loop::cmdSceneAddGP(const Uint64& cHnd, const Uint64& sIdx, std::stringstre
 }
 
 //______________________________________________________________________________
-ui::Pad* Loop::padGet(const Uint64& pIdx)
+ui::pad* loop::padGet(const Uint64& pIdx)
 {
 	/*! Returns a pointer to \c pIdx pad. At the moment the only valid
-	 *	pIdx is 1.
+	 *	pIdx is 1 by default.
 	 */
-//	return _pad[1];
+	return _pad[1];
 }	
 
 // #############################################################################

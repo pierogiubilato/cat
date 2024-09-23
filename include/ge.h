@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -45,7 +45,7 @@ namespace cat { namespace ge {
  *
  *	\author Piero Giubilato
  *	\version 1.2
- *	\date 17 Sep 2024
+ *	\date 21 Sep 2024
  */
 
  //______________________________________________________________________________
@@ -57,26 +57,11 @@ class GE : public cat::CO
 
 	public:
 
-		// Note on types: types form an orthonormal bit-base, so they can
-		// arbitrary added to keep trace of the various layers which
-		// compose the final object.			
-
-		// The different GE (Graphic Entity) types.
-		enum class ktype : Uint32 {
-			null = 0,
-			base = 1,
-			coord = 2,
-			point = 4,
-			vector = 8,
-			ref = 16,
-			color = 32
-		};
-				
 		// Default interface public members, overload cat::CO class.
-		Uint64 type() const { return 0; }		//!< Returns GE type. It's a sum of all the layer!
-		Uint64 version() const { return 0; }	//!< Returns GE version.
-		std::string stem() const { return ""; }	//!< Returns GE stem name.
-		void dump(const Uint64 & = 0) const {};	//!< Dumps GE data.
+		oType type() const { return oType::geBase; }	//!< Returns GE type. It's a sum of all the layer!
+		Uint64 version() const { return 0; }			//!< Returns GE version.
+		std::string stem() const { return ""; }			//!< Returns GE stem name.
+		void dump(const Uint64 & = 0) const {};			//!< Dumps GE data.
 		size_t size(const bool& = false) const { return 0;}
 		bool stream(std::stringstream&, const bool&) { return false; }
 };

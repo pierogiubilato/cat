@@ -17,8 +17,12 @@
 #if !defined uiSplash_H
 #define uiSplash_H
 
+// SDL library.
+#include "SDL.h"
+//#include "SDL_opengl.h"
+
 // Application components.
-#include "ui.h"
+//#include "ui.h"
 	
 // #############################################################################
 namespace cat { namespace ui {

@@ -24,12 +24,13 @@ project ("cat")
 # As we link dinamically, makes the lib dll already in the source output directory.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
+
 # The actual proprietary project code. Look at the "../src/CMakeLists.txt" file for details.
 # ------------------------------------------------------------------------------------------
 add_subdirectory(src)
 
 
-
 # All the libraries the project depends on. Look at the "../lib/CMakeLists.txt" file for details.
 # -----------------------------------------------------------------------------------------------
 add_subdirectory(lib)
+

@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -112,10 +112,10 @@ coord& coord::operator = (const double& s)
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 coord::type() const
+oType coord::type() const
 {
 	/*! Returns the entity type (the class type itself). */
-	return GE::ktype::coord; 
+	return oType::geCoord; 
 }
 
 //______________________________________________________________________________
@@ -453,7 +453,7 @@ double coord::angle(const coord& c) const
 coord& coord::Maxize(const coord& c) 
 {
 	/*! Set every coordinate of the caller as the maximum between the caller
-		coordinate and the argument corrispective one. */
+		coordinate and the argument one. */
 	if (c.x() > _x) _x = c.x();	
 	if (c.y() > _y) _y = c.y();
 	if (c.z() > _z) _z = c.z();
@@ -466,7 +466,7 @@ coord& coord::Maxize(const coord& c)
 coord& coord::minize(const coord& c) 
 {
 	/*! Set every coordinate of the caller as the minimum between the caller
-		coordinate and the argument corrispective one. */
+		coordinate and the argument one. */
 	if (c.x() < _x) _x = c.x();	
 	if (c.y() < _y) _y = c.y();
 	if (c.z() < _z) _z = c.z();
@@ -521,7 +521,7 @@ coord& coord::rotZ(const double& a)
 coord& coord::rotV(const double&, const coord& v)
 {
 	/*! To be implemented. */
-   std::cout << COL(LRED) << "gd::coord::rotV is NOT IMPLEMENTED yet!" << COL(DEFAULT) << "\n";
+   std::cout << COL(LRED) << "ge::coord::rotV is NOT IMPLEMENTED yet!" << COL(DEFAULT) << "\n";
 
 	// Result
 	return *this;

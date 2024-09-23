@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"co.h"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.0"
+// [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -16,6 +16,10 @@
 // Overloading check
 #ifndef co_H
 #define co_H
+
+// STL.
+#include<sstream>
+#include<ostream>
 
 // Application
 #include "acGlobal.h"
@@ -26,9 +30,16 @@
 namespace cat {
 
 
+// *****************************************************************************
+// **						The basic cat GO types							  **
+// *****************************************************************************
+
+	
+
+
 
 // *****************************************************************************
-// **							The basic cat GE							  **
+// **							The basic cat GO							  **
 // *****************************************************************************
 
 /*! 'cat::CO' is the base class for all cat data objects, including data,
@@ -46,7 +57,7 @@ namespace cat {
  *
  *	\author Piero Giubilato
  *	\version 1.2
- *	\date 18 Sep 2024
+ *	\date 21 Sep 2024
  */
 
  //______________________________________________________________________________
@@ -58,11 +69,49 @@ class CO
 
 	public:
 	
+		// Object types.
+		enum class oType : Uint64 {
+
+			// The virtual base object
+			coBase,
+
+			// GE (Graphics Entities).
+			geNull,
+			geBase,
+			geCoord,
+			gePoint,
+			geVector,
+			geRef,
+			geColor,
+
+			// GP (Graphics Primitives).
+			gpNull,
+			gpBase,
+			gpStroked,	// | These are layer GPs, i.e. GPs 
+			gpFilled,	// | providing specific properties
+			gpFonted,	// | to others GPS.
+			gpScene,
+			gpFrame,
+			gpMaterial,
+			gpPalette,
+			gpPoint,
+			gpLine,
+			gpPolygon,
+			gpBox,
+			gpTube,
+			gpCylinder,
+			gpCone,
+			gpSphere,
+			gpLabel
+			//131072,262144,524288, 1048576
+			// GT (Graphics Tools).
+		};
+
 		// Default interface virtual public members.
-		virtual Uint64 type() const { return 0; }		//!< Returns CO type. It's a sum of all the layer!
-		virtual Uint64 version() const { return 0; }	//!< Returns CO version.
-		virtual std::string stem() const { return ""; }	//!< Returns CO stem name.
-		virtual void dump(const Uint64 & = 0) const {};	//!< Dumps CO data.
+		virtual oType type() const { return oType::coBase; }	//!< Returns CO type.
+		virtual Uint64 version() const { return 0; }			//!< Returns CO version.
+		virtual std::string stem() const { return ""; }			//!< Returns CO stem name.
+		virtual void dump(const Uint64 & = 0) const {};			//!< Dumps CO data.
 
 		//! Returns the object size in bytes.
 		virtual size_t size(const bool& = false) const {
@@ -88,7 +137,7 @@ class CO
 // *****************************************************************************
 
 //______________________________________________________________________________
-inline std::ostream& operator << (std::ostream& o, const cat::co& obj)
+inline std::ostream& operator << (std::ostream& o, const cat::CO& obj)
 {
 	/*! Overloads standard output operator << for a generic cake::object. */ 
 	obj.dump();

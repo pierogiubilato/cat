@@ -1,16 +1,19 @@
 //------------------------------------------------------------------------------
 // CAT application core entry point										      --
-// (C) Piero Giubilato 2011-2015, University of Padova                        --
+// (C) Piero Giubilato 2011-2024, Padova University							  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
 // [File name]		"acMain.cpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.1"
+// [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
 // [Date]			"20 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
+
+// Standard
+#include <direct.h>
 
 // Application components.
 #include "acMain.h"
@@ -20,37 +23,35 @@
 #include "afFile.h"
 #include "afFont.h"
 
-// Standard
-#include <direct.h>
 
 //______________________________________________________________________________
 // The main routines
 int main(int argc, char** argv);				//!< Entry point.
-void main_CmdParse(const int&, char**);			//!< Command line parser.
-void main_Path();								//!< Paths builder.
-void main_Credits();							//!< Credits.
-void main_Help();								//!< Help.
-int main_ServStart();							//!< Starts services.
-void main_ServStop();							//!< Stops services.
-void main_Info();								//!< Provides status info.
+void mainCmdParse(const int&, char**);			//!< Command line parser.
+void mainPath();								//!< Paths builder.
+void mainCredits();								//!< Credits.
+void mainHelp();								//!< Help.
+int mainServStart();							//!< Starts services.
+void mainServStop();							//!< Stops services.
+void mainInfo();								//!< Provides status info.
 
 //______________________________________________________________________________
 // Private vars
-static std::vector<std::string> arg_Key;		// Preset key-list.
-static std::vector<std::string> arg_Entry;		// Independent entry.
-static std::vector<std::string> arg_Command;	// Command.
+static std::vector<std::string> argKey;			// Preset key-list.
+static std::vector<std::string> argEntry;		// Independent entry.
+static std::vector<std::string> argCommand;		// Command.
 
 //______________________________________________________________________________
 
 // Application Global (ag) settings defaults.
-Uint32 cat::ag::_verbose = CAT_VERB_WARN;		// No verbosity by default.
+int cat::ag::_verbose = CAT_VERB_WARN;			// No verbosity by default.
 bool cat::ag::_stupShowInfo = false;			// No general info.
 bool cat::ag::_stupShowFont = false; 			// No font list dump.
 bool cat::ag::_stupShowHelp = false; 			// No quick help.
 std::string cat::ag::_pathMain = "";			// No default path.	
 std::string cat::ag::_pathFonts = "";			// No default font path.	
-Uint32 cat::ag::_screenDPIX = 96;				// Default screen X resolution.
-Uint32 cat::ag::_screenDPIY = 96;				// Default screen Y resolution.
+int cat::ag::_screenDPIX = 96;					// Default screen X resolution.
+int cat::ag::_screenDPIY = 96;					// Default screen Y resolution.
 
 // Global application core services.
 cat::ac::server* cat::ac::_server = 0;			// No inst. Server.
@@ -66,19 +67,19 @@ int main(int argc, char** argv)
 	/* Application entry point. */
    	
 	// Show credits
-	main_Credits();
+	mainCredits();
 	
 	// Parse command line
-	main_CmdParse(argc, argv);
+	mainCmdParse(argc, argv);
 
 	// Sets all the paths.
-	main_Path();
+	mainPath();
 
 	// Starts the services.
-	if(main_ServStart()) return 1;
+	if(mainServStart()) return 1;
 
 	// Show info.
-	main_Info();
+	mainInfo();
 	
 	// Shows the Splash.
 //	new pear::ui::Splash(1000);	// Self destroying!
@@ -87,7 +88,7 @@ int main(int argc, char** argv)
 	// ----------------------------------
 	try {
 		cat::ac::_loop = new cat::ac::loop();
-		cat::ac::_loop->cmdApp_Run(); 
+		cat::ac::_loop->cmdAppRun(); 
 	}
   	catch (const std::exception& ex) {
 		std::cout << "cat: " << ex.what() << "\n";
@@ -99,7 +100,7 @@ int main(int argc, char** argv)
 	}
 	
 	// Stops the services.
-	main_ServStop();
+	mainServStop();
 
 	// Funny, but just clear console color!
 	std::cout << COL(DEFAULT);
@@ -110,7 +111,7 @@ int main(int argc, char** argv)
 }
 
 //______________________________________________________________________________
-int main_ServStart() 
+int mainServStart() 
 {
 	/*! Starts the application-wide services */
 
@@ -123,31 +124,31 @@ int main_ServStart()
 	
 	// Startup the File Facility.
 	// --------------------------
-	//try {
-	//	cat::af::_file = new pear::af::file();
-	//}
-	//catch (const std::exception& ex) {
-	//	std::cout << "cat: " << ex.what() << "\n";
-	//	return 1;
-	//}
-	//catch (...) {
-	//	std::cout << "cat: undefined exception while starting the File Facility.";
-	//	return 1;
-	//}
+	try {
+		cat::af::_file = new cat::af::file();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "cat: " << ex.what() << "\n";
+		return 1;
+	}
+	catch (...) {
+		std::cout << "cat: undefined exception while starting the File Facility.";
+		return 1;
+	}
 
 	// Startup the Font Facility.
 	// --------------------------
-	//try {
-	//	cat::af::_font = new pear::af::font(cat::ag::_PathFonts);
-	//}
-	//catch (const std::exception& ex) {
-	//	std::cout << "cat: " << ex.what() << "\n";
-	//	return 1;
-	//}
-	//catch (...) {
-	//	std::cout << "cat: undefined exception while starting the Font Facility.";
-	//	return 1;
-	//}
+	try {
+		cat::af::_font = new cat::af::font(cat::ag::_pathFonts);
+	}
+	catch (const std::exception& ex) {
+		std::cout << "cat: " << ex.what() << "\n";
+		return 1;
+	}
+	catch (...) {
+		std::cout << "cat: undefined exception while starting the Font Facility.";
+		return 1;
+	}
 
 	// Startup the Net Server.
 	// -----------------------
@@ -168,7 +169,7 @@ int main_ServStart()
 }
 
 //______________________________________________________________________________
-void main_ServStop() 
+void mainServStop() 
 {
 	/*! Stops the application-wide services */
 
@@ -185,10 +186,10 @@ void main_ServStop()
 }
 
 //______________________________________________________________________________
-void main_CmdParse(const int& argc, char** argv)
+void mainCmdParse(const int& argc, char** argv)
 {
 	/*! Parse the command line. Saves all the given parameter into the provided
-	 *	paw::obj::Ana structure. It works by cheking for tokens, and for those 
+	 *	paw::obj::Ana structure. It works by checking for tokens, and for those 
 	 *	tokens which requires some parameters it stores up to prmCountLimit
 	 *	numbers found after the token, up to the next recognized token.
 	 */
@@ -223,11 +224,10 @@ void main_CmdParse(const int& argc, char** argv)
 
 	// Transfer stored parameters to the appropriate vars.
 	cat::ag::_verbose = static_cast<Uint32>(prmStore[kaVerb][0]);
-	//pear::ag::_Verbose = prmStore[kaPort][0];
 }
 
 //______________________________________________________________________________
-void main_Credits()
+void mainCredits()
 {
 	/*! Some credits! */
 	
@@ -261,22 +261,22 @@ void main_Credits()
 	// Library references.
 	std::cout << "\nBased on:\n"
 		<< "2D Graphics:   " << CLW << "SDL Library " << CD
-		<< "(" << CLC << "http://www.libsdl.org/" << CD << ")" << "\n"
+		<< "(" << CLC << "https://github.com/libsdl-org/SDL" << CD << ")" << "\n"
 		<< "3D Graphics:   " << CLW << "OpenGL Library " << CD 
 		<< "(" << CLC << "http://www.opengl.org/" << CD << ")" << "\n"
 		<< "GL extensions: " << CLW << "GLEW Library " << CD 
 		<< "(" << CLC << "http://glew.sourceforge.net/" << CD << ")" << "\n"
 		<< "GUI controls:  " << CLW << "Dear ImGUI" << CD 
-		<< "(" << CLC << "http://www.antisphere.com" << CD << ")" << "\n"
+		<< "(" << CLC << "https://github.com/ocornut/imgui" << CD << ")" << "\n"
 		<< "NET sockets:   " << CLW << "SDL_net Library " << CD 
-		<< "(" << CLC << "http://www.libsdl.org/" << CD << ")" << "\n"
+		<< "(" << CLC << "https://github.com/libsdl-org/SDL_net" << CD << ")" << "\n"
 		<< "Font library:  " << CLW << "FreeType Project " << CD 
 		<< "(" << CLC << "http://www.freetype.org/" << CD << ")" << "\n"
 		<< "Mathematics:   " << CLW << "OpenGL Mathematics " << CD 
-		<< "(" << CLC << "http://glm.g-truc.net/" << CD << ")" << "\n";
+		<< "(" << CLC << "https://github.com/g-truc/glm" << CD << ")" << "\n";
 
 	// Authors.
-	std::cout << "\nAutors:\n" << CLW
+	std::cout << "\nAuthors:\n" << CLW
 		<< "Piero Giubilato\n"
 		<< CD << "\n";
 
@@ -290,7 +290,7 @@ void main_Credits()
 }
 
 //______________________________________________________________________________
-void main_Path() 
+void mainPath() 
 {
 	/*! Sets up all the application paths. */
 	
@@ -299,31 +299,24 @@ void main_Path()
 	_getcwd(temp, CAT_PATH_MAXLEN) ? cat::ag::_pathMain = temp : cat::ag::_pathMain = "";
 	
 	// Set up the font path.
-	cat::ag::_pathFonts = cat::ag::_PathMain;
+	cat::ag::_pathFonts = cat::ag::_pathMain;
 	cat::ag::_pathFonts.append(CAT_PATH_FONTS);   
 }
 
 //______________________________________________________________________________
-void main_Info()
+void mainInfo()
 {
 	/*! Show some general info at startup. */
 	std::cout << "\n";
 	
 	// Show compilation info ("-i" token).
-	if (pear::ag::_stupShowInfo) {
+	if (cat::ag::_stupShowInfo) {
 
 		// Show SDL info.
-		SDL_version compiled;
-		SDL_version linked;
-		SDL_VERSION(&compiled);
-		SDL_GetVersion(&linked);
+		int version = SDL_GetVersion();
 		std::cout << COL(LWHITE) << "SDL Library\n" << COL(DEFAULT);
-		std::cout << "   Compiled: " << (unsigned int)compiled.major << "." 
-								 << (unsigned int)compiled.minor << "." 
-								 << (unsigned int)compiled.patch  << "\n",
-		std::cout << "   Linked:   " << (unsigned int)linked.major << "." 
-								 << (unsigned int)linked.minor << "." 
-								 << (unsigned int)linked.patch  << "\n",       
+		std::cout << "   Compiled: " << version << "\n",
+		std::cout << "   Linked:   " << version << "\n",       
 		std::cout << "   Platform: " << SDL_GetPlatform() << "\n";
 	
 	}
@@ -332,11 +325,11 @@ void main_Info()
 	// by checking the global var pear::ag::...... ("-i" and "-f" tokens).
 
 	// Show little help ("-h" token).
-	if (cat::ag::_stupShowHelp) main_Help();
+	if (cat::ag::_stupShowHelp) mainHelp();
 }
 
 //______________________________________________________________________________
-void main_Help()
+void mainHelp()
 {
 	/*! Show little on-the-fly help. */
 	std::cout << "\nThis is the little, very un-useful help!\n";

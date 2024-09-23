@@ -14,7 +14,7 @@
 // [Author]			"Sarah Zalusky"
 // [Version]		"1.2"
 // [Modified by]	"Sarah Zalusky, Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"20 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -22,8 +22,15 @@
 #if !defined uiMouse_H
 #define uiMouse_H
 
-// Application components.
-#include "ui.h"
+// GLAD bindings (used to manage the display frame buffers).
+//#include "glad.h"
+
+// Linear algebra is provided by the GLM library, and used as standard math in Pear.
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 
 // #############################################################################
@@ -78,7 +85,7 @@ class mouseBall  //: public UI
 		mouseBall();
 		
 		//! Store original position vector on (left-or-right) mouse click (x, y). 
-		void begin(const int& x, const int& y, const int& mb, const bool& zp = false, const View* view = 0);
+		void begin(const int& x, const int& y, const int& mb, const bool& zp = false, const view* view = 0);
 		
 		//! Compute new quaternion, scale or pan based on current mouse position.
 		void drag(const int& x, const int& y);
@@ -204,9 +211,9 @@ class mousePicker // : public UI
 
 		GLuint buffer[64];
 		GLuint hits; 
-		//GLint view[4];
+		GLint view[4];
 		
-		//std::vector<int> _pickedFlags;
+		std::vector<int> _pickedFlags;
 	 
 };
 

@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -88,10 +88,10 @@ ref::ref(const point& p, const vector& v, const double& a): GE(),
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 ref::type() const
+oType ref::type() const
 {
 	/*! Returns a numeric identification. */
-	return GE::ktype::ref;
+	return oType::geRef;
 }
 
 //______________________________________________________________________________
@@ -119,7 +119,7 @@ size_t ref::size() const
 //______________________________________________________________________________
 void ref::dump(const Uint32& ind) const
 {
-	/*! Send out all the refrence data. */
+	/*! Send out all the reference data. */
 	std::string pad(ind, ' ');
 	std::cout << pad << "p0: " << _p0[0] << " " << _p0[1] << " " << _p0[2] << "\n";
 	std::cout << pad << "v0: " << _v0[0] << " " << _v0[1] << " " << _v0[2] << " " << _vA << "\n";

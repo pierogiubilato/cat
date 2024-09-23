@@ -30,7 +30,7 @@ namespace cat { namespace gp {
 
 	\author Piero Giubilato
 	\version 1.3
-	\date 17 Sep 2024
+	\date 21 Sep 2024
 */
 //______________________________________________________________________________
 class scene: public GP
@@ -50,7 +50,7 @@ class scene: public GP
 		~scene();			//!< Dtor.
 		
 		// Default access public members overload.
-		Uint64 type() const;					//!< Returns GP type.
+		oType type() const;						//!< Returns GP type.
 		Uint64 version() const;					//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.

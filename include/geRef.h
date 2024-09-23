@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -26,7 +26,7 @@ namespace cat { namespace ge {
  *	
  *	\author Piero Giubilato
  *	\version 1.2
- *	\date 17 Sep 2024
+ *	\date 21 Sep 2024
  */
 //______________________________________________________________________________
 class ref: public GE
@@ -59,7 +59,7 @@ class ref: public GE
 		ref(const point& p, const vector& v, const double& a); 
 		
 		// Public members overloaded from cake::Object
-		Uint64 type() const;					//!< Returns the GP type id.
+		oType type() const;						//!< Returns the GP type id.
 		Uint64 version() const;					//!< Return the GP version
 		size_t size() const;					//!< Returns the entity memory size in bytes.
 		void dump(const Uint32& = 0) const;		//!< Dump entity elements.

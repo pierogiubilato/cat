@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"21 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -35,7 +35,7 @@ class pad;
  *	
  *	\author Piero Giubilato
  *	\version 1.2
- *	\date 19 Sep 2024
+ *	\date 21 Sep 2024
  */
 class view //: public UI 
 {
@@ -117,7 +117,7 @@ class view //: public UI
 		kAxis _axis[3];					//!< Show/Set axis.
 		
 		// Special members.
-		view(Pad* owner);				//!< Mandatory owner ctor.
+		view(pad* owner);				//!< Mandatory owner ctor.
 		~view();						//!< Standard dtor.
 		
 		// General members and status.

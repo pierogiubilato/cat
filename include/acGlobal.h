@@ -17,10 +17,10 @@
 #define acGlobal_H
 
 	// Standard libraries
-	#include <iomanip>
-	#include <stddef.h>
-	#include <exception>
-	#include <stdexcept>
+	//#include <iomanip>
+	//#include <stddef.h>
+	//#include <exception>
+	//#include <stdexcept>
 
 
 
@@ -45,24 +45,15 @@
 	
 	/*! Application path. */
 	#define CAT_PATH_MAXLEN 1024				//!< Maximum path length.
-	#define CAT_PATH_FONTS "/resources/fonts"	//!< Maximum path length.
+	#define CAT_PATH_FONTS "/resources/fonts"	//!< Font path.
 
 	/*! Sets the default Pad windows appearance. */
-	#define CAT_PAD_WIDTH 1024		//!< Pad width.
-	constexpr auto CAT_PAD_HEIGHT = 768		//!< Pad height.;
+	constexpr int CAT_PAD_WIDTH = 1024;			//!< Pad width.
+	constexpr int CAT_PAD_HEIGHT = 768;			//!< Pad height.;
 
 	/*! Net default parameters. */
 	// ...	
 	// ...
-
-
-
-	// ---------------------------------------------------
-	// -- Global .h which needs environment definitions --
-	// ---------------------------------------------------
-
-	// Using personalized Console.
-	#include "afConsole.h"
 
 
 

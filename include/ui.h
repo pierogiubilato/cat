@@ -18,8 +18,8 @@
 #define ui_H
 
 // Application
-#include "acMain.h"
-#include "afStream.h"
+//#include "acMain.h"
+//#include "afStream.h"
 
 // Windows checks and inclusions for OpenGL.
 #if defined(_WIN32) || defined(_WIN64)
