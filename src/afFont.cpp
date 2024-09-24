@@ -8,14 +8,22 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
 
+// STL.
+#include<iostream>
+#include<stdexcept>
+
 // Application components
-#include "afFont.h"
 #include "afFile.h"
+#include "acMain.h"
+#include "afStream.h"
+#include "afFont.h"
+#include "afConsole.h"
+
 
 // #############################################################################
 namespace cat { namespace af {
@@ -34,7 +42,7 @@ font::font(const std::string& path)
 	 */
 
 	// Initializes the FreeType library.	
-	FT_Error err = FT_Init_FreeType(&_FLib);
+	FT_Error err = FT_Init_FreeType(&_fLib);
 	if (err) throw std::runtime_error("FreeType initialization failed.");
 	
 	// No current face available.
@@ -80,11 +88,11 @@ void font::init(const std::string& path)
 	cat::af::_file->list(path, file);
 	
 	// Creates the available families/styles table.
-	for (Uint32 i = 0; i < file.size(); i++) {
+	for (uint32_t i = 0; i < file.size(); i++) {
 		
 		// Retrieve the face associated to the file
 		FT_Face newFace;
-		FT_Error err = FT_New_Face(_FLib, file[i].c_str(), 0, &newFace);
+		FT_Error err = FT_New_Face(_fLib, file[i].c_str(), 0, &newFace);
 		if (err == FT_Err_Unknown_File_Format) {
 			std::cout << COL(CAT_COL_WARNING) << "Error loading: " 
 					  << COL(DEFAULT) << file[i] << "\n";
@@ -98,7 +106,7 @@ void font::init(const std::string& path)
 		} else {
 			
 			// Check if the family already exist.
-			Uint32 j = 0;
+			uint32_t j = 0;
 			for (j; j < _fTable.size(); j++) {
 				if (_fTable[j].name == newFace->family_name) break;
 			}
@@ -110,7 +118,7 @@ void font::init(const std::string& path)
 			}
 
 			// Check if the style already exist.
-			Uint32 k = 0;
+			uint32_t k = 0;
 			for (k; k < _fTable[j].style.size(); k++) {
 				if (_fTable[j].style[k].name == newFace->style_name) break;
 			}
@@ -158,7 +166,7 @@ void font::fontList()
 }
 
 //______________________________________________________________________________
-std::vector<std::string> Font::familyList()	const
+std::vector<std::string> font::familyList()	const
 {
 	/*! Lists all available font families. Returns a vector containing the names
 	 *	of the families. These name can be used to select the font family when
@@ -170,11 +178,11 @@ std::vector<std::string> Font::familyList()	const
 }
 
 //______________________________________________________________________________
-Uint64 font::familyIdx(const std::string& family) const
+uint64_t font::familyIdx(const std::string& family) const
 {
 	/*! Find and check for the family index. If the family is not fount, by
 	 *	default returns the index of the first family (=0). */
-	Uint64 fIdx = 0;
+	uint_fast32_t fIdx = 0;
 	for (fIdx = 0; fIdx < _fTable.size(); fIdx++) {
 		if (_fTable[fIdx].name == family) return fIdx;
 	}
@@ -182,7 +190,7 @@ Uint64 font::familyIdx(const std::string& family) const
 }
 
 //______________________________________________________________________________
-std::string font::familyName(const Uint64& idx) const
+std::string font::familyName(const uint64_t& idx) const
 {
 	/*! Returns the family name given the index. If the index is out of range,
 	 *	by default returns the name of the first family, if any, or an empty
@@ -202,7 +210,7 @@ std::vector<std::string> font::styleList(const std::string& family) const
 	std::vector<std::string> sList;
 	
 	// Find and check for the family.
-	Uint64 fIdx = familyIdx(family);
+	uint64_t fIdx = familyIdx(family);
 	
 	// Fill the style vector and return.
 	for (size_t i = 0; i < _fTable[fIdx].style.size() ; i++) {
@@ -212,16 +220,16 @@ std::vector<std::string> font::styleList(const std::string& family) const
 }
 
 //______________________________________________________________________________
-Uint64 font::styleIdx(const std::string& family, const std::string& style) const
+uint64_t font::styleIdx(const std::string& family, const std::string& style) const
 {
 	/*! Find and check for the style index. If the index is not fount, by
 	 *	default returns the index of the first style (=0). */
 	
 	// Retrieves the family index.
-	Uint64 fIdx = familyIdx(family);
+	uint_fast32_t fIdx = familyIdx(family);
 	
 	// Retrieve the style index.
-	Uint64 sIdx = 0;
+	uint_fast32_t sIdx = 0;
 	for (sIdx = 0; sIdx < _fTable.size(); sIdx++) {
 		if (_fTable[sIdx].name == style) return sIdx;
 	}
@@ -229,7 +237,7 @@ Uint64 font::styleIdx(const std::string& family, const std::string& style) const
 }
 
 //______________________________________________________________________________
-std::string font::styleName(const std::string& family, const Uint64& sIdx) const
+std::string font::styleName(const std::string& family, const uint64_t& sIdx) const
 {
 	/*! Returns the style name given a family name and a style index. If family
 	 *	does not exist or the the index is out of range, by default returns an 
@@ -237,7 +245,7 @@ std::string font::styleName(const std::string& family, const Uint64& sIdx) const
 	 */
 	
 	// Retrieves the family index.
-	Uint64 fIdx = familyIdx(family);
+	uint_fast32_t fIdx = familyIdx(family);
 	if (fIdx >= _fTable.size()) return std::string("");		
 
 	// Checks and returns.
@@ -247,7 +255,7 @@ std::string font::styleName(const std::string& family, const Uint64& sIdx) const
 }
 
 //______________________________________________________________________________
-void font::textParse(std::string& text, std::vector<Uint32>& color, const Uint32& defaultColor)
+void font::textParse(std::string& text, std::vector<uint32_t>& color, const uint32_t& defaultColor)
 {
 	/*!	Get the string \c text and extract from it the control characters and
 	 *	corresponding arguments. The original string will hence be modified! 
@@ -272,9 +280,9 @@ void font::textParse(std::string& text, std::vector<Uint32>& color, const Uint32
 	// Set the default RGBA code. Note that a color will be assigned even to
 	// DEFAULT control characters ("\n", ...).
 	color.clear();
-	Uint32 RGBA = defaultColor;
+	uint32_t RGBA = defaultColor;
 	std::string sequence = "";
-	for (Uint64 i = 0; i < text.size(); i++) {
+	for (uint_fast32_t i = 0; i < text.size(); i++) {
 
 		// Standard character, assign color. The alpha channel is anyway
 		// modulated by the default color alpha	channel initial value.
@@ -330,7 +338,7 @@ void font::textParse(std::string& text, std::vector<Uint32>& color, const Uint32
 		
 	// Debug.
 	//std::cout << "Ending string: [" << text << "]\n";
-	//for (Uint64 i = 0; i < text.size(); i++) {
+	//for (uint64_t i = 0; i < text.size(); i++) {
 	//	std::cout << "# " << i << ", " << text[i] << ", " << std::hex << color[i] << std::hex << "\n";
 	//}
 	//std::cout << text.size() << ", " << color.size() << "\n";
@@ -338,7 +346,7 @@ void font::textParse(std::string& text, std::vector<Uint32>& color, const Uint32
 
 //______________________________________________________________________________
 void font::textFont(const std::string& family, const std::string& style,
-					const Uint32& size, const float& angle)
+					const uint32_t& size, const float& angle)
 {
 	/*! Sets the font used to draw the text. \c family and \c style must 
 	 *	correspond to an existent combination of font family and style. If the
@@ -353,7 +361,7 @@ void font::textFont(const std::string& family, const std::string& style,
 	if (!_fTable.size()) return;
 
 	// Chose the family.
-	Uint32 f = 0;
+	size_t f = 0;
 	for (f; f < _fTable.size(); f++) {
 		if (_fTable[f].name == family) break;
 	}
@@ -362,7 +370,7 @@ void font::textFont(const std::string& family, const std::string& style,
 	if (f == _fTable.size()) f = 0;
 
 	// Chose the style.
-	Uint32 s = 0;
+	size_t s = 0;
 	for (s; s < _fTable[f].style.size(); s++) {
 		if (_fTable[f].style[s].name == style) break;
 	}
@@ -374,7 +382,7 @@ void font::textFont(const std::string& family, const std::string& style,
 	_fFace = _fTable[f].style[s].face;
 
 	// Check for size standard in case.
-	Uint32 _size = size;
+	size_t _size = size;
 	if (size == 0) _size = CAT_FONT_DEF_SIZE_PX; 
 	
 	// Set a size (pixel)
@@ -392,8 +400,8 @@ void font::textFont(const std::string& family, const std::string& style,
 
 
 //______________________________________________________________________________
-void font::textDraw(const std::string& text, const std::vector<Uint32>& color, 
-					Uint32& pxmWidth, Uint32& pxmHeight, GLubyte*& pxmData)
+void font::textDraw(const std::string& text, const std::vector<uint32_t>& color, 
+					uint32_t& pxmWidth, uint32_t& pxmHeight, uint8_t*& pxmData)
 {
  	/*! Creates a pixMap containing the text \c text rendered with the currently 
 	 *	loaded face. The pixmap will be loaded into the \c pxmData pointer with
@@ -419,18 +427,18 @@ void font::textDraw(const std::string& text, const std::vector<Uint32>& color,
 	int lineIdx = 0;
 
 	// Allocates a per-character map tables.
-	Uint64 count = text.size();
-	unsigned char** charMap = new unsigned char*[count];
+	uint_fast32_t count = text.size();
+	uint8_t** charMap = new uint8_t*[count];
 	FT_Vector* charPos = new FT_Vector[count];
 	FT_Vector* charDim = new FT_Vector[count];
-	Uint32 charSize = 0;
+	uint_fast32_t charSize = 0;
 	
 	// Drawing boundaries.
 	FT_Vector pxmMin = charPen;		
 	FT_Vector pxmMax = charPen;
 	
 	// Loop over all the characters.  
-	for (Uint64 i = 0; i < count; i++) {
+	for (uint64_t i = 0; i < count; i++) {
     
 		// Set transformation.
 		FT_Set_Transform(_fFace, &_fMatrix, &charPen);
@@ -443,7 +451,7 @@ void font::textDraw(const std::string& text, const std::vector<Uint32>& color,
 		// Stores the generated glyph bitmap (1 byte/pixel).
 		charSize = slot->bitmap.width * slot->bitmap.rows;
 		charMap[i] = new unsigned char[charSize];
-		for (Uint32 p = 0; p < charSize; p++) charMap[i][p] = slot->bitmap.buffer[p];
+		for (uint_fast32_t p = 0; p < charSize; p++) charMap[i][p] = slot->bitmap.buffer[p];
 		
 		// Stores position and dimension of the glyph bitmap.
 		charPos[i].x = + slot->bitmap_left;
@@ -493,27 +501,27 @@ void font::textDraw(const std::string& text, const std::vector<Uint32>& color,
 	
 	// Allocates the main pixMap.
 	if (pxmData) delete[] pxmData;
-	pxmData = new GLubyte[pxmHeight * pxmWidth * 4];
+	pxmData = new uint8_t[pxmHeight * pxmWidth * 4];
 	
 	// Clean the main map.
-	for (Uint32 i = 0; i < pxmWidth * pxmHeight * 4; i++) pxmData[i] = 0;
+	for (uint_fast32_t i = 0; i < pxmWidth * pxmHeight * 4; i++) pxmData[i] = 0;
 
 	// Stiches the single character maps into the main map. The Y axis is
 	// mirrored to match the OpenGL standard which orients pix maps in the
 	// Argand-Gauss way.
-	Uint32 start = 0;
-	Uint32 pxPos = 0;
-	unsigned char alpha = 0;
-  	for (Uint64 i = 0; i < count; i++) {
+	uint_fast32_t start = 0;
+	uint_fast32_t pxPos = 0;
+	uint8_t alpha = 0;
+  	for (uint_fast32_t i = 0; i < count; i++) {
 		
 		// Skip control chars.
 		if (text[i] < 32) continue;
 
 		// Get char color.
-		GLubyte colR = color[i] >> 24;
-		GLubyte colG = color[i] >> 16;
-		GLubyte colB = color[i] >> 8;
-		GLubyte colA = color[i];
+		uint8_t colR = color[i] >> 24;
+		uint8_t colG = color[i] >> 16;
+		uint8_t colB = color[i] >> 8;
+		uint8_t colA = color[i];
 
 		// Stich every pixel different from 0.
 		start = (pxmWidth * (pxmMax.y - charPos[i].y) + (charPos[i].x - pxmMin.x));
@@ -532,7 +540,7 @@ void font::textDraw(const std::string& text, const std::vector<Uint32>& color,
 	}
 	
 	// Release the single character maps.
-	for (Uint32 i = 0; i < count; i++) delete[] charMap[i];
+	for (uint_fast32_t i = 0; i < count; i++) delete[] charMap[i];
 	delete[] charMap;
 	delete[] charPos;
 	delete[] charDim;

@@ -91,20 +91,77 @@ inline std::ostream& operator << (std::ostream& o, const cat::gt::GT& obj)
 namespace cat { namespace gt {
 
 //______________________________________________________________________________
+//! Color.
+class color : public GT
+{
+public:
+
+	/*! Color GT. Holds the color parameters. */
+	float channel[4];
+	UINT32 RGBA;
+	
+	//! Default ctor.
+	color() {
+		set(0.7, 0.7, 0.7, 0.7);
+	}
+
+	//! RGBA ctor.
+	color(const float& r, const float& g, const float& b,  const float& a) {
+		set(r, g, b, a);
+	}
+
+	// Set R, G, B, A color.
+	void set(const float& r, const float& g, const float& b, const float& a) {
+		
+		// Set channel values.
+		channel[0] = r;
+		channel[1] = g;
+		channel[2] = b;
+		channel[3] = a;
+
+		// Check boundaries.
+		for (auto i = 0; i < 4; i++) {
+			if (channel[i] < 0) {
+				channel[i] = 0;
+			} else {
+				if (channel[i] > 1) channel[i] = 1;
+			}
+		}
+
+		// Assign RBA value.
+		RGBA = channel[0] * 255 +
+			channel[1] * 65280 +
+			channel[2] * 16711680 +
+			channel[3] * 4278190080;
+
+	}
+
+	// Direct access to color channels.
+	int r() const { return channel[0]; }
+	int g() const { return channel[1]; }
+	int b() const { return channel[2]; }
+	int a() const { return channel[3]; }
+
+};
+
+
+//______________________________________________________________________________
 //! Brush.
 class brush: public GT
 {
+	public:
+	
 	/*! Brush GT. Holds the stroking parameters. */
 	bool active; 
-	float color[4]; 
+	color col; 
 	float width;
 	Uint16 pattern;
 	Uint32 scale;
-
+	
 	//! Default ctor.
 	brush() {
 		active = true;
-		color[0] = color[1] = color[2] = 0.7f; color[3] = 1;
+		//col
 		width = 1;
 		pattern = 0;
 		scale = 1;
@@ -114,20 +171,27 @@ class brush: public GT
 //______________________________________________________________________________
 class fill: public GT 
 {
+
+	public:
+
 	/*! Fill GT. Holds the filling parameters. */
 	bool active; 
-	float color[4]; 
-	
+	color col;
+	bool wire;
+
 	//! Default ctor.
 	fill() {
 		active = true;
-		color[0] = color[1] = color[2] = 0.5f; color[3] = 1;
+		wire = false;
 	}
 };
 
 //______________________________________________________________________________
 class material: public GT
 {
+	
+	public:
+
 	/*! Material GT. Holds the material settings. */ 
 	bool active; 
 	float ambient[4]; 
@@ -150,6 +214,8 @@ class material: public GT
 //______________________________________________________________________________
 class inherit: public GT
 {
+	public:
+
 	/*! Inherit GT. Holds the inheritance settings. */ 
 	bool enabled;
 	bool visibility;
@@ -170,6 +236,8 @@ class inherit: public GT
 //______________________________________________________________________________
 class font: public GT
 {
+	public:
+
 	/*! Font GT. Hold the properties of a font. */
 	std::string family;		//!< Font family (arial, ...).
 	std::string style;		//!< Font style (bold, ...).
@@ -186,6 +254,8 @@ class font: public GT
 //______________________________________________________________________________
 class trsf: public GT
 {
+	public:
+
 	/*! Trsf GT. Hold the properties of a 3D transformation. */
 	gp::GPPos pos;			//!< Translation.
 	gp::GPAng rot;			//!< Rotation.

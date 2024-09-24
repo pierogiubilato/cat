@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// CAT Application Facility File class										  --
+// CAT Application Facility file class										  --
 // (C) Piero Giubilato 2011-2024, Padova University							  --
 //------------------------------------------------------------------------------
 
@@ -15,6 +15,10 @@
 // Overloading check
 #if !defined afFile_H
 #define afFile_H
+
+// STL.
+#include <string>
+#include <vector>
 
 // Application
 //#include "af.h"
@@ -37,10 +41,7 @@ namespace cat { namespace af {
 class file //: public AF
 {
 	private:
-		
-		
-
-
+	
 	protected:
 	
 	public:

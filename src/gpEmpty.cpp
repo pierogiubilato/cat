@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
-// [Language]		"C++"
+// [Date]			"24 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Components
@@ -25,14 +25,14 @@ namespace cat { namespace gp {
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 empty::type() const
+CO::oType empty::type() const
 {
 	/*! Returns a numeric identification. */
-	return GP::Type() + GP::kgp_Virtual;
+	return CO::oType::gpEmpty;
 }
 
 //______________________________________________________________________________
-Uint64 empty::version() const
+cat::coVer_t empty::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
@@ -46,7 +46,7 @@ std::string empty::stem() const
 }
 
 //______________________________________________________________________________
-void empty::dump(const Uint64& ind) const
+void empty::dump(const int& ind) const
 {
 	/*! Send out all the box data. */
 	std::string pad(ind, ' ');

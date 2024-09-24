@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -46,12 +46,12 @@ filled::~filled()
 } 
 
 //______________________________________________________________________________
-Uint64 filled::type() const
+CO::oType filled::type() const
 {
 	/*! Returns object type. This function MUST be overloaded to differentiate 
 	 *	any derived class, and must also be addictive! 
 	 */
-   return stroked::type() + ktype::filled;
+   return CO::oType::gpFilled;
 }
 
 //______________________________________________________________________________

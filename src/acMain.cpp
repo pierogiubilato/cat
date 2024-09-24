@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
-// [Language]		"C++"
+// [Date]			"23 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Standard
@@ -54,12 +54,12 @@ int cat::ag::_screenDPIX = 96;					// Default screen X resolution.
 int cat::ag::_screenDPIY = 96;					// Default screen Y resolution.
 
 // Global application core services.
-cat::ac::server* cat::ac::_server = 0;			// No inst. Server.
-cat::ac::loop* cat::ac::_loop = 0;				// No inst. Loop.
+cat::ac::server* cat::ac::_server = NULL;		// No inst. Server.
+cat::ac::loop* cat::ac::_loop = NULL;			// No inst. Loop.
 
 // Global application facility services.
-cat::af::file* cat::af::_file = 0;				// No inst. File Facility.
-cat::af::font* cat::af::_font = 0;				// No inst. Font Facility.
+cat::af::file* cat::af::_file = NULL;			// No inst. File Facility.
+cat::af::font* cat::af::_font = NULL;			// No inst. Font Facility.
 
 //______________________________________________________________________________
 int main(int argc, char** argv)

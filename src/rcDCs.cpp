@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -40,51 +40,51 @@ namespace cat { namespace rc {
 // *****************************************************************************
 
 	// Default brush.
-	const gt::brush DCs::dkBrushDefault = {
-		true,				// Active. 
-		{0xffb2b2b2, {0.7f, 0.7f, 0.7f, 1.0f}}, // Color.
-		{1.0f, 0, 1}		// Stroke
-	};
+	const gt::brush DCs::dkBrushDefault;
+		//true,				// Active. 
+		//{0xffb2b2b2, {0.7f, 0.7f, 0.7f, 1.0f}}, // Color.
+		//{1.0f, 0, 1}		// Stroke
+		//);
 
 	// Default fill.
-	const gt::fill DCs::dkFillDefault = {
-		false,						// Not active
-		{0xffb2b2b2, {0.7f, 0.7f, 0.7f, 1.0f}}, // Color.		
-		false						// Not wireframed.
-	};
-		
+	const gt::fill DCs::dkFillDefault; // = {
+		//	false,						// Not active
+		//	{0xffb2b2b2, {0.7f, 0.7f, 0.7f, 1.0f}}, // Color.		
+		//	false						// Not wireframed.
+		//};
+
 	// Default material.
-	const gt::material DCs::dkMaterialDefault = {
-		false,						// Not active.
-		{0.0f, 0.0f, 0.0f, 1.0f},	// Ambient.
-		{0.7f, 0.7f, 0.7f, 1.0f},	// Diffuse.
-		{0.7f, 0.7f, 0.7f, 1.0f},	// Specular.
-		{0.0f, 0.0f, 0.0f, 1.0f},	// Emission.
-		20							// Shininess.
-	};
+	const gt::material DCs::dkMaterialDefault; // = {
+	//	false,						// Not active.
+	//	{0.0f, 0.0f, 0.0f, 1.0f},	// Ambient.
+	//	{0.7f, 0.7f, 0.7f, 1.0f},	// Diffuse.
+	//	{0.7f, 0.7f, 0.7f, 1.0f},	// Specular.
+	//	{0.0f, 0.0f, 0.0f, 1.0f},	// Emission.
+	//	20							// Shininess.
+	//};
 
 	// Default Inheritance.
-	const gt::inherit DCs::dkInheritDefault = {
-		true,	// Appearance/global.
-		true,	// Visibility.
-		true,	// Alpha channel.
-		true,	// Wireframe.
-		true	// Reference.
-	};
+	const gt::inherit DCs::dkInheritDefault; // = {
+	//	true,	// Appearance/global.
+	//	true,	// Visibility.
+	//	true,	// Alpha channel.
+	//	true,	// Wireframe.
+	//	true	// Reference.
+	//};
 
 	// Default Font.
-	const gt::font DCs::dkFontDefault = {
-		"",		// Default Font Facility family.
-		"",		// Default font Facility style.
-		0		// Default Font Facility size.
-	};
+	const gt::font DCs::dkFontDefault; // = {
+	//	"",		// Default Font Facility family.
+	//	"",		// Default font Facility style.
+	//	0		// Default Font Facility size.
+	//};
 
 	// Default reference.
-	const gt::trsf DCs::dkTrsfDefault = {
-		{0.0f, 0.0f, 0.0f},		// Position (0,0,0), no translation.
-		{0.0f, 0.0f, 0.0f},		// Angle (0,0,0), no rotation.
-		{1.0f, 1.0f, 1.0f}		// Scale (1,1,1), no scaling.
-	};
+	const gt::trsf DCs::dkTrsfDefault; // = {
+	//	{0.0f, 0.0f, 0.0f},		// Position (0,0,0), no translation.
+	//	{0.0f, 0.0f, 0.0f},		// Angle (0,0,0), no rotation.
+	//	{1.0f, 1.0f, 1.0f}		// Scale (1,1,1), no scaling.
+	//};
 
 
 
@@ -93,14 +93,14 @@ namespace cat { namespace rc {
 // *****************************************************************************
 
 //______________________________________________________________________________
-DCs::DCs(const char* host, const Uint16& port, const Uint64& verb): core(host, port, verb)
+DCs::DCs(const char* host, const int& port, const int& verb): core(host, port, verb)
 {
 
 	// Preset drawing tools to default values.
-	_brush = dkBrushDefault;	
-	_fill = dkFillDefault;
-	_material = dkMaterialDefault;
-	_inherit = dkInheritDefault;
+	//_brush = dkBrushDefault;	
+	//_fill = dkFillDefault;
+	//_material = dkMaterialDefault;
+	//_inherit = dkInheritDefault;
 
 }
 	
@@ -113,7 +113,7 @@ DCs::DCs(const char* host, const Uint16& port, const Uint64& verb): core(host, p
 // ************************************ Brush **********************************
 
 //______________________________________________________________________________
-gpBrush DCs::dcBrushGet() const
+gt::brush DCs::dcBrushGet() const
 {
 	/*! Returns the current brush. */
 	return _brush;
@@ -171,9 +171,9 @@ void DCs::dcBrushSet(const bool& active, const double& R, const double& G,
 	_brush.active = active;
 	
 	// Stroke.
-	_brush.stroke.width = static_cast<float>(width);
-	_brush.stroke.pattern = pattern; 
-	_brush.stroke.scale = scale;
+	_brush.width = static_cast<float>(width);
+	_brush.pattern = pattern; 
+	_brush.scale = scale;
 }
 
 //______________________________________________________________________________
@@ -205,26 +205,22 @@ void DCs::dcBrushActive(const bool& active)
 }
 
 //______________________________________________________________________________
-void DCs::dcBrushColor(const double& R, const double& G,
-						  const double& B, const double& A)
+void DCs::dcBrushColor(const double& r, const double& g,
+	const double& b, const double& a)
 {
-	/*! Sets only the brush color, where \c R is the red channel, \c G the green 
+	/*! Sets only the brush color, where \c R is the red channel, \c G the green
 	 *	channel, \c B the blue channel and \c A the alpha (transparency)
 	 *	channel. EAch channel can range in the [0 - 1] interval
 	 */
-	
+
 	// Color check.
-	float _r = static_cast<float>(r); if (_r < 0) _r = 0; if (_r > 1) _r = 1;
-	float _g = static_cast<float>(g); if (_g < 0) _g = 0; if (_g > 1) _g = 1;
-	float _b = static_cast<float>(b); if (_b < 0) _b = 0; if (_b > 1) _b = 1;
-	float _a = static_cast<float>(a); if (_a < 0) _a = 0; if (_a > 1) _a = 1;
+	float _r = static_cast<float>(r);
+	float _g = static_cast<float>(g);
+	float _b = static_cast<float>(b);
+	float _a = static_cast<float>(a);
 
 	// Color assign.
-	_brush.col.col[0] = _r;
-	_brush.col.col[1] = _g;
-	_brush.col.col[2] = _b;
-	_brush.col.col[3] = _a;
-	_brush.col.RGBA = (Uint32)(_r * 255 + _g * 65280 + _b * 16711680 + _a * 4278190080); 
+	_brush.col.set(r, g, b, a);
 }
 
 //______________________________________________________________________________
@@ -252,9 +248,9 @@ void DCs::dcBrushStroke(const double& width, const Uint16& pattern,
 						   const Uint32& scale)
 {
 	/*! Sets the brush stroke. */
-	_brush.stroke.width = static_cast<float>(width);
-	_brush.stroke.pattern = pattern;
-	_brush.stroke.scale = scale;
+	_brush.width = static_cast<float>(width);
+	_brush.pattern = pattern;
+	_brush.scale = scale;
 }
 
 
@@ -364,11 +360,7 @@ void DCs::dcFillColor(const double& r, const double& g,
 	float _a = static_cast<float>(a); if (_a < 0) _a = 0; if (_a > 1) _a = 1;
 
 	// Color assign.
-	_fill.col.col[0] = _r;
-	_fill.col.col[1] = _g;
-	_fill.col.col[2] = _b;
-	_fill.col.col[3] = _a;
-	_fill.col.RGBA = (Uint32)(_r * 255 + _g * 65280 + _b * 16711680 + _a * 4278190080); 
+	_fill.col.set(r, g, b, a);
 }
 
 //______________________________________________________________________________
@@ -685,7 +677,7 @@ gp::GPHnd DCs::dcVirtual(const gp::GPHnd& parent, const char* name)
 	if (sceneStatus()) return 0;
 
 	// Draw the object and retrieve a pointer to it.
-	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::virtual, parent);
+	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::empty(), parent);
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 
 	// Sets object specific properties.
@@ -838,7 +830,7 @@ gp::GPHnd DCs::dcPoint(const gp::GPHnd& parent,
 	if (sceneStatus()) return 0;
 
 	// Adds the GP to the scene.
-	gp::GPHnd newGP = _scene[_select]->gpAdd(new ge::point(x, y, z, r), parent);
+	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::point(x, y, z, r), parent);
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 	
 	// Sets GP specific properties.
@@ -886,8 +878,8 @@ gp::GPHnd DCs::dcLine(const gp::GPHnd& parent,
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 	
 	// Sets GP specific properties.
-	gp->Name(name);
-	gp->Info("");
+	gp->name(name);
+	gp->info("");
 	
 	// Sets GP drawing properties.
 	gpLoadBrush(gp);
@@ -930,10 +922,10 @@ gp::GPHnd DCs::dcPolygon(const gp::GPHnd& parent, const double* vtx, const Uint6
 	if (sceneStatus()) return 0;
 
 	// Creates the polygon vertexes.
-	go::point* v = new go::point[vtxCount];
+	ge::point* v = new ge::point[vtxCount];
 	for (Uint64 i = 0; i <vtxCount; i++) {
 		Uint64 p = i * 3;
-		v[i].XYZ(vtx[p], vtx[p + 1], vtx[p + 2]); 
+		v[i].xyz(vtx[p], vtx[p + 1], vtx[p + 2]); 
 	}
 	
 	// Adds the GP to the scene.
@@ -942,8 +934,8 @@ gp::GPHnd DCs::dcPolygon(const gp::GPHnd& parent, const double* vtx, const Uint6
 	delete[] v;
 
 	// Sets GP specific properties.
-	gp->Name(name);
-	gp->Info("");
+	gp->name(name);
+	gp->info("");
 	
 	// Sets GP drawing properties.
 	gpLoadInherit(gp);
@@ -960,14 +952,14 @@ gp::GPHnd DCs::dcPolygon(const double* vtx, const Uint64& vtxCount,
 						const bool& closed, const char* name)
 {
 	/*! Draw a polygon object. Parentless overload. */
-	return dcPolygon((gpHnd)0, vtx, vtxCount, closed, name); 
+	return dcPolygon((gp::GPHnd)0, vtx, vtxCount, closed, name); 
 }
 
 
 // *********************************** Box *************************************
 
 //______________________________________________________________________________
-gp::GPHnd DCs::dcBox(const gpHnd& parent, const double* vtx, const char* name)
+gp::GPHnd DCs::dcBox(const gp::GPHnd& parent, const double* vtx, const char* name)
 {
 	/*! Draws a box. Returns the handle to that object if successful, NULL
 	 *	otherwise. \c parent is the parent for the object, \c vtx is the pointer 
@@ -993,8 +985,8 @@ gp::GPHnd DCs::dcBox(const gpHnd& parent, const double* vtx, const char* name)
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 																		
 	// Sets GP specific properties.
-	gp->Name(name);
-	gp->Info("");
+	gp->name(name);
+	gp->info("");
 	
 	// Sets GP drawing properties.
 	gpLoadInherit(gp);
@@ -1010,11 +1002,11 @@ gp::GPHnd DCs::dcBox(const gpHnd& parent, const double* vtx, const char* name)
 gp::GPHnd DCs::dcBox(const double* vtx, const char* name)
 {
 	/*! Draw a box object by defining its 8 vertexes. Parentless overload. */
-	return dcBox((gpHnd)0, vtx, name); 
+	return dcBox((gp::GPHnd)0, vtx, name); 
 }
 
 //______________________________________________________________________________
-gp::GPHnd DCs::dcBox(const gpHnd& parent,
+gp::GPHnd DCs::dcBox(const gp::GPHnd& parent,
 					const double& cX, const double& cY, const double& cZ,
 					const double& sX, const double& sY, const double& sZ,										
 					const char* name)
@@ -1035,8 +1027,8 @@ gp::GPHnd DCs::dcBox(const gpHnd& parent,
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 																		
 	// Sets GP specific properties.
-	gp->Name(name);
-	gp->Info("");
+	gp->name(name);
+	gp->info("");
 	
 	// Sets GP drawing properties.
 	gpLoadInherit(gp);
@@ -1054,14 +1046,14 @@ gp::GPHnd DCs::dcBox(const double& cX, const double& cY, const double& cZ,
 					const char* name)
 {
 	/*! Draw a box object. Parentless overload. */
-	return dcBox((gpHnd)0, cX, cY, cZ, sX, sY, sZ, name); 
+	return dcBox((gp::GPHnd)0, cX, cY, cZ, sX, sY, sZ, name); 
 }
 
 
 // ********************************** Tube *************************************
 
 //______________________________________________________________________________
-gp::GPHnd DCs::dcTube(const gpHnd& parent,
+gp::GPHnd DCs::dcTube(const gp::GPHnd& parent,
 					 const double& riBase, const double& roBase, 
 					 const double& riTop, const double& roTop, 
 					 const double& height, const Uint32& slices,
@@ -1092,8 +1084,8 @@ gp::GPHnd DCs::dcTube(const gpHnd& parent,
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 																		
 	// Sets GP specific properties.
-	gp->Name(name);
-	gp->Info("");
+	gp->name(name);
+	gp->info("");
 	
 	// Sets GP drawing properties.
 	gpLoadInherit(gp);
@@ -1111,14 +1103,14 @@ gp::GPHnd DCs::dcTube(const double& riBase, const double& roBase,
 					 const Uint32& stacks, const char* name)
 {
 	/*! Draw a cylinder object. Parentless overload. */
-	return dcTube((gpHnd)0, riBase, roBase, riTop, roTop, height, slices, stacks, name);
+	return dcTube((gp::GPHnd)0, riBase, roBase, riTop, roTop, height, slices, stacks, name);
 }
 
 
 // ******************************** Cylinder ***********************************
 
 //______________________________________________________________________________
-gp::GPHnd DCs::dcCylinder(const gpHnd& parent,
+gp::GPHnd DCs::dcCylinder(const gp::GPHnd& parent,
 						const double& radius, const double& height,
 						const Uint32& slices, const Uint32& stacks,
 						const char* name)
@@ -1144,8 +1136,8 @@ gp::GPHnd DCs::dcCylinder(const gpHnd& parent,
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 																		
 	// Sets GP specific properties.
-	gp->Name(name);
-	gp->Info("");
+	gp->name(name);
+	gp->info("");
 	
 	// Sets GP drawing properties.
 	gpLoadInherit(gp);
@@ -1162,14 +1154,14 @@ gp::GPHnd DCs::dcCylinder(const double& radius, const double& height,
 						 const char* name)
 {
 	/*! Draw a cylinder object. Parentless overload. */
-	return dcCylinder((gpHnd)0, radius, height, slices, stacks, name);
+	return dcCylinder((gp::GPHnd)0, radius, height, slices, stacks, name);
 }
 
 
 // ********************************** Cone *************************************
 
 //______________________________________________________________________________
-gp::GPHnd DCs::dcCone(const gpHnd& parent,
+gp::GPHnd DCs::dcCone(const gp::GPHnd& parent,
 					 const double& radius, const double& height,
 					 const Uint32& slices, const Uint32& stacks,
 					 const char* name)
@@ -1195,8 +1187,8 @@ gp::GPHnd DCs::dcCone(const gpHnd& parent,
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 																		
 	// Sets GP specific properties.
-	gp->Name(name);
-	gp->Info("");
+	gp->name(name);
+	gp->info("");
 	
 	// Sets GP drawing properties.
 	gpLoadInherit(gp);
@@ -1213,14 +1205,14 @@ gp::GPHnd DCs::dcCone(const double& radius, const double& height,
 					 const char* name)
 {
 	/*! Draw a cylinder object. Parentless overload. */
-	return dcCone((gpHnd)0, radius, height, slices, stacks, name);
+	return dcCone((gp::GPHnd)0, radius, height, slices, stacks, name);
 }
 
 
 // ********************************* Sphere ************************************
 
 //______________________________________________________________________________
-gp::GPHnd DCs::dcSphere(const gpHnd& parent,
+gp::GPHnd DCs::dcSphere(const gp::GPHnd& parent,
 					   const double& radius, const Uint32& slices,
 					   const Uint32& stacks, const char* name)
 {
@@ -1242,8 +1234,8 @@ gp::GPHnd DCs::dcSphere(const gpHnd& parent,
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 																		
 	// Sets GP specific properties.
-	gp->Name(name);
-	gp->Info("");
+	gp->name(name);
+	gp->info("");
 	
 	// Sets GP drawing properties.
 	gpLoadInherit(gp);
@@ -1259,14 +1251,14 @@ gp::GPHnd DCs::dcSphere(const double& radius, const Uint32& slices,
 						const Uint32& stacks, const char* name)
 {
 	/*! Draw a sphere object. Parentless overload. */
-	return dcSphere((gpHnd)0, radius, slices, stacks, name);
+	return dcSphere((gp::GPHnd)0, radius, slices, stacks, name);
 }
 
 
 // ********************************** Label ************************************
 
 //______________________________________________________________________________
-gp::GPHnd DCs::dcLabel(const gpHnd& parent, const char* text,
+gp::GPHnd DCs::dcLabel(const gp::GPHnd& parent, const char* text,
 					  const double& cX, const double& cY, const double& cZ,
 					  const Uint32& alignment, const double& rotation, 
 					  const bool& view2D, const char* name)
@@ -1311,8 +1303,8 @@ gp::GPHnd DCs::dcLabel(const gpHnd& parent, const char* text,
 	gp::GP* gp = _scene[_select]->gpGet(newGP);
 																		
 	// Sets GP specific properties.
-	gp->Name(name);
-	gp->Info("");
+	gp->name(name);
+	gp->info("");
 	
 	// Sets label drawing properties (fill and material not actually used).
 	gpLoadInherit(gp);
@@ -1331,7 +1323,7 @@ gp::GPHnd DCs::dcLabel(const char* text,
 					  const bool& view2D, const char* name)
 {
 	/*! Draw a label object. Parentless overload. */
-	return dcLabel((gpHnd)0, text, cX, cY, cZ, alignment, rotation, view2D, name); 
+	return dcLabel((gp::GPHnd)0, text, cX, cY, cZ, alignment, rotation, view2D, name); 
 }
 
 

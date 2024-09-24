@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -47,8 +47,8 @@ namespace cat { namesppace gp {
 	// mode.
 	float GP::_selColor[4] = {1, 1, 1, 1};
 	float GP::_selWidth = 3;
-	Uint16 GP::_selPattern = 255;
-	Uint32 GP::_selFactor = 1;
+	uint16_t GP::_selPattern = 255;
+	uint32_t GP::_selFactor = 1;
 		
 
 
@@ -73,7 +73,7 @@ GP::~GP()
 	/*! Destructor	*/
 	
 	// Kills all the childs!
-	//for (Uint32 i = 0; i < _Child.size(); i++) delete _SPtr[_Child[i]];
+	//for (uint32_t i = 0; i < _Child.size(); i++) delete _SPtr[_Child[i]];
 } 
 
 
@@ -82,7 +82,7 @@ GP::~GP()
 // *****************************************************************************
 
 //______________________________________________________________________________
-void GP::init(scene* owner, GPHnd pHnd)
+void GP::init(scene* owner, gp::GPHnd pHnd)
 {
 	// Basic properties.
 	_ownerPtr = owner;
@@ -117,7 +117,7 @@ void GP::init(scene* owner, GPHnd pHnd)
 }
 
 //______________________________________________________________________________
-GPPos GP::offset(const GPDim& dim, const Uint64& alignment)	const
+gp::GPPos GP::offset(const gp::GPDim& dim, const int& alignment)	const
 {
 	/*! Simply calculates the offset necessary to align a bounding box of
 	 *	dimensions \c dim accordingly to the \c alignment parameter passed.
@@ -146,7 +146,7 @@ GPPos GP::offset(const GPDim& dim, const Uint64& alignment)	const
 // *****************************************************************************
 
 //______________________________________________________________________________
-GP* GP::build(const Uint64& type) const
+gp::GP* GP::build(const uint64_t& type) const
 {
 	/*! Build a GP by its type. This call allows to build a specific object with
 	 *	no more knowledge about it except the type of GP. If the provided \c type
@@ -156,22 +156,22 @@ GP* GP::build(const Uint64& type) const
    
 	// Create it!
 	switch (type) {
-  		case kgp_Stroked: return new gp::Stroked();
-		case kgp_Filled: return new gp::Filled();
-		case kgp_Fonted: return new gp::Fonted();
-		case kgp_Scene: return new gp::Scene();
-		case kgp_Virtual: return new gp::Virtual();  
-		case kgp_Material: return new gp::Material();
-		case kgp_Frame: return new gp::Frame();
-		case kgp_Point: return new gp::Point();
-		case kgp_Line: return new gp::Line();
-		case kgp_Polygon: return new gp::Polygon();
-		case kgp_Box: return new gp::Box();
-		case kgp_Tube: return new gp::Tube();
-		case kgp_Cylinder: return new gp::Cylinder();
-		case kgp_Cone: return new gp::Cone();
-		case kgp_Sphere: return new gp::Sphere();
-		case kgp_Label: return new gp::Label();  
+	case cat::CO::oType::stroked: return new gp::stroked();
+	case cat::CO::oType::filled:	return new gp::filled();
+		case cat::CO::oType::fonted:	return new gp::fonted();
+		case cat::CO::oType::scene:	return new gp::scene();
+		case cat::CO::oType::empty:	return new gp::empty();
+		case cat::CO::oType::material: return new gp::Material();
+		case cat::CO::oType::frame:	return new gp::frame();
+		case cat::CO::oType::point:	return new gp::point();
+		case cat::CO::oType::line:	return new gp::line();
+		case cat::CO::oType::polygon: return new gp::polygon();
+		case cat::CO::oType::box:	return new gp::box();
+		case cat::CO::oType::tube:	return new gp::tube();
+		case cat::CO::oType::cylinder: return new gp::cylinder();
+		case cat::CO::oType::cone:	return new gp::cone();
+		case cat::CO::oType::sphere: return new gp::sphere();
+		case cat::CO::oType::gpLabel: return new gp::label();
 	}
 
 	// Not recognized type!
@@ -234,7 +234,7 @@ bool GP::childDel(GPHnd cHnd)
 	 */
 
 	// Search the handle.
-	Uint64 cIdx = 0;
+	uint64_t cIdx = 0;
 	for (cIdx = 0; cIdx < _childHnd.size(); cIdx++) if (_childHnd[cIdx] == cHnd) break;
 
 	// Removes and exit.
@@ -248,7 +248,7 @@ bool GP::childDel(GPHnd cHnd)
 }
 
 //______________________________________________________________________________
-GPHnd GP::childGet(Uint64 cIdx) const
+GPHnd GP::childGet(int cIdx) const
 {
 	/*! Returns the handle to the \c cIdx th child of the GP. If \c cIdx is
 	 * out of range returns 0.
@@ -266,7 +266,7 @@ GPHnd GP::childCount() const
 
 
 // *****************************************************************************
-// **						  Default GO public members						  **
+// **						  Default CO public members						  **
 // *****************************************************************************
 
 //______________________________________________________________________________
@@ -284,16 +284,16 @@ void GP::handle(GPHnd Hnd)
 }
 
 //______________________________________________________________________________
-Uint64 GP::type() const
+CO::oType GP::type() const
 {
 	/*! Returns object type. This function MUST be overloaded to differentiate 
 	 *	any derived class! 
 	 */
-   return ktype::null;
+   return CO::oType::gpBase;
 }
 
 //______________________________________________________________________________
-Uint64 GP::version() const
+uint64_t GP::version() const
 {
 	/*! Returns object version. This function MUST be overloaded to differentiate 
 	 *	any derived class! Version numbering is made in unit of hundreds for the
@@ -330,7 +330,7 @@ size_t GP::size(const bool& dynamic) const
 }
 
 //______________________________________________________________________________
-void GP::dump(const Uint64& ind) const
+void GP::dump(const int& ind) const
 {
  	/*! Dumps on the standard output the relevant GP properties. */
 
@@ -373,7 +373,7 @@ void GP::dump(const Uint64& ind) const
 	// Childrens.
 	if (childCount()) {
 		std::cout << pad2 << "Childs [";		
-		for (Uint64 i = 0; i < childCount(); i++) {
+		for (uint64_t i = 0; i < childCount(); i++) {
 			std::cout << COL(CAT_DUMP_COL_CHILD) << _childHnd[i] << CD << "\n";
 			if (i < childCount() - 1) std::cout << ", ";
 		}
@@ -396,8 +396,8 @@ bool GP::stream(std::stringstream& o, const bool& read)
 	if (read) {
 				
 		// Check type and version consistency
-		Uint64 typeCheck = 0;
-		Uint64 versionCheck = 0;
+		uint64_t typeCheck = 0;
+		uint64_t versionCheck = 0;
 		af::stream::read(o, typeCheck); 
 		if (typeCheck != type()) {
 			throw std::runtime_error("cat::GP::stream uncorrect Type!");
@@ -513,7 +513,7 @@ void GP::modeSelected(const bool& sel)
 	_modeSelected = sel;
 
 	// Propagates to all childrens.
-	for (Uint64 i = 0; i < _childHnd.size(); i++) {
+	for (uint64_t i = 0; i < _childHnd.size(); i++) {
 		GP* child =	_ownerPtr->gp_Get(_childHnd[i]);
 		if (child) child->modeSelected(sel);
 	}
@@ -700,14 +700,14 @@ void GP::inhrRef(const bool& inhr)
 // ************************* EXPERIMENTAL
 
 //______________________________________________________________________________
-bool GP::modeGet(const Uint8& flag) const
+bool GP::modeGet(const uint8_t& flag) const
 {
 	/*! Retrieves the status of the \c flag argument. */
 	return _modeStore & flag;
 }
 
 //______________________________________________________________________________
-void GP::modeSet(const Uint8& flag, const bool& status)
+void GP::modeSet(const uint8_t& flag, const bool& status)
 {
 	/*! Sets the GP status of the \c flag mode. */
 	status ? _modeStore |= flag : _modeStore &= ~flag;
@@ -907,7 +907,7 @@ void GP::glDrawEnd()
 void TW_CALL GP::cbkSizeGet(void* value, void* client)
 {
 	/*! Get the layout mode. */
-	*static_cast<Uint32*>(value) = static_cast<GP*>(client)->size();
+	*static_cast<uint32_t*>(value) = static_cast<GP*>(client)->size();
 }
 
 //______________________________________________________________________________

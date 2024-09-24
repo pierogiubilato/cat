@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
-// [Language]		"C++"
+// [Date]			"23 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 
@@ -57,10 +57,10 @@ polygon::polygon(const ge::point* v, const Uint64& vCnt, const bool& closed)
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 polygon::type() const
+CO::oType polygon::type() const
 {
 	/*! Returns a numeric identification. */
-	return stroked::type() + GP::ktype::polygon;
+	return CO::otype::gpPolygon;
 }
 
 //______________________________________________________________________________

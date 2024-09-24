@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2011"
+// [Date]			"23 Sep 2011"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -59,10 +59,10 @@ point::point(const double* vtx, const double& r)
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 point::type() const
+CO::oType point::type() const
 {
 	/*! Returns a numeric identification. */
-	return stroked::type() + GP::ktype::point;
+	return CO::oType::gpPoint;
 }
 
 //______________________________________________________________________________

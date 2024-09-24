@@ -15,8 +15,8 @@
 
 // Application components.
 #include "acLoop.h"
+#include "acMain.h"
 #include "acServer.h"
-
 
 // #############################################################################
 // Open namespaces
@@ -85,7 +85,7 @@ void loop::cmdAppRun()
 		}
 
 		// Server run.
-		cat::ac::_server->run(true);
+		ac::_server->run(true);
 	}
 }
 

@@ -19,17 +19,8 @@
 // STL.
 #include <string>
 
-// SDL (used also for numeric types).
-//#include "SDL.h"
-//#include "SDL_opengl.h"
-
 // Application globals
 #include "acGlobal.h"
-
-
-
-// Personalized streams are spread through all the application.
-//#include "afStream.h"
 
 
 // #############################################################################

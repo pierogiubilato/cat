@@ -52,8 +52,8 @@ namespace cat { namespace gp {
 struct GPPos { float x; float y; float z; };
 struct GPAng { float a; float b; float g; };
 struct GPDim { float x; float y; float z; };
-struct GPColor { Uint32 RGBA; float col[4]; };
-struct GPStroke { float width; Uint16 pattern; Uint32 Scale; };
+struct GPColor { uint32_t RGBA; float col[4]; };
+struct GPStroke { float width; uint16_t pattern; uint32_t scale; };
 
 
 
@@ -62,7 +62,7 @@ struct GPStroke { float width; Uint16 pattern; Uint32 Scale; };
 // *****************************************************************************
 
 //! The handle representing a GP object.
-typedef Uint64 GPHnd;
+typedef uint64_t GPHnd;
 
 // Simple support structures.
 //struct GPPos {float x; float y; float z;};
@@ -135,7 +135,7 @@ class GP : public cat::CO
 		//};
 
 		//! Status mode constants.
-		enum class kMode : Uint32 {
+		enum class kMode : uint_fast32_t {
 			null = 0,
 			visible = 1,	//! GP is visible.
 			frozen = 2,		//! GP is frozen.
@@ -147,7 +147,7 @@ class GP : public cat::CO
 		};
 
 		//! Inheritance mode constants.
-		enum class kInhr : Uint32 {
+		enum class kInhr : uint_fast32_t {
 			null = 0,
 			enable = 1,		//! Inheritance On/Off.
 			visible = 2,	//! Inherits visibility status.
@@ -157,7 +157,7 @@ class GP : public cat::CO
 		};
 
 		// Alignment constants.
-		enum class kAlign : Uint32 {
+		enum class kAlign : uint_fast32_t {
 			null = 0,
 			horLeft = 1,
 			horMid = 2,
@@ -170,21 +170,21 @@ class GP : public cat::CO
 		// Static data members for selection mode appearance.
 		static float _selColor[4];
 		static float _selWidth;
-		static Uint16 _selPattern;
-		static Uint32 _selFactor;
+		static uint16_t _selPattern;
+		static uint32_t _selFactor;
 
 		// Special members.
 		GP();									//!< Default ctor.
 		virtual ~GP();							//!< Virtual dtor.
 
 		// Special factory Build.
-		GP* build(const Uint64&) const;			//!< Builds a new GP object.	
+		GP* build(const uint64_t&) const;		//!< Builds a new GP object.	
 
 		// Default interface public members, overload cat::CO class.
 		oType type() const;						//!< Returns GP object type.
-		Uint64 version() const;					//!< Returns GP version.
+		uint32_t version() const;				//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
-		void dump(const Uint64 & = 0) const;	//!< Dumps GP data.
+		void dump(const int & = 0) const;	//!< Dumps GP data.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
 		bool stream(std::stringstream& o, const bool& read = false);
 
@@ -204,10 +204,10 @@ class GP : public cat::CO
 		void parent(GPHnd);						//!< Sets the parent handle.
 		bool childAdd(GPHnd);					//!< Adds a child to the GP.
 		bool childDel(GPHnd cHnd);				//!< Deletes the child of handle cHnd from the GP.
-		GPHnd childGet(Uint64 cIdx) const;		//!< Returns the child(cIdx) handle.
-		Uint64 childCount() const;				//!< Returns the number of childs.
+		GPHnd childGet(int cIdx) const;			//!< Returns the child(cIdx) handle.
+		int childCount() const;					//!< Returns the number of childs.
 
-		// Public basic members.
+		// GP public basic members.
 		GPHnd handle() const;					//!< Returns the GP unique Id.
 		void handle(GPHnd);						//!< Sets the GP unique Id.
 		const char* name() const;				//!< Return GP name.
@@ -215,7 +215,7 @@ class GP : public cat::CO
 		const char* info() const;				//!< Return GP info.
 		void info(const char*);					//!< Sets the GP info.
 
-		// Public mode members.
+		// GP public mode members.
 		bool modeVisible() const;				//!< Retrieves GP visible status.
 		void modeVisible(const bool&);			//!< Sets the GP visible status.
 		bool modeWireframe() const;				//!< Retrieves GP wireframe status.
@@ -231,8 +231,8 @@ class GP : public cat::CO
 		bool modeNeedRedraw() const;			//!< Retrieves if the GP need redraw.
 		void modeNeedRedraw(const bool&);		//!< Sets the if the GP need redraw.	
 
-		bool modeGet(const Uint8&) const;	//!< Retrieves the GP status equivalent to flag.
-		void modeSet(const Uint8&, const bool&);	//!< Sets the GP status equivalent to flag.
+		bool modeGet(const uint8_t&) const;		//!< Retrieves the GP status equivalent to flag.
+		void modeSet(const uint8_t&, const bool&);//!< Sets the GP status equivalent to flag.
 
 		// Public inheritance members.
 		bool inhrAppear() const;				//!< Return appearance inheritance.
@@ -254,12 +254,12 @@ class GP : public cat::CO
 		char* _info;							//!< GP info. String are not used here to save memory.
 
 		// Family relationships.
-		scene* _ownerPtr;						//!< The GP owner (the scene it belongs to).
+		scene* _ownerPtr;						//!< The GP owner (the scene it belongs to, NOT STREAMED).
 		GPHnd _parentHnd;						//!< The parent GP Handle (if any).
-		GP* _parentPtr;							//!< The parent GP Pointer (if instantiated).
+		GP* _parentPtr;							//!< The parent GP Pointer (if instantiated, NOT STREAMED).
 		std::vector<GPHnd> _childHnd;			//!< The child(s) GP(s) pointers (if any, NOT STREAMED).
 
-		// Status mode.
+		// GP status mode.
 		bool _modeVisible;						//!< GP drawn or not.
 		bool _modeWire;							//!< GP wireframe mode.
 		bool _modeFrozen;						//!< frozen or not.
@@ -276,11 +276,11 @@ class GP : public cat::CO
 		bool _inhrRef;							//!< Inherit reference frame.
 
 		// Status and Inheritance bitmasks:
-		Uint8 _modeStore;						//!< Byte storing the current status.
-		Uint8 _inhrStore;						//!< Byte storing the inheritance settings.
+		uint8_t _modeStore;						//!< Byte storing the current status.
+		uint8_t _inhrStore;						//!< Byte storing the inheritance settings.
 
 		// Offset a point accordingly to the alignment constants.
-		GPPos offset(const GPDim&, const Uint64& alignment) const;
+		GPPos offset(const GPDim&, const int& alignment) const;
 	
 	private:
 

@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"gdRef.cpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.2"
+// [Version]		"1.3"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"21 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -95,7 +95,7 @@ oType ref::type() const
 }
 
 //______________________________________________________________________________
-Uint64 ref::version() const
+cat::coVer_t ref::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
@@ -117,7 +117,7 @@ size_t ref::size() const
 	return total;
 }
 //______________________________________________________________________________
-void ref::dump(const Uint32& ind) const
+void ref::dump(const int& ind) const
 {
 	/*! Send out all the reference data. */
 	std::string pad(ind, ' ');
@@ -273,7 +273,7 @@ bool ref::getAxisAngle()
 	 */
 
 	// First step, we determine the rotation axis. This is done by finding
-	// the eigevector of eigenvalue 1. There are two possible solutions
+	// the eigenvector of eigenvalue 1. There are two possible solutions
 	// for this eigenvalue (+-1), we will disambiguate them in the next 
 	// step	by using the rotation angle cosine and sine.
 	_v0[0] = (_trsf[4] - 1) * (_trsf[8] - 1) - _trsf[5] * _trsf[7];
@@ -292,7 +292,7 @@ bool ref::getAxisAngle()
 	// trace of the rotation matrix, so we get:
 	double cosA = (_trsf[0] + _trsf[4] + _trsf[8] - 1) / 2;
 	
-	// Now, if A is the trasformation matrix, we exploit the fact that
+	// Now, if A is the transformation matrix, we exploit the fact that
 	// the A - Trsp(A) matrix is equivalent (calling x, y, z the axis
 	// components and a the rotation angle around this axis):
 	//
@@ -364,7 +364,7 @@ void ref::a0(const vector& a)
 	double cZ = cos(a[2]);
 		
 	// Fills transformation matrix. How that works: transformation matrix is 
-	// fully defined by the euler angles and here created to describe the XYZ
+	// fully defined by the Euler angles and here created to describe the XYZ
 	// to UVW transformation; use it transposed to get the UVW to XYZ one.
 	//
 	//	/  cZ cY	cZ sY sX - sZ cX	cZ sY cX + sZ sX  \
@@ -513,7 +513,7 @@ point ref::toXYZ(const point& p) const
 	// Rotates  the vector component
 	point q = toXYZ((vector)p);
 	
-	// Then traslates, as displacement is expressed in XYZ base
+	// Then translates, as displacement is expressed in XYZ base
 	return point(q[0] + _p0[0], q[1] + _p0[1], q[2] + _p0[2]);
 }
 
@@ -557,7 +557,7 @@ point& ref::trsf(point& p, const bool& inverse) const
 	// Rotates the point as a vector.
 	trsf((vector&)p, inverse);
 		
-	// Then traslates, as displacement is expressed in XYZ base
+	// Then translates, as displacement is expressed in XYZ base
 	if (inverse) {
 		p[0] -= static_cast<float>(_p0[0]);
 		p[1] -= static_cast<float>(_p0[1]);

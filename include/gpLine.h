@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -27,7 +27,7 @@ namespace cat { namespace gp {
  *	
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 18 Sep 2024
+ *	\date 23 Sep 2024
  */
 
 //______________________________________________________________________________
@@ -53,7 +53,7 @@ class line: public stroked
 		line(const double* vtx);
 	
 		// Default access public members
-		Uint64 type() const;					//!< Returns GP type.
+		CO::oType type() const;					//!< Returns GP type.
 		Uint64 version() const;					//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.

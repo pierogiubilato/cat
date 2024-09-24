@@ -1,27 +1,27 @@
 //------------------------------------------------------------------------------
-// PEAR Label GP class					 									  --
+// CAT label Graphic Primitive class					 					  --
 // (C) Piero Giubilato 2011-2013, CERN										  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-// [File name]		"pear_gp_Label.h"
+// [File name]		"gpLabel.h"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.0"
+// [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"04 Sep 2011"
-// [Language]		"C++"
+// [Date]			"23 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
-#if !defined pear_gp_Label_H
-#define pear_gp_Label_H
+#if !defined gpLabel_H
+#define gpLabel_H
 
 // Components
-#include "pear_gp_Fonted.h"
+#include "gpFonted.h"
 
 
 // #############################################################################
-namespace pear { namespace gp {
+namespace cat { namespace gp {
 
 /*! pear::gp::Label creates a Label.
  *	
@@ -30,18 +30,18 @@ namespace pear { namespace gp {
  *	\date 04 Sep 2011
  */
 //______________________________________________________________________________
-class Label: public Fonted
+class label: public fonted
 {
 	private:   
 	
 		// The 5 vertex points defining the label space (1 anchor + 1 quad).
-		go::Point _Vtx[5];
-		Uint32 _Alignment;		// Label alignement respect _Vtx[0].
-		float _Rotation;		// Label rotation respect the horizontal viewport axis.
-		bool _View2D;			// Project the label into the 2D viewport.
+		ge::point _Vtx[5];
+		Uint32 _alignment;		// Label alignment respect _Vtx[0].
+		float _rotation;		// Label rotation respect the horizontal viewport axis.
+		bool _view2D;			// Project the label into the 2D viewport.
 
 		// The plain text.
-		std::string _Text;		// Text contained into the label.
+		std::string _text;		// Text contained into the label.
 		
 		// The generated pixMap.
 		#ifdef PEAR_SERVER
@@ -55,42 +55,39 @@ class Label: public Fonted
 	public:
 		
 		// Special members.		
-		Label();					//! Default ctor.
-		virtual ~Label();			//!< Virtual dtor.
+		label();					//! Default ctor.
+		virtual ~label();			//!< Virtual dtor.
 
 		//! Standard Constructor with (text, position and font).
-		Label(const std::string& text, 
+		label(const std::string& text, 
 			  const double& x = 0, const double& y = 0, const double& z = 0, 
-			  const Uint32& alignement = 0, const double& rotation = 0,
+			  const Uint32& alignment = 0, const double& rotation = 0,
 			  const bool& view2D = false);
-		
-		
+				
 		// Default access public members
-		Uint64 Type() const;					//!< Returns GP type.
-		Uint64 Version() const;					//!< Returns GP version.
-		std::string Stem() const;				//!< Returns GP stem name.
-		size_t Size(const bool& = false) const;	//!< Returns GP size in bytes.
-		void Dump(const Uint64& = 0) const;		//!< Dumps GP data.
-		
-		//! Stream the GP data (both read and write).
-		bool Stream(std::stringstream& o, const bool& read = false);
+		CO::oType type() const;					//!< Returns GP type.
+		Uint64 version() const;					//!< Returns GP version.
+		std::string stem() const;				//!< Returns GP stem name.
+		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
+		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
+		bool stream(std::stringstream& o, const bool& read = false);
 
-		// Public transformation ovelorads.
-		Label& Trsf(const go::Ref& ref, const bool& inv);		//!< Transform the GP.
-		Label& TrsfIn(const go::Ref& ref) {return Trsf(ref, false);}	//!< Transform the GP into ref.	 	
-		Label& TrsfOut(const go::Ref& ref) {return Trsf(ref, true);}	//!< Transform the GP from ref.
+		// Public transformation overloads.
+		label& trsf(const ge::ref& ref, const bool& inv);		//!< Transform the GP.
+		label& trsfIn(const ge::ref& ref) {return trsf(ref, false);}	//!< Transform the GP into ref.	 	
+		label& trsfOut(const ge::ref& ref) {return trsf(ref, true);}	//!< Transform the GP from ref.
 
 		// Text and relate properties access.
-		std::string& Text() {return _Text;}
-		Uint32& Alignment() {return _Alignment;}
-		float& Rotation() {return _Rotation;}
-		bool& View2D() {return _View2D;}
+		std::string& text() {return _text;}
+		Uint32& alignment() {return _alignment;}
+		float& rotation() {return _rotation;}
+		bool& view2D() {return _view2D;}
 
-		// Access to the internal go::Point Components.
-		go::Point Vtx(const Uint64&) const;
+		// Access to the internal ge::point Components.
+		ge::point vtx(const Uint64&) const;
 		
 		// Drawing functions are ONLY defined for the SERVER side!
-		#ifdef PEAR_SERVER
+		#ifdef CAT_SERVER
 			
 			// Drawing.			
 			void glDraw();		//!< Draws the GP.
@@ -102,9 +99,9 @@ class Label: public Fonted
 			void uiBarLoad(ui::Bar&);			//!< Load the GP properties bar.
 			//TwType uiTwEnumFtFamily() const;	//!< Creates a TwEnum for the Font Families.
 			//TwType uiTwEnumFtStyle() const;		//!< Creates a TwEnum for the Family's Font Styles.
-			TwType uiTwEnumTxAlign() const;		//!< Creates a TwEnum for the Text's alignment mode.
-			static void TW_CALL uiTextSet(const void *value, void *clientData);
-			static void TW_CALL uiTextGet(void *value, void *clientData);
+//			TwType uiTwEnumTxAlign() const;		//!< Creates a TwEnum for the Text's alignment mode.
+//			static void TW_CALL uiTextSet(const void *value, void *clientData);
+//			static void TW_CALL uiTextGet(void *value, void *clientData);
 			//static void TW_CALL uiFamilySet(const void *value, void *clientData);
 			//static void TW_CALL uiFamilyGet(void *value, void *clientData);
 			//static void TW_CALL uiStyleSet(const void *value, void *clientData);
@@ -122,10 +119,10 @@ class Label: public Fonted
 //	*****************************************************************************
 
 //______________________________________________________________________________
-inline std::ostream& operator << (std::ostream& o, const pear::gp::Label& obj)
+inline std::ostream& operator << (std::ostream& o, const cat::gp::label& obj)
 {
 	/*! Overloads standard output operator << for a generic pear::gp::Label. */ 
-	obj.Dump();
+	obj.dump();
 	return o;
 }
 

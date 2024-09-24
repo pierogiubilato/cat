@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -31,15 +31,21 @@ namespace cat {
 
 
 // *****************************************************************************
-// **						The basic cat GO types							  **
+// **						The basic cat CO types							  **
 // *****************************************************************************
 
-	
+	//! Handle representing a CO object.
+	typedef uint_fast64_t coHnd_t;
 
+	//! Handle representing a CO object.
+	typedef uint_fast64_t coType_t;
+
+	//! Version of CO object.
+	typedef uint_fast16_t coVer_t;
 
 
 // *****************************************************************************
-// **							The basic cat GO							  **
+// **							The basic cat CO							  **
 // *****************************************************************************
 
 /*! 'cat::CO' is the base class for all cat data objects, including data,
@@ -70,7 +76,7 @@ class CO
 	public:
 	
 		// Object types.
-		enum class oType : Uint64 {
+		enum class oType : coType_t {
 
 			// The virtual base object
 			coBase,
@@ -109,9 +115,9 @@ class CO
 
 		// Default interface virtual public members.
 		virtual oType type() const { return oType::coBase; }	//!< Returns CO type.
-		virtual Uint64 version() const { return 0; }			//!< Returns CO version.
+		virtual coVer_t version() const { return 0; }			//!< Returns CO version.
 		virtual std::string stem() const { return ""; }			//!< Returns CO stem name.
-		virtual void dump(const Uint64 & = 0) const {};			//!< Dumps CO data.
+		virtual void dump(const int & = 0) const {};			//!< Dumps CO data.
 
 		//! Returns the object size in bytes.
 		virtual size_t size(const bool& = false) const {

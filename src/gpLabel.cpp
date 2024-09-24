@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -62,7 +62,7 @@ label::label()
 }
 
 //______________________________________________________________________________
-Label::Label(const std::string& text, 
+label::Label(const std::string& text, 
 			 const double& x, const double& y, const double& z, 
 			 const Uint32& alignment, const double& rotation,
 			 const bool& view2D)
@@ -112,10 +112,10 @@ label::~label()
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 label::type() const
+CO::oType label::type() const
 {
 	/*! Returns a numeric identification. */
-	return Fonted::Type() + GP::kgp_Label;
+	return CO::oType::gpLabel;
 }
 
 //______________________________________________________________________________
@@ -157,7 +157,7 @@ void label::dump(const Uint64& ind) const
 	/*! Send out all the GP data. */
 	fonted::dump(ind);
 	
-	// Quich out definitions.
+	// Quick out definitions.
 	#define CD COL(DEFAULT)
 	#define CLW COL(LWHITE)
 

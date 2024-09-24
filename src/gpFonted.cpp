@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -48,12 +48,12 @@ fonted::~fonted()
 } 
 
 //______________________________________________________________________________
-Uint64 fonted::type() const
+CO::oType fonted::type() const
 {
 	/*! Returns object type. This function MUST be overloaded to differentiate 
 	 *	any derived class! 
 	 */
-   return stroked::type() + ktype::fonted;
+   return CO::oType::gpFonted;
 }
 
 //______________________________________________________________________________

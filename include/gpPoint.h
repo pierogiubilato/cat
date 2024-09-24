@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -26,8 +26,8 @@ namespace cat { namespace gp {
 /*! pear::gp::Point creates a Point in 3D.
  *	
  *	\author Piero Giubilato
- *	\version 1.0
- *	\date 18 Sep 2024
+ *	\version 1.1
+ *	\date 23 Sep 2024
  */
 
 //______________________________________________________________________________
@@ -50,7 +50,7 @@ class point: public stroked
 		point(const double*, const double& = 1);
 		
 		// Default access public members
-		Uint64 type() const;		//!< Returns GP type.
+		CO::oType type() const;		//!< Returns GP type.
 		Uint64 version() const;		//!< Returns GP version.
 		std::string stem() const;	//!< Returns GP stem name.
 		void dump(const Uint64& = 0) const;	//!< Dumps GP data.
@@ -60,9 +60,9 @@ class point: public stroked
 		bool stream(std::stringstream& o, const bool& read = false);
 
 		// Public transformation overloads.
-		Point& trsf(const ge::ref& ref, const bool& inv);				//!< Transform the GP.
-		Point& trsfIn(const ge::ref& ref) {return trsf(ref, false);}	//!< Transform the GP into ref.	 	
-		Point& trsfOut(const ge::ref& ref) {return trsf(ref, true);}	//!< Transform the GP from ref.
+		point& trsf(const ge::ref& ref, const bool& inv);				//!< Transform the GP.
+		point& trsfIn(const ge::ref& ref) {return trsf(ref, false);}	//!< Transform the GP into ref.	 	
+		point& trsfOut(const ge::ref& ref) {return trsf(ref, true);}	//!< Transform the GP from ref.
 
 		// Provide Access to the internal Point Components.
 		ge::point vtx() const;

@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"geRef.h"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.2"
+// [Version]		"1.3"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"21 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -25,8 +25,8 @@ namespace cat { namespace ge {
 /*! cat::ge::ref creates a reference frame in 3D.
  *	
  *	\author Piero Giubilato
- *	\version 1.2
- *	\date 21 Sep 2024
+ *	\version 1.3
+ *	\date 24 Sep 2024
  */
 //______________________________________________________________________________
 class ref: public GE
@@ -60,9 +60,9 @@ class ref: public GE
 		
 		// Public members overloaded from cake::Object
 		oType type() const;						//!< Returns the GP type id.
-		Uint64 version() const;					//!< Return the GP version
+		uint32_t version() const;				//!< Return the GP version
 		size_t size() const;					//!< Returns the entity memory size in bytes.
-		void dump(const Uint32& = 0) const;		//!< Dump entity elements.
+		void dump(const int& = 0) const;		//!< Dump entity elements.
 		std::string stem() const;				//!< Returns GP stem.
 		
 	 	//! Stream the GP data (both read and write).

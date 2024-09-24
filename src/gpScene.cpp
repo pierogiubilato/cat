@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -51,14 +51,14 @@ scene::~scene()
 // *****************************************************************************
 
 //______________________________________________________________________________
-oType scene::type() const
+CO::oType scene::type() const
 {
 	/*! Returns a numeric identification. */
 	return oType::gpScene;
 }
 
 //______________________________________________________________________________
-Uint64 scene::version() const
+uint32_t scene::version() const
 {
 	/*! Returns primitive version. */
 	return 100;
@@ -81,10 +81,10 @@ size_t scene::size(const bool& dynamic) const
 	 */
 	
 	// Get dynamically allocated size.
-	size_t tSize = obj::size(true);
+	size_t tSize = GP::size(true);
 	
 	// All the contained adds up to the size!
-	for (Uint64 i = 1; i < _scene.size(); i++) {
+	for (auto i = 1; i < _scene.size(); i++) {
 		if (_scene[i]) tSize += _scene[i]->size();
 	}
 
@@ -97,7 +97,7 @@ size_t scene::size(const bool& dynamic) const
 }
 
 //______________________________________________________________________________
-void scene::dump(const Uint64& ind) const
+void scene::dump(const int& ind) const
 {
 	/*! Send out all the GP data. */
 	GP::dump();
@@ -108,7 +108,7 @@ void scene::dump(const Uint64& ind) const
 	std::cout << pad2 << "scene [GPs count: "  << COL(LWHITE) << _count << COL(DEFAULT) << "]\n";	
 
 	// List reference properties.
-	for (Uint64 i = 1; i < _scene.size(); i++) {
+	for (auto i = 1; i < _scene.size(); i++) {
 		if(_scene[i]) _scene[i]->dump(ind + 2 * CAT_DUMP_PADDING);
 	}
 }
@@ -126,10 +126,10 @@ bool scene::stream(std::stringstream& o, const bool& read)
 		
 		// read all the GPs.
 		af::stream::read(o, _count);	// GPs total count.
-		for (Uint64 i = 0; i < _count; i++) {
+		for (auto i = 0; i < _count; i++) {
 			
 			// Builds up the new object.
-			Uint64 gType = 0;
+			uint64_t gType = 0;
 			af::stream::read(o, gType);	// Get the type.
 			_scene.push_back(GP::build(gType)); 
 						
@@ -153,7 +153,7 @@ bool scene::stream(std::stringstream& o, const bool& read)
 
 		// Writes all the GPs.
 		af::stream::write(o, _count);	// GPs total count.
-		for (Uint64 i = 1; i < _scene.size(); i++) {
+		for (auto i = 1; i < _scene.size(); i++) {
 			if(_scene[i]) {
 				af::stream::write(o, _scene[i]->type());	// Pre-write the type.
 				_scene[i]->stream(o, false);// Write the GP.
@@ -169,7 +169,7 @@ bool scene::stream(std::stringstream& o, const bool& read)
 void gp::scene::clear()
 {
 	/*! Clears the scene. */
-	for (Uint64 i = 1; i < _scene.size(); i++) {
+	for (auto i = 1; i < _scene.size(); i++) {
 		delete _scene[i];
 	}
 	_scene.clear();
@@ -183,7 +183,7 @@ void gp::scene::clear()
 // *****************************************************************************
 
 //______________________________________________________________________________
-GPHnd scene::gpAdd(GP* gp, const gpHnd& pHnd)
+GPHnd scene::gpAdd(GP* gp, const GPHnd& pHnd)
 {
 	/*! Adds the GP \c gp to the scene. Note that the scene will take full
 	 *	ownership of the new guest, managing it and eventually taking care 
@@ -239,7 +239,7 @@ GPHnd scene::gpAdd(std::stringstream& stream)
 	
 	// First 8 bytes contain the entity type, so read them and reset position,
 	// as the new gp will self-read again its own type.
-	Uint64 gpType;
+	uint64_t gpType;
 	af::stream::read(stream, gpType);
 	stream.seekg(std::ios_base::beg); 	
 
@@ -286,7 +286,7 @@ void scene::gpDel(const GPHnd& gpHnd)
 	_scene[gpHnd] = 0;
 
 	// Recursively deletes the family
-	for (Uint64 i = 1; i < _scene.size(); i++) {
+	for (auto i = 1; i < _scene.size(); i++) {
 		if (_scene[i]) {
 			if (_scene[i]->parent() == gpHnd) gpDel(i); 
 		}
@@ -322,7 +322,7 @@ GP* scene::gpGet(const GPHnd& gpHnd) const
 }
 
 //______________________________________________________________________________
-GP* scene::operator[] (const gpHnd& gpHnd) const
+GP* scene::operator[] (const GPHnd& gpHnd) const
 {   
 	/*! Returns the pointer of the scene GP identified by \c Hnd. */
 	return gpGet(gpHnd);

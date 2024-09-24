@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -65,14 +65,14 @@ frame::frame(const ge::point& p0, const ge::vector& v0, const double& a)
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 frame::type() const
+CO::oType frame::type() const
 {
 	/*! Returns a numeric identification. */
-	return GP::type() + GP::ktype::frame;
+	return CO::oType::gpFrame;
 }
 
 //______________________________________________________________________________
-Uint64 frame::version() const
+cat::coVer_t frame::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
@@ -102,7 +102,7 @@ size_t frame::size(const bool& dynamic) const
 	else return sizeof(*this) + tSize;	
 }
 //______________________________________________________________________________
-void frame::dump(const Uint64& ind) const
+void frame::dump(const int& ind) const
 {
 	/*! Send out all the box data. */
 	std::string pad(ind, ' ');
@@ -135,7 +135,7 @@ frame& frame::trsf(const ge::ref& rf, const bool& inv)
 	/*! Transforms the frame coordinates applying the rf transformation directly
 	 *	if inv = false, and by applying the inverse transformation if inv = true. 
 	 */
-	//for (unsigned int i = 0; i < 8; i++) rf.trsf(_vtx[i], inv);
+	//for (auto i = 0; i < 8; i++) rf.trsf(_vtx[i], inv);
 	
 	return *this;
 }	

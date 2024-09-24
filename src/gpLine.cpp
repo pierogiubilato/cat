@@ -8,13 +8,13 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
 
 // Application components.
-#include "gpline.h"
+#include "gpLine.h"
 
 
 // #############################################################################
@@ -63,10 +63,10 @@ line::line(const double* _vtx)
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 line::type() const
+CO::oType line::type() const
 {
 	/*! Returns a numeric identification. */
-	return stroked::type() + GP::ktype::line;
+	return CO::oType::gpLine;
 }
 
 //______________________________________________________________________________

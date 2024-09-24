@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -48,16 +48,16 @@ stroked::~stroked()
 } 
 
 //______________________________________________________________________________
-Uint64 stroked::type() const
+CO::oType stroked::type() const
 {
 	/*! Returns object type. This function MUST be overloaded to differentiate 
 	 *	any derived class, and must also be addictive! 
 	 */
-   return GP::type() + ktype::stroked;
+   return CO::oType::gpStroked;
 }
 
 //______________________________________________________________________________
-Uint64 stroked::version() const
+uint32_t stroked::version() const
 {
 	/*! Returns object version. This function MUST be overloaded to differentiate 
 	 *	any derived class! Version numbering is made in unit of hundreds for the
@@ -91,7 +91,7 @@ size_t stroked::size(const bool& dynamic) const
 }
 
 //______________________________________________________________________________
-void stroked::dump(const Uint64& ind) const
+void stroked::dump(const int& ind) const
 {
  	/*! Dumps on the standard output the relevant gp::Stroke properties. */
 

@@ -16,6 +16,10 @@
 #if !defined rcDCs_H
 #define rcDCs_H
 
+// STL.
+#include<cstdint>
+
+// Application
 #include "rcCore.h"
 
 // #############################################################################
@@ -27,21 +31,18 @@ namespace cat { namespace rc {
  *
  *	\author Piero Giubilato
  *	\version 1.1
- *	\date 17 Sep 2024
+ *	\date 23 Sep 2024
  */
 class DCs: public core 
 {
-	public:
-
-	// Special members.
-	CAT_API CAT_CALL DCs(const char* host, const Uint16& port, const Uint64& verb = 0);
-
 	
-	// Client-side Drawing constants
-	// -----------------------------
+	private:
+
+		// Client-side Drawing constants
+		// -----------------------------
 
 		// Colors
-					
+
 		// Drawing tools.
 		static const gt::brush dkBrushDefault;				// The default brush.
 		static const gt::fill dkFillDefault;				// The default fill.
@@ -51,13 +52,30 @@ class DCs: public core
 		static const gt::trsf dkTrsfDefault;				// The default transformation.
 
 		// Stippling patterns.
-		static const Uint16 dkStippleDefault =	0x0000;		// Continuous stroke.
+		static const Uint16 dkStippleDefault = 0x0000;		// Continuous stroke.
 		static const Uint16 dkStippleDashLarge = 0xff00;	// Large dashing.
 		static const Uint16 dkStippleDashMedium = 0xf0f0;	// Medium dashing.
 		static const Uint16 dkStippleDashFine = 0x8888;		// Fine dashing.
 		static const Uint16 dkStippleDot = 0x7777;			// Dotting.
 
 
+		// Internal state variables.
+		gt::brush _brush;			// The current brush.
+		gt::fill _fill;				// The current  fill.
+		gt::material _material;		// The current material.	
+		gt::inherit _inherit;		// The current inheritance.
+		gt::font _font;				// The current font.	
+		gt::trsf _trsf;				// The current transformation.
+
+
+
+	public:
+
+	// Special members.
+	CAT_API CAT_CALL DCs(const char* host, const int& port, const int& verb = 0);
+	//DCs(const char* host, const int& port, const int& verb = 0);
+		
+	
 	// Client-side Drawing commands
 	// ----------------------------
 

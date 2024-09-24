@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"21 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -45,7 +45,7 @@ namespace cat { namespace ge {
  *
  *	\author Piero Giubilato
  *	\version 1.2
- *	\date 21 Sep 2024
+ *	\date 24 Sep 2024
  */
 
  //______________________________________________________________________________
@@ -59,9 +59,9 @@ class GE : public cat::CO
 
 		// Default interface public members, overload cat::CO class.
 		oType type() const { return oType::geBase; }	//!< Returns GE type. It's a sum of all the layer!
-		Uint64 version() const { return 0; }			//!< Returns GE version.
+		uint32_t version() const { return 0; }			//!< Returns GE version.
 		std::string stem() const { return ""; }			//!< Returns GE stem name.
-		void dump(const Uint64 & = 0) const {};			//!< Dumps GE data.
+		void dump(const int & = 0) const {};			//!< Dumps GE data.
 		size_t size(const bool& = false) const { return 0;}
 		bool stream(std::stringstream&, const bool&) { return false; }
 };

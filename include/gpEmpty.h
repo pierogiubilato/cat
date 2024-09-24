@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
-// [Language]		"C++"
+// [Date]			"24 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
@@ -23,12 +23,12 @@
 // #############################################################################
 namespace cat { namespace gp {
 
-/*! cat::gp::Virtual is a virtual graphic primitive with no actual properties.
+/*! cat::gp::empty is a virtual graphic primitive with no actual properties.
  *	It is used for testing/padding.
  *	
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 18 Sep 2024
+ *	\date 24 Sep 2024
  */
 
 //______________________________________________________________________________
@@ -41,10 +41,10 @@ class empty: public GP
 	public:
 		
 		// Default access public members
-		Uint64 type() const;			//!< Returns GP type.
-		Uint64 version() const;			//!< Returns GP version.
+		CO::oType type() const;			//!< Returns GP type.
+		uint32_t version() const;		//!< Returns GP version.
 		std::string stem() const;		//!< Returns GP stem name.
-		//size_t Size() const;			//!< Returns GP size in bytes.
+		size_t size() const;			//!< Returns GP size in bytes.
 		void dump(const Uint64& ind = 0) const;			//!< Dumps GP data.
 		
 		//! Stream the GP data (both read and write).
@@ -68,7 +68,7 @@ class empty: public GP
 //	*****************************************************************************
 
 //______________________________________________________________________________
-inline std::ostream& operator << (std::ostream& o, const pear::gp::empty& obj)
+inline std::ostream& operator << (std::ostream& o, const cat::gp::empty& obj)
 {
 	/*! Overloads standard output operator << for a generic pear::gp::Virtual. */ 
 	obj.dump();

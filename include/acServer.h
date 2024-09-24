@@ -24,7 +24,7 @@
 #include <sstream>
 
 // SDL tcp/ip services. 
-#include "SDL_net.h"
+#include "SDL3_net/SDL_net.h"
 
 // Application components
 #include "rc.h"

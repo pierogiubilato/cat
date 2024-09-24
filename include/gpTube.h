@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
-// [Language]		"C++"
+// [Date]			"23 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
@@ -59,7 +59,7 @@ class tube: public filled
 			 const Uint32& slices = 10, const Uint32& stacks = 1);
 		
 		// Default access public members.
-		Uint64 type() const;					//!< Returns GP type.
+		CO::oType type() const;					//!< Returns GP type.
 		Uint64 version() const;					//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
@@ -76,9 +76,9 @@ class tube: public filled
 		double roBase() const {return _roBase;}
 		double riTop() const {return _riTop;}
 		double roTop() const {return _roTop;}
-		double height() const {return _Height;}
-		double slices() const {return _Slices;}
-		double stacks() const {return _Stacks;}
+		double height() const {return _height;}
+		double slices() const {return _slices;}
+		double stacks() const {return _stacks;}
 				
 		// Drawing functions are ONLY defined for the SERVER side!
 		#ifdef CAT_SERVER
@@ -89,55 +89,55 @@ class tube: public filled
 };
 
 
-/*! pear::gp::Cylinder creates a cylinder in 3D. It actually is an ultralight 
- *	overload of the gp::Tube class to just provide easier constructor and
+/*! cat::gp::cylinder creates a cylinder in 3D. It actually is an ultralight 
+ *	overload of the cat::gp::tube class to just provide easier constructor and
  *	different signature.
  *	
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 30 Aug 2011
+ *	\date 23 Sep 2024
  */
 //______________________________________________________________________________
-class Cylinder: public Tube
+class cylinder: public tube
 {
 	public:
 		//! Default ctor.
-		Cylinder():Tube(0, 1, 0, 1, 1) {;};
+		cylinder():tube(0, 1, 0, 1, 1) {;};
 	
 		//! Standard Constructor.
-		Cylinder(const double& rBase, const double& rTop, const double& height,
+		cylinder(const double& rBase, const double& rTop, const double& height,
 				 const Uint32& slices = 10, const Uint32& stacks = 1)
-				 :Tube(0, rBase, 0, rTop, height, slices, stacks) {;};
+				 : tube(0, rBase, 0, rTop, height, slices, stacks) {;};
 		
 		// Default access public members.
-		Uint64 Type() const {return Filled::Type() + kgp_Cylinder;};
-		std::string Stem() const {return "Cylinder";};
+		CO::oType type() const {return CO::oType::gpCylinder;};
+		std::string stem() const {return "cylinder";};
 };
 
 
-/*! pear::gp::Cone creates a cone in 3D. It actually is an ultralight 
- *	overload of the gp::Tube class to just provide easier constructor and
- *	different signature.
+/*! cat::gp::cone creates a cone in 3D. It actually is an ultralight 
+ *	overload of the cat::gp::Tube class to have an easier constructor 
+ *  and a different signature.
  *	
  *	\author Piero Giubilato
- *	\version 1.0
- *	\date 30 Aug 2011
+ *	\version 1.1
+ *	\date 23 Sep 2024
  */
 //______________________________________________________________________________
-class Cone: public Tube
+class cone: public tube
 {
 	public:
 		//! Default ctor.
-		Cone():Tube(0, 1, 0, 0, 1) {;};
+		cone():tube(0, 1, 0, 0, 1) {;};
 	
 		//! Standard Constructor.
-		Cone(const double& rBase, const double& height,
+		cone(const double& rBase, const double& height,
 				 const Uint32& slices = 10, const Uint32& stacks = 1)
-				 :Tube(0, rBase, 0, 0, height, slices, stacks) {;};
+				 : tube(0, rBase, 0, 0, height, slices, stacks) {;};
 		
 		// Default access public members.
-		Uint64 Type() const {return Filled::Type() + kgp_Cone;};
-		std::string Stem() const {return "Cone";};
+		CO::oType type() const {return CO::oType::gpCone;};
+		std::string stem() const {return "cone";};
 };
 
 
@@ -151,10 +151,10 @@ class Cone: public Tube
 //	*****************************************************************************
 
 //______________________________________________________________________________
-inline std::ostream& operator << (std::ostream& o, const pear::gp::Tube& obj)
+inline std::ostream& operator << (std::ostream& o, const cat::gp::tube& obj)
 {
 	/*! Overloads standard output operator << for a generic pear::gp::Tube. */ 
-	obj.Dump();
+	obj.dump();
 	return o;
 }
 

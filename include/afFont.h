@@ -16,18 +16,21 @@
 #if !defined afFont_H
 #define afFont_H
 
-// Application components.
-#include "acMain.h"
+// STL.
+#include <vector>
 
-// OpenGL data types are used in many parts.
-//#include "glew/glew.h"
-#include "glad.h"
+// OpenGL data types are used for pxMap management.
+// #include "glad.h" // <-- Used only for 'GLByte', which is an 'uint8_t'
 
 // FreeType	(font management C library).
 extern "C" {
 	#include <ft2build.h>
 	#include FT_FREETYPE_H
 }
+
+// Application components.
+//#include "acMain.h"
+
 
 // #############################################################################
 namespace cat { namespace af {
@@ -41,8 +44,8 @@ namespace cat { namespace af {
  *	to be available.
  *
  *	\author Piero Giubilato
- *	\version 1.0
- *	\date 08 Aug 2024
+ *	\version 1.1
+ *	\date 24 Sep 2024
  */
 //______________________________________________________________________________
 class font //: public AF
@@ -71,7 +74,7 @@ class font //: public AF
 		FT_Matrix	_fMatrix;		// The current transformation matrix.
 		
 		// Paragraph elements.
-		Uint32		_fLineHeight;	// Line height calculated from the font size.
+		uint32_t	_fLineHeight;	// Line height calculated from the font size.
 
 		// Init library.
 		void init(const std::string& path);
@@ -87,29 +90,29 @@ class font //: public AF
 		// Support functions.			  
 		void fontList(); //!< Printout a list of all available family/style combinations.
 		std::vector<std::string> familyList() const;	//!< Returns all available font families.
-		Uint64 familyIdx(const std::string&) const;		//!< Returns the family Idx by Name.
-		std::string familyName(const Uint64&) const;	//!< Returns the family Name by Idx.
+		uint64_t familyIdx(const std::string&) const;		//!< Returns the family Idx by Name.
+		std::string familyName(const uint64_t&) const;	//!< Returns the family Name by Idx.
 		std::vector<std::string> styleList(const std::string&) const;	//!< Returns all available font family styles.
-		Uint64 styleIdx(const std::string&, const std::string&) const;	//!< Returns the style Idx.
-		std::string styleName(const std::string&, const Uint64&) const;	//!< Returns the style Name by Idx.
+		uint64_t styleIdx(const std::string&, const std::string&) const;	//!< Returns the style Idx.
+		std::string styleName(const std::string&, const uint64_t&) const;	//!< Returns the style Name by Idx.
 
 		//!	Checks, parses and removes a text string from the control characters.
-		void textParse(std::string& text, std::vector<Uint32>& color, 
-					   const Uint32& defaultColor);
+		void textParse(std::string& text, std::vector<uint32_t>& color, 
+					   const uint32_t& defaultColor);
 	   
 		//! Sets the text font.
 		void textFont(const std::string& family, const std::string& style,
-					  const Uint32& size, const float& angle);
+					  const uint32_t& size, const float& angle);
 		
 		//! Draws the text on a pixmap.
-		void textDraw(const std::string& text, const std::vector<Uint32>& color, 
-					  Uint32& pxmWidth, Uint32& pxmHeight, GLubyte*& pxmData);
+		void textDraw(const std::string& text, const std::vector<uint32_t>& color, 
+					  uint32_t& pxmWidth, uint32_t& pxmHeight, uint8_t*& pxmData);
 		
 		// Debug.
 		//void Test();
 		//void faceLoad(const char* family = "", const char* style ="");
-		//void faceSetPoint(const Uint32& size, const float& angle);
-		//void faceSetPixel(const Uint32& size, const float& angle);
+		//void faceSetPoint(const uint32_t& size, const float& angle);
+		//void faceSetPixel(const uint32_t& size, const float& angle);
 };
 
 

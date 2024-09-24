@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -30,7 +30,7 @@ namespace cat { namespace gp {
  *	
  *	\author Piero Giubilato
  *	\version 1.1
- *	\date 18 Sep 2024
+ *	\date 24 Sep 2024
  */
 
 //______________________________________________________________________________
@@ -55,26 +55,26 @@ class frame: public GP
 		frame(const ge::point& p0, const ge::vector& v0, const double& a);
 	
 		// Default access public members
-		Uint64 type() const;					//!< Returns GP type.
-		Uint64 version() const;					//!< Returns GP version.
+		CO::oType type() const;					//!< Returns GP type.
+		coVer_t version() const;				//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
-		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
+		void dump(const int& = 0) const;		//!< Dumps GP data.
 		bool stream(std::stringstream& o, const bool& read = false);
 		
 		// Public transformation overloads.
-		Frame& trsf(const ge::ref& ref, const bool& inv);				//!< Transform the GP.
-		Frame& trsfIn(const ge::ref& ref) {return trsf(ref, false);}	//!< Transform the GP into ref.	 	
-		Frame& trsfOut(const ge::ref& ref) {return trsf(ref, true);}	//!< Transform the GP from ref.
+		frame& trsf(const ge::ref& ref, const bool& inv);				//!< Transform the GP.
+		frame& trsfIn(const ge::ref& ref) {return trsf(ref, false);}	//!< Transform the GP into ref.	 	
+		frame& trsfOut(const ge::ref& ref) {return trsf(ref, true);}	//!< Transform the GP from ref.
 
 		// Provide Access to the internal Reference Components.
 		ge::ref ref() const;	// Returns the internal reference.
 
 		// Drawing functions are ONLY defined for the SERVER side!
 		#ifdef CAT_SERVER
-			void glDraw();			//!< Draws the GP on the current GLcontext.
+			void glDraw();			//!< Draws the GP on the current GLContext.
 			void glDrawSel();		//!< Draws the GP in selection mode.
-			void glDrawEnd();		//!< Closes the GP drawing. MAndatory call!
+			void glDrawEnd();		//!< Closes the GP drawing. Mandatory call!
 			void glTrsfApply();		//!< Apply (push) the gp Ref (hierarchical) transformation.
 			void glTrsfReset();		//!< Reset (pop) the gp Ref (hierarchical) transformation.
 		#endif

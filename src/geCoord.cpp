@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"21 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -133,7 +133,7 @@ std::string coord::stem() const
 }
 
 //______________________________________________________________________________
-Uint64 coord::version() const
+uint32_t coord::version() const
 {
 	/*! Returns the GP version. */
 	return 100;
@@ -164,9 +164,9 @@ bool coord::stream(std::stringstream& o, const bool& read)
 }
 
 //______________________________________________________________________________
-void coord::dump(const Uint64& ind) const
+void coord::dump(const int& ind) const
 {
-	/*! Ouputs the coordinates. */
+	/*! Outputs the coordinates. */
 	std::cout << std::string(ind, ' ') << *this;
 }
 

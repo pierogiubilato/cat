@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"21 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -45,7 +45,7 @@ namespace cat { namespace ge {
  *
  *	\author Piero Giubilato
  *	\version 1.2
- *	\date 17 Sep 2024
+ *	\date 24 Sep 2024
  */
 //______________________________________________________________________________
 class coord: public GE
@@ -70,10 +70,10 @@ class coord: public GE
 			
 		// Default access public members.
 		oType type() const;								//!< Returns GP type.
-		Uint64 version() const;							//!< Returns GP version.
+		uint32_t version() const;							//!< Returns GP version.
 		std::string stem() const;						//!< Returns GP stem name.
 		size_t size() const;							//!< Returns GP size in bytes.
-		void dump(const Uint64& ind = 0) const;			//!< Dumps GP data.
+		void dump(const int ind = 0) const;			//!< Dumps GP data.
 		
 		//! Stream the GP data (both read and write).
 		bool stream(std::stringstream& o, const bool& read = false);

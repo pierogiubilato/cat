@@ -22,7 +22,7 @@
 #endif
 
 // SDL net for the socket controls.
-#include <SDL_net.h>
+#include <SDL3_net/SDL_net.h>
 
 // Application components.
 #include "gtTools.h"

@@ -29,9 +29,24 @@ endif()
 
 # The main target executable.
 add_executable (cat 
+	
+	# Core.
 	"../src/acMain.cpp"
 	"../src/acServer.cpp"
-	#"../src/acLoop.cpp"
+	"../src/acLoop.cpp"
+	
+	# Facilities.
+	"../src/afFile.cpp"
+	"../src/afFont.cpp"
+
+	# Client.
+	"../src/rcDCs.cpp"
+	
+	#GPs
+	"../src/gpScene.cpp"
+	
+
+
 	#"../src/uiPad.cpp"
 	#"../src/uiWindow.cpp"
 	#"../src/uiSplash.cpp"
@@ -41,25 +56,37 @@ add_executable (cat
 target_include_directories(cat PRIVATE "../include/")
 
 # The SDL library is used by the CAT application, but build independently.
+# Look at the ''CMakeLists.txt' for building details.
 target_include_directories(cat PRIVATE "../lib/SDL/include/SDL3/")
 
-# The SDL_net library is built within the CAT application. Check which
-# actual path to include depending on the used branch (SDL2 or Main)
-#target_include_directories(cat PRIVATE "../lib/SDL_net/include")
-target_include_directories(cat PRIVATE "../lib/SDL_net/include/SDL3_net/")
+
+# The SDL_net library is built within the CAT application. Version
+# used is 3.x.x, so be sure that the submodule repository branch
+# is set to 'Main' (other branches are for older versions).
+target_include_directories(cat PRIVATE "../lib/SDL_net/include/")
+target_sources(cat PRIVATE 
+	"../lib/SDL_net/src/SDL_net.c"
+)
 
 # The GLAD OpenGL loader facility is included into the main server build.
 # Check and update it accordingly to the standard evolution.
 target_include_directories(cat PRIVATE "../lib/glad/include/")
 target_include_directories(cat PRIVATE "../lib/glad/include/glad/")
 
+
 # The GLM lilbary (Open GL math) is used for all 3D calculations.
 target_include_directories(cat PRIVATE "../lib/glm/")
 
-# The FreetYpe lilbary is used to handle fonts. It is used
+
+# The FreetYpe library is used to handle fonts. It is used
 # as pre-built binaries, so make sure to link accordingly
 # the environment you compile within.
 target_include_directories(cat PRIVATE "../lib/freetype/include/")
+
+# The ''dirent.h' file for cross-platform POSIX file management.
+target_include_directories(cat PRIVATE "../lib/dirent/")
+
+
 
 # CAT server final executable sources.
 #target_sources(cat PRIVATE 

@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
-// [Language]		"C++"
+// [Date]			"23 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 
@@ -52,10 +52,10 @@ sphere::sphere(const double& radius, const Uint32& slices, const Uint32& stacks)
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 sphere::type() const
+CO::oType sphere::type() const
 {
 	/*! Returns a numeric identification. */
-	return Filled::Type() + GP::kgp_Sphere;
+	return CO::oType::gpSphere;
 }
 
 //______________________________________________________________________________

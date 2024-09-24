@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"17 Sep 2024"
+// [Date]			"23 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -35,7 +35,7 @@ namespace cat { namespace gp {
  *
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 17 Sep 2024
+ *	\date 23 Sep 2024
 */
 
 //______________________________________________________________________________
@@ -57,13 +57,11 @@ class fonted: public stroked
 		virtual ~fonted();						//!< Virtual dtor.
 		
 		// To be overloaded public members (already virtual from pear::GO).
-		Uint64 type() const;					//!< Returns GP type.
+		CO::oType type() const;					//!< Returns GP type.
 		Uint64 version() const;					//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
-		
-		//! Streams the GP data (already virtual from pear::GO).		
 		bool stream(std::stringstream& o, const bool& read = false);
 				
 		// Public specific members.

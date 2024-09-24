@@ -17,7 +17,7 @@
 
 // Dirent POSIX interface (not by default on WIN).
 #if defined(_WIN32) || defined(_WIN64)
-	#include "dirent/dirent.h"
+	#include "dirent.h"
 #else
 	#include "dirent.h"
 #endif

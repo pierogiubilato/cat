@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
-// [Language]		"C++"
+// [Date]			"23 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 
@@ -64,10 +64,10 @@ tube::tube(const double& riBase, const double& roBase, const double& riTop,
 // *****************************************************************************
 
 //______________________________________________________________________________
-Uint64 tube::type() const
+CO::oType tube::type() const
 {
 	/*! Returns a numeric identification. */
-	return filled::type() + GP::ktype::tube;
+	return CO::oType::gpTube;
 }
 
 //______________________________________________________________________________
