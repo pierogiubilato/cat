@@ -42,10 +42,10 @@ class empty: public GP
 		
 		// Default access public members
 		CO::oType type() const;			//!< Returns GP type.
-		uint32_t version() const;		//!< Returns GP version.
+		coVer_t version() const;		//!< Returns GP version.
 		std::string stem() const;		//!< Returns GP stem name.
 		size_t size() const;			//!< Returns GP size in bytes.
-		void dump(const Uint64& ind = 0) const;			//!< Dumps GP data.
+		void dump(const int& ind = 0) const;			//!< Dumps GP data.
 		
 		//! Stream the GP data (both read and write).
 		bool stream(std::stringstream& o, const bool& read = false);

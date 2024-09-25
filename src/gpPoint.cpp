@@ -66,7 +66,7 @@ CO::oType point::type() const
 }
 
 //______________________________________________________________________________
-Uint64 point::version() const
+cat::coVer_t point::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
@@ -97,7 +97,7 @@ size_t point::size(const bool& dynamic) const
 }
 
 //______________________________________________________________________________
-void point::dump(const Uint64& ind) const
+void point::dump(const int& ind) const
 {
 	/*! Send out all the GP data. */
 	Stroked::Dump(ind);

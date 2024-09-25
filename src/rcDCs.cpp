@@ -132,7 +132,7 @@ void DCs::dcBrushSet(const gt::brush& brush)
 //______________________________________________________________________________
 void DCs::dcBrushSet(const bool& active, const double& R, const double& G,
 						const double& B, const double& A, const double& width,
-						const Uint16& pattern, const Uint32& scale)
+						const Uint16& pattern, const uint32_t& scale)
 {
 	/*! Sets the drawing brush. Calling this function affects all subsequent
 	 *	drawing functions. Brush properties are:
@@ -177,8 +177,8 @@ void DCs::dcBrushSet(const bool& active, const double& R, const double& G,
 }
 
 //______________________________________________________________________________
-void DCs::dcBrushSet(const bool& active, const Uint32& color, const double& width, 
-						const Uint16& pattern, const Uint32& scale)
+void DCs::dcBrushSet(const bool& active, const uint32_t& color, const double& width, 
+						const Uint16& pattern, const uint32_t& scale)
 {
 	/*! Same as the main dcBrushSet fuction, except the color argument is passed
 	 *	as an unsigned integer of 32 bits.
@@ -224,7 +224,7 @@ void DCs::dcBrushColor(const double& r, const double& g,
 }
 
 //______________________________________________________________________________
-void DCs::dcBrushColor(const Uint32& color)
+void DCs::dcBrushColor(const uint32_t& color)
 {
 	/*! Same as the dcBrushColor fuction, except the color argument is passed
 	 *	as an unsigned integer of 32 bits.
@@ -245,7 +245,7 @@ void DCs::dcBrushColor(const Uint32& color)
 
 //______________________________________________________________________________
 void DCs::dcBrushStroke(const double& width, const Uint16& pattern, 
-						   const Uint32& scale)
+						   const uint32_t& scale)
 {
 	/*! Sets the brush stroke. */
 	_brush.width = static_cast<float>(width);
@@ -317,7 +317,7 @@ void DCs::dcFillSet(const bool& active, const double& r, const double& g,
 }
 
 //______________________________________________________________________________
-void DCs::dcFillSet(const bool& active, const Uint32& color, const bool& wire)
+void DCs::dcFillSet(const bool& active, const uint32_t& color, const bool& wire)
 {
 	/*! Same as the main dcFillSet fuction, except the color argument is passed
 	 *	as an unsigned integer of 32 bits.
@@ -364,7 +364,7 @@ void DCs::dcFillColor(const double& r, const double& g,
 }
 
 //______________________________________________________________________________
-void DCs::dcFillColor(const Uint32& color)
+void DCs::dcFillColor(const uint32_t& color)
 {
 	/*! Same as the dcFillColor fuction, except the color argument is passed
 	 *	as an unsigned integer of 32 bits.
@@ -427,7 +427,7 @@ void DCs::dcMaterialSet(const bool& active, const double& shininess, const doubl
 	_material.shininess = static_cast<float>(shininess);
 	
 	// Material colors.
-	for (Uint64 i = 0; i < 4; i++) {
+	for (uint64_t i = 0; i < 4; i++) {
 		_material.ambient[i] = static_cast<float>(channel[i]);
 		_material.diffuse[i] = static_cast<float>(channel[4 + i]);
 		_material.specular[i] = static_cast<float>(channel[8 + i]);
@@ -451,7 +451,7 @@ void DCs::dcMaterialSet(const bool& active, const double& shininess,
 	_material.shininess = static_cast<float>(shininess);
 	
 	// Material colors.
-	for (Uint64 i = 0; i < 4; i++) {
+	for (uint64_t i = 0; i < 4; i++) {
 		if (ambient) _material.ambient[i] = static_cast<float>(ambient[i]);
 		if (diffuse) _material.diffuse[i] = static_cast<float>(diffuse[i]);
 		if (specular) _material.specular[i] = static_cast<float>(specular[i]);
@@ -461,11 +461,11 @@ void DCs::dcMaterialSet(const bool& active, const double& shininess,
 
 //______________________________________________________________________________
 void DCs::dcMaterialSet(const bool& active, const double& shininess, 
-						   const Uint32& ambient, const Uint32& diffuse,
-						   const Uint32& specular, const Uint32& emission)
+						   const uint32_t& ambient, const uint32_t& diffuse,
+						   const uint32_t& specular, const uint32_t& emission)
 {	
 	/*! Same as the main dcMaterialSet fuction, except the channel color arguments
-	 * are passed as 4 Uint32 reference containing the color in the RGBA format.
+	 * are passed as 4 uint32_t reference containing the color in the RGBA format.
 	 */
 	
 	// Status
@@ -473,7 +473,7 @@ void DCs::dcMaterialSet(const bool& active, const double& shininess,
 	_material.shininess = static_cast<float>(shininess);
 	
 	// Material colors.
-	for (Uint64 i = 0; i < 4; i++) {
+	for (uint64_t i = 0; i < 4; i++) {
 		_material.ambient[i] = (float)(ambient >> i * 8) / 255;
 		_material.diffuse[i] = (float)(diffuse >> i * 8) / 255;
 		_material.specular[i] = (float)(specular >> i * 8) / 255;
@@ -551,7 +551,7 @@ void DCs::dcFontSet(const gt::font& font)
 }
 
 //______________________________________________________________________________
-void DCs::dcFontSet(const char* family, const char* style, const Uint32& size)
+void DCs::dcFontSet(const char* family, const char* style, const uint32_t& size)
 {
 	/*! Sets the font. In case of wrong parameters/unavailable font, the
 	 *	standard settings will be applied.
@@ -668,7 +668,7 @@ void DCs::dcTrsfScale(const double& x, const double& y, const double& z)
 // ********************************* Virtual ***********************************
 
 //______________________________________________________________________________
-gp::GPHnd DCs::dcVirtual(const gp::GPHnd& parent, const char* name)
+gp::GPHnd DCs::dcEmpty(const gp::GPHnd& parent, const char* name)
 {
 	/*! Draw a virtual object. Returns the object handle, or NULL in case
 		of failure. */	
@@ -693,10 +693,10 @@ gp::GPHnd DCs::dcVirtual(const gp::GPHnd& parent, const char* name)
 }
 
 //______________________________________________________________________________
-gp::GPHnd DCs::dcVirtual(const char* name) 
+gp::GPHnd DCs::dcEmpty(const char* name) 
 {
 	/*! Draw a virtual object, parentless overload. */
-	return dcVirtual((gp::GPHnd)0, name);
+	return dcEmpty((gp::GPHnd)0, name);
 }
 
 // ********************************** Frame ************************************
@@ -901,62 +901,63 @@ gp::GPHnd DCs::dcLine(const double& x1, const double& y1, const double& z1,
 }
 
 
-// ********************************* Polygon ***********************************
 
-//______________________________________________________________________________
-gp::GPHnd DCs::dcPolygon(const gp::GPHnd& parent, const double* vtx, const Uint64& vtxCount,
-						const bool& closed, const char* name)
-{
-	/*! Draw a Polygon. Returns the handle to that object if successful, NULL
-	 *	otherwise. \c parent is the parent for the object, \c vtx is a pointer
-	 * 	to a double array of 3 * vtxCount elements, where elements represent
-	 * 	vertex coordinates in this order: x(0), y(0), z(0), x(1), y(1), z(1),
-	 *	...., x(n-1), y(n-1), z(n-1).
-	 *	\c closed is a boolean forcing the polygon to be closed or not.
-	 *	Polygon color, appearance and style are defined by the current settings of the 
-	 *	drawing brush and fill. Note that this function draws a NON-oriented 
-	 *	polygon, so there is no difference between its two faces when rendered.
-	 */
-	
-	// Checks if a scene is currently selected.
-	if (sceneStatus()) return 0;
-
-	// Creates the polygon vertexes.
-	ge::point* v = new ge::point[vtxCount];
-	for (Uint64 i = 0; i <vtxCount; i++) {
-		Uint64 p = i * 3;
-		v[i].xyz(vtx[p], vtx[p + 1], vtx[p + 2]); 
-	}
-	
-	// Adds the GP to the scene.
-	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::polygon(v, vtxCount, closed), parent);
-	gp::GP* gp = _scene[_select]->gpGet(newGP);
-	delete[] v;
-
-	// Sets GP specific properties.
-	gp->name(name);
-	gp->info("");
-	
-	// Sets GP drawing properties.
-	gpLoadInherit(gp);
-	gpLoadBrush(gp);
-	gpLoadFill(gp);
-	gpLoadTrsf(gp);
-
-	// Return the handle to that GP.
-	return newGP;
-}
-
-//______________________________________________________________________________
-gp::GPHnd DCs::dcPolygon(const double* vtx, const Uint64& vtxCount,
-						const bool& closed, const char* name)
-{
-	/*! Draw a polygon object. Parentless overload. */
-	return dcPolygon((gp::GPHnd)0, vtx, vtxCount, closed, name); 
-}
-
-
-// *********************************** Box *************************************
+//// ********************************* Polygon ***********************************
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcPolygon(const gp::GPHnd& parent, const double* vtx, const uint64_t& vtxCount,
+//						const bool& closed, const char* name)
+//{
+//	/*! Draw a Polygon. Returns the handle to that object if successful, NULL
+//	 *	otherwise. \c parent is the parent for the object, \c vtx is a pointer
+//	 * 	to a double array of 3 * vtxCount elements, where elements represent
+//	 * 	vertex coordinates in this order: x(0), y(0), z(0), x(1), y(1), z(1),
+//	 *	...., x(n-1), y(n-1), z(n-1).
+//	 *	\c closed is a boolean forcing the polygon to be closed or not.
+//	 *	Polygon color, appearance and style are defined by the current settings of the 
+//	 *	drawing brush and fill. Note that this function draws a NON-oriented 
+//	 *	polygon, so there is no difference between its two faces when rendered.
+//	 */
+//	
+//	// Checks if a scene is currently selected.
+//	if (sceneStatus()) return 0;
+//
+//	// Creates the polygon vertexes.
+//	ge::point* v = new ge::point[vtxCount];
+//	for (uint64_t i = 0; i <vtxCount; i++) {
+//		uint64_t p = i * 3;
+//		v[i].xyz(vtx[p], vtx[p + 1], vtx[p + 2]); 
+//	}
+//	
+//	// Adds the GP to the scene.
+//	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::polygon(v, vtxCount, closed), parent);
+//	gp::GP* gp = _scene[_select]->gpGet(newGP);
+//	delete[] v;
+//
+//	// Sets GP specific properties.
+//	gp->name(name);
+//	gp->info("");
+//	
+//	// Sets GP drawing properties.
+//	gpLoadInherit(gp);
+//	gpLoadBrush(gp);
+//	gpLoadFill(gp);
+//	gpLoadTrsf(gp);
+//
+//	// Return the handle to that GP.
+//	return newGP;
+//}
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcPolygon(const double* vtx, const uint64_t& vtxCount,
+//						const bool& closed, const char* name)
+//{
+//	/*! Draw a polygon object. Parentless overload. */
+//	return dcPolygon((gp::GPHnd)0, vtx, vtxCount, closed, name); 
+//}
+//
+//
+//// *********************************** Box *************************************
 
 //______________________________________________________________________________
 gp::GPHnd DCs::dcBox(const gp::GPHnd& parent, const double* vtx, const char* name)
@@ -1050,209 +1051,209 @@ gp::GPHnd DCs::dcBox(const double& cX, const double& cY, const double& cZ,
 }
 
 
-// ********************************** Tube *************************************
-
-//______________________________________________________________________________
-gp::GPHnd DCs::dcTube(const gp::GPHnd& parent,
-					 const double& riBase, const double& roBase, 
-					 const double& riTop, const double& roTop, 
-					 const double& height, const Uint32& slices,
-					 const Uint32& stacks, const char* name)
-{
-	/*! Draws a tube. Returns the handle to that object if successful, NULL 
-	 *	otherwise. \c parent is the parent for the object, \c riBase is the 
-	 *	inner radius of the base while roBase is its outer radius. The same hold
-	 *	for the top of the tube with riTop and roTop. The tube is built with its 
-	 *	base lying on the XY plane and centered in Z = 0 and its top placed at 
-	 *	Z = \c height position along the Z axis.
-	 *	\c slices are the number of sector the tube circumference is divided 
-	 *	into, while \c stacks indicates the number of sector composing its height.
-	 *	Tube appearance and inheritance are defined by the current settings 
-	 *	of the drawing brush and inheritance mode. To affect the tube orientation 
-	 *	and position in space make it children of a frame object.
-	 * 	This primitive can be used to draw cylinders and cones as well. Two
-	 *	overloaded commands (dcCylinder and dcCone) are anyway provided with
-	 *	simplified argument lists.
-	 */
-	
-	// Checks if a scene is currently selected.
-	if (sceneStatus()) return 0;
-
-	// Adds the GP to the scene.
-	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::tube(riBase, roBase, riTop, roTop, 
-													   height, slices, stacks), parent);
-	gp::GP* gp = _scene[_select]->gpGet(newGP);
-																		
-	// Sets GP specific properties.
-	gp->name(name);
-	gp->info("");
-	
-	// Sets GP drawing properties.
-	gpLoadInherit(gp);
-	gpLoadBrush(gp);
-	gpLoadFill(gp);
-	  	
-	// Return the handle to that GP.
-	return newGP;	
-}
-
-//______________________________________________________________________________
-gp::GPHnd DCs::dcTube(const double& riBase, const double& roBase, 
-					 const double& riTop, const double& roTop, 
-					 const double& height, const Uint32& slices,
-					 const Uint32& stacks, const char* name)
-{
-	/*! Draw a cylinder object. Parentless overload. */
-	return dcTube((gp::GPHnd)0, riBase, roBase, riTop, roTop, height, slices, stacks, name);
-}
-
-
-// ******************************** Cylinder ***********************************
-
-//______________________________________________________________________________
-gp::GPHnd DCs::dcCylinder(const gp::GPHnd& parent,
-						const double& radius, const double& height,
-						const Uint32& slices, const Uint32& stacks,
-						const char* name)
-{
-	/*! Draws a cylinder. Returns the handle to that object if successful, NULL 
-	 *	otherwise. \c parent is the parent for the object, \c radius is the 
-	 *	radius of the cylinder base while \c height is its height. The cylinder
-	 *	is built with the base lying on the XY plane and centered in Z = 0, while
-	 *	its top is placed at Z = \c height along the Z axis.
-	 *	\c slices are the number of sector the tube circumference is divided 
-	 *	into, while \c stacks indicates the number of sector composing its height.
-	 *	Cylinder appearance and inheritance are defined by the current settings 
-	 *	of the drawing brush and inheritance mode. To affect the cylinder orientation 
-	 *	and position in space make it children of a frame object.
-	 */
-	
-	// Checks if a scene is currently selected.
-	if (sceneStatus()) return 0;
-
-	// Adds the GP to the scene.
-	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::cylinder(radius, radius, height, 
-														   slices, stacks), parent);
-	gp::GP* gp = _scene[_select]->gpGet(newGP);
-																		
-	// Sets GP specific properties.
-	gp->name(name);
-	gp->info("");
-	
-	// Sets GP drawing properties.
-	gpLoadInherit(gp);
-	gpLoadBrush(gp);
-	gpLoadFill(gp);
-	  	
-	// Return the handle to that GP.
-	return newGP;	
-}
-
-//______________________________________________________________________________
-gp::GPHnd DCs::dcCylinder(const double& radius, const double& height, 
-						 const Uint32& slices, const Uint32& stacks, 
-						 const char* name)
-{
-	/*! Draw a cylinder object. Parentless overload. */
-	return dcCylinder((gp::GPHnd)0, radius, height, slices, stacks, name);
-}
-
-
-// ********************************** Cone *************************************
-
-//______________________________________________________________________________
-gp::GPHnd DCs::dcCone(const gp::GPHnd& parent,
-					 const double& radius, const double& height,
-					 const Uint32& slices, const Uint32& stacks,
-					 const char* name)
-{
-	/*! Draws a cone. Returns the handle to that object if successful, NULL 
-	 *	otherwise. \c parent is the parent for the object, \c radius is the 
-	 *	radius of the cone base while \c height is its height. The cone is
-	 *	built with the base lying on the XY plane and centered in Z = 0, while
-	 *	its top is placed at Z = \c height along the Z axis.
-	 *	\c slices are the number of sector the cone circumference is divided 
-	 *	into, while \c stacks indicates the number of sector composing its height.
-	 *	Cone appearance and inheritance are defined by the current settings 
-	 *	of the drawing brush and inheritance mode. To affect the cone orientation 
-	 *	and position in space make it children of a frame object.
-	 */
-	
-	// Checks if a scene is currently selected.
-	if (sceneStatus()) return 0;
-
-	// Adds the GP to the scene.
-	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::cone(radius, height, 
-														slices, stacks), parent);
-	gp::GP* gp = _scene[_select]->gpGet(newGP);
-																		
-	// Sets GP specific properties.
-	gp->name(name);
-	gp->info("");
-	
-	// Sets GP drawing properties.
-	gpLoadInherit(gp);
-	gpLoadBrush(gp);
-	gpLoadFill(gp);
-	
-	// Return the handle to that GP.
-	return newGP;	
-}
-
-//______________________________________________________________________________
-gp::GPHnd DCs::dcCone(const double& radius, const double& height, 
-					 const Uint32& slices, const Uint32& stacks, 
-					 const char* name)
-{
-	/*! Draw a cylinder object. Parentless overload. */
-	return dcCone((gp::GPHnd)0, radius, height, slices, stacks, name);
-}
-
-
-// ********************************* Sphere ************************************
-
-//______________________________________________________________________________
-gp::GPHnd DCs::dcSphere(const gp::GPHnd& parent,
-					   const double& radius, const Uint32& slices,
-					   const Uint32& stacks, const char* name)
-{
-	/*! Draws a sphere. Returns the handle to that object if successful, 
-	 *	NULL otherwise. \c parent is the parent for the object, \c radius is the 
-	 *	radius of the sphere, which is centered in XYZ.
-	 *	\c slices are the number of meridian sectors of the sphere, while \c 
-	 *	stacks indicates the number of parallel sectors of the sphere.
-	 *	Sphere appearance and inheritance are defined by the current settings 
-	 *	of the drawing brush and inheritance mode. To affect the sphere position
-	 *	and orientation in space make it children of a frame object. 
-	 */
-	
-	// Checks if a scene is currently selected.
-	if (sceneStatus()) return 0;
-
-	// Adds the GP to the scene.
-	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::sphere(radius, slices, stacks), parent);
-	gp::GP* gp = _scene[_select]->gpGet(newGP);
-																		
-	// Sets GP specific properties.
-	gp->name(name);
-	gp->info("");
-	
-	// Sets GP drawing properties.
-	gpLoadInherit(gp);
-	gpLoadBrush(gp);
-	gpLoadFill(gp);
-	
-	// Return the handle to that GP.
-	return newGP;	
-}
-
-//______________________________________________________________________________
-gp::GPHnd DCs::dcSphere(const double& radius, const Uint32& slices, 
-						const Uint32& stacks, const char* name)
-{
-	/*! Draw a sphere object. Parentless overload. */
-	return dcSphere((gp::GPHnd)0, radius, slices, stacks, name);
-}
+//// ********************************** Tube *************************************
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcTube(const gp::GPHnd& parent,
+//					 const double& riBase, const double& roBase, 
+//					 const double& riTop, const double& roTop, 
+//					 const double& height, const uint32_t& slices,
+//					 const uint32_t& stacks, const char* name)
+//{
+//	/*! Draws a tube. Returns the handle to that object if successful, NULL 
+//	 *	otherwise. \c parent is the parent for the object, \c riBase is the 
+//	 *	inner radius of the base while roBase is its outer radius. The same hold
+//	 *	for the top of the tube with riTop and roTop. The tube is built with its 
+//	 *	base lying on the XY plane and centered in Z = 0 and its top placed at 
+//	 *	Z = \c height position along the Z axis.
+//	 *	\c slices are the number of sector the tube circumference is divided 
+//	 *	into, while \c stacks indicates the number of sector composing its height.
+//	 *	Tube appearance and inheritance are defined by the current settings 
+//	 *	of the drawing brush and inheritance mode. To affect the tube orientation 
+//	 *	and position in space make it children of a frame object.
+//	 * 	This primitive can be used to draw cylinders and cones as well. Two
+//	 *	overloaded commands (dcCylinder and dcCone) are anyway provided with
+//	 *	simplified argument lists.
+//	 */
+//	
+//	// Checks if a scene is currently selected.
+//	if (sceneStatus()) return 0;
+//
+//	// Adds the GP to the scene.
+//	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::tube(riBase, roBase, riTop, roTop, 
+//													   height, slices, stacks), parent);
+//	gp::GP* gp = _scene[_select]->gpGet(newGP);
+//																		
+//	// Sets GP specific properties.
+//	gp->name(name);
+//	gp->info("");
+//	
+//	// Sets GP drawing properties.
+//	gpLoadInherit(gp);
+//	gpLoadBrush(gp);
+//	gpLoadFill(gp);
+//	  	
+//	// Return the handle to that GP.
+//	return newGP;	
+//}
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcTube(const double& riBase, const double& roBase, 
+//					 const double& riTop, const double& roTop, 
+//					 const double& height, const uint32_t& slices,
+//					 const uint32_t& stacks, const char* name)
+//{
+//	/*! Draw a cylinder object. Parentless overload. */
+//	return dcTube((gp::GPHnd)0, riBase, roBase, riTop, roTop, height, slices, stacks, name);
+//}
+//
+//
+//// ******************************** Cylinder ***********************************
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcCylinder(const gp::GPHnd& parent,
+//						const double& radius, const double& height,
+//						const uint32_t& slices, const uint32_t& stacks,
+//						const char* name)
+//{
+//	/*! Draws a cylinder. Returns the handle to that object if successful, NULL 
+//	 *	otherwise. \c parent is the parent for the object, \c radius is the 
+//	 *	radius of the cylinder base while \c height is its height. The cylinder
+//	 *	is built with the base lying on the XY plane and centered in Z = 0, while
+//	 *	its top is placed at Z = \c height along the Z axis.
+//	 *	\c slices are the number of sector the tube circumference is divided 
+//	 *	into, while \c stacks indicates the number of sector composing its height.
+//	 *	Cylinder appearance and inheritance are defined by the current settings 
+//	 *	of the drawing brush and inheritance mode. To affect the cylinder orientation 
+//	 *	and position in space make it children of a frame object.
+//	 */
+//	
+//	// Checks if a scene is currently selected.
+//	if (sceneStatus()) return 0;
+//
+//	// Adds the GP to the scene.
+//	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::cylinder(radius, radius, height, 
+//														   slices, stacks), parent);
+//	gp::GP* gp = _scene[_select]->gpGet(newGP);
+//																		
+//	// Sets GP specific properties.
+//	gp->name(name);
+//	gp->info("");
+//	
+//	// Sets GP drawing properties.
+//	gpLoadInherit(gp);
+//	gpLoadBrush(gp);
+//	gpLoadFill(gp);
+//	  	
+//	// Return the handle to that GP.
+//	return newGP;	
+//}
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcCylinder(const double& radius, const double& height, 
+//						 const uint32_t& slices, const uint32_t& stacks, 
+//						 const char* name)
+//{
+//	/*! Draw a cylinder object. Parentless overload. */
+//	return dcCylinder((gp::GPHnd)0, radius, height, slices, stacks, name);
+//}
+//
+//
+//// ********************************** Cone *************************************
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcCone(const gp::GPHnd& parent,
+//					 const double& radius, const double& height,
+//					 const uint32_t& slices, const uint32_t& stacks,
+//					 const char* name)
+//{
+//	/*! Draws a cone. Returns the handle to that object if successful, NULL 
+//	 *	otherwise. \c parent is the parent for the object, \c radius is the 
+//	 *	radius of the cone base while \c height is its height. The cone is
+//	 *	built with the base lying on the XY plane and centered in Z = 0, while
+//	 *	its top is placed at Z = \c height along the Z axis.
+//	 *	\c slices are the number of sector the cone circumference is divided 
+//	 *	into, while \c stacks indicates the number of sector composing its height.
+//	 *	Cone appearance and inheritance are defined by the current settings 
+//	 *	of the drawing brush and inheritance mode. To affect the cone orientation 
+//	 *	and position in space make it children of a frame object.
+//	 */
+//	
+//	// Checks if a scene is currently selected.
+//	if (sceneStatus()) return 0;
+//
+//	// Adds the GP to the scene.
+//	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::cone(radius, height, 
+//														slices, stacks), parent);
+//	gp::GP* gp = _scene[_select]->gpGet(newGP);
+//																		
+//	// Sets GP specific properties.
+//	gp->name(name);
+//	gp->info("");
+//	
+//	// Sets GP drawing properties.
+//	gpLoadInherit(gp);
+//	gpLoadBrush(gp);
+//	gpLoadFill(gp);
+//	
+//	// Return the handle to that GP.
+//	return newGP;	
+//}
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcCone(const double& radius, const double& height, 
+//					 const uint32_t& slices, const uint32_t& stacks, 
+//					 const char* name)
+//{
+//	/*! Draw a cylinder object. Parentless overload. */
+//	return dcCone((gp::GPHnd)0, radius, height, slices, stacks, name);
+//}
+//
+//
+//// ********************************* Sphere ************************************
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcSphere(const gp::GPHnd& parent,
+//					   const double& radius, const uint32_t& slices,
+//					   const uint32_t& stacks, const char* name)
+//{
+//	/*! Draws a sphere. Returns the handle to that object if successful, 
+//	 *	NULL otherwise. \c parent is the parent for the object, \c radius is the 
+//	 *	radius of the sphere, which is centered in XYZ.
+//	 *	\c slices are the number of meridian sectors of the sphere, while \c 
+//	 *	stacks indicates the number of parallel sectors of the sphere.
+//	 *	Sphere appearance and inheritance are defined by the current settings 
+//	 *	of the drawing brush and inheritance mode. To affect the sphere position
+//	 *	and orientation in space make it children of a frame object. 
+//	 */
+//	
+//	// Checks if a scene is currently selected.
+//	if (sceneStatus()) return 0;
+//
+//	// Adds the GP to the scene.
+//	gp::GPHnd newGP = _scene[_select]->gpAdd(new gp::sphere(radius, slices, stacks), parent);
+//	gp::GP* gp = _scene[_select]->gpGet(newGP);
+//																		
+//	// Sets GP specific properties.
+//	gp->name(name);
+//	gp->info("");
+//	
+//	// Sets GP drawing properties.
+//	gpLoadInherit(gp);
+//	gpLoadBrush(gp);
+//	gpLoadFill(gp);
+//	
+//	// Return the handle to that GP.
+//	return newGP;	
+//}
+//
+////______________________________________________________________________________
+//gp::GPHnd DCs::dcSphere(const double& radius, const uint32_t& slices, 
+//						const uint32_t& stacks, const char* name)
+//{
+//	/*! Draw a sphere object. Parentless overload. */
+//	return dcSphere((gp::GPHnd)0, radius, slices, stacks, name);
+//}
 
 
 // ********************************** Label ************************************
@@ -1260,7 +1261,7 @@ gp::GPHnd DCs::dcSphere(const double& radius, const Uint32& slices,
 //______________________________________________________________________________
 gp::GPHnd DCs::dcLabel(const gp::GPHnd& parent, const char* text,
 					  const double& cX, const double& cY, const double& cZ,
-					  const Uint32& alignment, const double& rotation, 
+					  const uint32_t& alignment, const double& rotation, 
 					  const bool& view2D, const char* name)
 {
 	/*! Draws a label. A label is a simple text string which keeps a fixed 
@@ -1319,7 +1320,7 @@ gp::GPHnd DCs::dcLabel(const gp::GPHnd& parent, const char* text,
 //______________________________________________________________________________
 gp::GPHnd DCs::dcLabel(const char* text,
 					  const double& cX, const double& cY, const double& cZ,
-					  const Uint32& alignment, const double& rotation,
+					  const uint32_t& alignment, const double& rotation,
 					  const bool& view2D, const char* name)
 {
 	/*! Draw a label object. Parentless overload. */

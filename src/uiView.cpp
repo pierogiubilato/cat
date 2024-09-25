@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -45,10 +45,10 @@ view::view(pad* owner)
 	
 	// Matrixes.
 	_matrix.viewport[0] = 0;	// Bottom left corner X. 
-	_matrix.viewport[1] = 0;	// Bottom left corler Y.
+	_matrix.viewport[1] = 0;	// Bottom left corner Y.
 	_matrix.viewport[2] = 0;	// Width.
 	_matrix.viewport[3] = 0;	// Height.
-	for (Uint32 i = 0; i < 16; i++) {	
+	for (auto i = 0; i < 16; i++) {	
 		_matrix.modelview[i] = 0;
 		_matrix.projection[i] = 0; 
 	}
@@ -57,7 +57,7 @@ view::view(pad* owner)
 	_lighting = true;	// Lighting on.
 		
 	// Here the presets for the standard view lighting.
-	for (Uint32 i = 0; i < 8; i++) {
+	for (auto i = 0; i < 8; i++) {
 			
 		// Status.
 		_light[i].on = false;			// On/Off.
@@ -88,7 +88,7 @@ view::view(pad* owner)
 	}
 	
 	// Switch on just light #1 (light are computationally heavy...)
-	_light[0].On = true;		
+	_light[0].on = true;		
 
 	// Model.
 	_model.position[0] = 0.0f;	// Offset X.
@@ -143,15 +143,15 @@ bool view::compare(const view* cView) const
 	
 	// General.
 	equal &= (_zoom == cView->_zoom);
-	for (int i = 0; i < 3; i++) equal &= (_backColor[i] == cView->_backColor[i]);
+	for (auto i = 0; i < 3; i++) equal &= (_backColor[i] == cView->_backColor[i]);
 	equal &= (_mode == cView->_mode);
 	equal &= (_lighting == cView->_lighting);
 	
 	// Model.
-	for (int i = 0; i < 4; i++) {
+	for (auto i = 0; i < 4; i++) {
 		equal &= (_model.rotation[i] == cView->_model.rotation[i]);
 	}
-	for (int i = 0; i < 3; i++) {
+	for (auto i = 0; i < 3; i++) {
 		equal &= (_model.position[i] == cView->_model.position[i]);
 		equal &= (_model.scale[i] == cView->_model.scale[i]);
 	}	
@@ -159,20 +159,20 @@ bool view::compare(const view* cView) const
 	// Camera.
 	equal &= (_camera.focal == cView->_camera.focal);
 	equal &= (_camera.fov == cView->_camera.fov);
-	for (int i = 0; i < 3; i++) {
+	for (auto i = 0; i < 3; i++) {
 		equal &= (_camera.position[i] == cView->_camera.position[i]);
 		equal &= (_camera.target[i] == cView->_camera.target[i]);
 		equal &= (_camera.up[i] == cView->_camera.up[i]);
 	}	
 	
 	// Lights.
-	for (int l = 0; l < 8; l++) {
+	for (auto l = 0; l < 8; l++) {
 		equal &= (_light[l].on == cView->_light[l].on);
 		equal &= (_light[l].mult == cView->_light[l].mult);
 		for (int i = 0; i < 3; i++) {
-			equal &= (_light[l].dir[i] == cView->_Light[l].Dir[i]);
+			equal &= (_light[l].dir[i] == cView->_light[l].dir[i]);
 		}
-		for (int i = 0; i < 4; i++) {
+		for (auto i = 0; i < 4; i++) {
 			equal &= (_light[l].ambient[i] == cView->_light[l].ambient[i]);
 			equal &= (_light[l].diffuse[i] == cView->_light[l].diffuse[i]);
 			equal &= (_light[l].specular[i] == cView->_light[l].specular[i]);
@@ -180,7 +180,7 @@ bool view::compare(const view* cView) const
 	}
 
 	// Axis.
-	for (int a = 0; a < 3; a++) {
+	for (auto a = 0; a < 3; a++) {
 		equal &= (_axis[a].on == cView->_axis[a].on);
 		equal &= (_axis[a].grid == cView->_axis[a].grid);
 		equal &= (_axis[a].limit == cView->_axis[a].limit);
@@ -215,8 +215,8 @@ void view::needRedraw(bool const& status)
 // *****************************************************************************
 
 //______________________________________________________________________________
-void view::uiBarLoad(bar& bar) 
-{
+//void view::uiBarLoad(bar& bar) 
+//{
 	/*! Load an ui Bar with the view settings. */
 /*
 	// Gets the linked TwBar.
@@ -317,7 +317,7 @@ void view::uiBarLoad(bar& bar)
 		TwSetParam(twBar, varNameRoot.str().c_str(), "group", TW_PARAM_CSTRING, 1, "Light");
 	}
 */
-}
+//}
 
 
 // *****************************************************************************
@@ -339,10 +339,10 @@ bool view::glSet(cat::ui::mouseBall& mb, const bool& sel)
 
 	// Store current settings, they will be recalled by the
 	// glReset() call after drawing the full scene.	
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();	
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
+//	glMatrixMode(GL_PROJECTION);
+//	glPushMatrix();	
+//	glMatrixMode(GL_MODELVIEW);
+//	glPushMatrix();
 	
 	// Updates selection color/pattern accordingly to the view properties.
 	cat::gp::GP::_selColor[0] = 1 - _backColor[0];  
@@ -371,7 +371,7 @@ bool view::glSet(cat::ui::mouseBall& mb, const bool& sel)
 	// Compare and save current view settings for the taskbar
 	// refresh in case of multiple views/scenes.m
 	static view oldView(0);
-	_NeedRedraw = !compare(&oldView);
+	_needRedraw = !compare(&oldView);
 	oldView = *this;
 
 	// Stores current view matrixes. These will be used for
@@ -379,8 +379,8 @@ bool view::glSet(cat::ui::mouseBall& mb, const bool& sel)
 	// rendering is completed and the matrixes reset to their 
 	// previous values from the glReset() call.
 	if (!mb.flagAny()) {  
-		glGetDoublev(GL_MODELVIEW_MATRIX, _matrix.modelview);
-		glGetDoublev(GL_PROJECTION_MATRIX, _matrix.projection);
+//		glGetDoublev(GL_MODELVIEW_MATRIX, _matrix.modelview);
+//		glGetDoublev(GL_PROJECTION_MATRIX, _matrix.projection);
 		glGetIntegerv(GL_VIEWPORT, _matrix.viewport);
 	}
 
@@ -397,10 +397,10 @@ bool view::glReset()
 	 */
 	 
 	// Background color.
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();	
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
+//	glMatrixMode(GL_PROJECTION);
+//	glPopMatrix();	
+//	glMatrixMode(GL_MODELVIEW);
+//	glPopMatrix();
 	
 	// Everything fine.
 	return false;
@@ -420,8 +420,8 @@ bool view::glView()
 	return false;
 }
 
-////______________________________________________________________________________
-//bool View::glCamera(pear::ui::mouseBall& mb, const bool& sel)
+//////______________________________________________________________________________
+//bool view::glCamera(mouseBall& mb, const bool& sel)
 //{
 //	/*! Fits the current OpenGL PROJECTION matrix to match the camera settings,
 //	 *	focal length, fov, etc... Returns false if no error occurred, true 
@@ -462,7 +462,7 @@ bool view::glView()
 ////	gluPerspective(_camera.fov, aspect, 0.5, 100);			 
 //	
 //	
-//	// Everything fine.
+	// Everything fine.
 //	return false;
 //}
 
@@ -497,7 +497,7 @@ bool view::glMatrixes(cat::ui::mouseBall& mb, const bool& sel)
 		else mb.quaternionSet(_model.rotation);
 
 		// scale.
-		if (mb.flagscale()) mb.scaleGet(_model.scale); 
+		if (mb.flagScale()) mb.scaleGet(_model.scale); 
 		else mb.scaleSet(_model.scale);
 	
 
@@ -536,10 +536,10 @@ bool view::glMatrixes(cat::ui::mouseBall& mb, const bool& sel)
 	//glm::mat4 mdlMtx = camMtx * pckMtx * trlMtx * rotMtx * sclMtx;
 
 	// Load the view matrix.
-	glMatrixMode(GL_MODELVIEW);
+//	glMatrixMode(GL_MODELVIEW);
 //	glLoadIdentity();
 //glMultMatrixf(glm::value_ptr(mdlMtx));	
-	glLoadMatrixf(glm::value_ptr(mdlMtx));
+//	glLoadMatrixf(glm::value_ptr(mdlMtx));
 
 	// This allow to center the ArcBall action over the point
 	// of interest.
@@ -551,9 +551,9 @@ bool view::glMatrixes(cat::ui::mouseBall& mb, const bool& sel)
 	
 
 		// Picking matrix: in case of selection, resize the scene to fit the 
-Uint32 mPosView[3]; mb.posViewGet(mPosView);	
-glMatrixMode(GL_PROJECTION);
-glLoadIdentity();
+uint32_t mPosView[3]; mb.posViewGet(mPosView);	
+//glMatrixMode(GL_PROJECTION);
+//glLoadIdentity();
 //if (sel) gluPickMatrix(mPosView[0], viewport[3] - mPosView[1] + viewport[1], 3, 3, viewport);
 //gluPerspective(_camera.fov, viewAspect, 0.5, 100);	
 
@@ -578,11 +578,11 @@ glLoadIdentity();
 
 		//glTranslatef((viewport[2] - 2 * (x - viewport[0])) / deltax, (viewport[3] - 2 * (y - viewport[1])) / deltay, 0);
 		glm::mat4 pckTrlMtx = glm::translate(uniMtx, glm::vec3((viewport[2] - 2 * (x - viewport[0])) / deltax, (viewport[3] - 2 * (y - viewport[1])) / deltay, 0));
-		glMultMatrixf(glm::value_ptr(pckTrlMtx));
+	//	glMultMatrixf(glm::value_ptr(pckTrlMtx));
 
 		//glscalef(viewport[2] / deltax, viewport[3] / deltay, 1.0);
 		glm::mat4 pckSclMtx = glm::scale(uniMtx, glm::vec3(viewport[2] / deltax, viewport[3] / deltay, 1.0));
-		glMultMatrixf(glm::value_ptr(pckSclMtx));
+//		glMultMatrixf(glm::value_ptr(pckSclMtx));
 
 		pckMtx = pckSclMtx * pckTrlMtx;
 	}
@@ -592,10 +592,10 @@ glLoadIdentity();
 	//prjMtx *= pckMtx;
 
 		// Load the projection matrix.	
-	glMultMatrixf(glm::value_ptr(prjMtx));
+//	glMultMatrixf(glm::value_ptr(prjMtx));
 //	glMatrixMode(GL_PROJECTION);
 //	glLoadMatrixf(glm::value_ptr(prjMtx));
-	glMatrixMode(GL_MODELVIEW);
+//	glMatrixMode(GL_MODELVIEW);
 
 
 	// In case of selection, narrows the view down to few pixels around the mouse 
@@ -622,63 +622,63 @@ glLoadIdentity();
 }
 
 //______________________________________________________________________________
-bool View::glLight()
+bool view::glLight()
 {
 	/*! Fits the current OpenGL lighting to match the view settings. Returns
 	 *	false if no error occurred, true otherwise.
 	 */
 	 
 	// Enable lighting in case.
-	if(_Lighting) {
-		glEnable(GL_LIGHTING);
+	if(_lighting) {
+//		glEnable(GL_LIGHTING);
 
 	// Normal mode without lightining.
 	} else {
-		glDisable(GL_LIGHTING);
+//		glDisable(GL_LIGHTING);
 		return false;
 	}
 
 	// For all the active lights.
-	for (Uint64 l = 0; l < 8; l++) {	
+	for (auto l = 0; l < 8; l++) {	
 
 		// Generate a GL_LIGHT_ID which identifies the current light.
 		Uint16 GL_LIGHT_ID = 0x4000 + (Uint16)l;
 			
 		// If the light is ON enable it, otherwise turn off.
-		if (_Light[l].On) glEnable(GL_LIGHT_ID);
+		if (_light[l].on) glEnable(GL_LIGHT_ID);
 		else {glDisable(GL_LIGHT_ID); continue;}
 
 		// Pivots
 		float v[4];					// Color vector.
-		float lm = _Light[l].Mult;	// Multiplier.
+		float lm = _light[l].mult;	// Multiplier.
 
 		// Set Light Ambient.
-		v[0] = _Light[l].Ambient[0] * lm; 
-		v[1] = _Light[l].Ambient[1] * lm;
-		v[2] = _Light[l].Ambient[2] * lm; 
-		v[3] = _Light[l].Ambient[3];
-		glLightfv(GL_LIGHT_ID, GL_AMBIENT, v);
+		v[0] = _light[l].ambient[0] * lm; 
+		v[1] = _light[l].ambient[1] * lm;
+		v[2] = _light[l].ambient[2] * lm; 
+		v[3] = _light[l].ambient[3];
+	//	glLightfv(GL_LIGHT_ID, GL_AMBIENT, v);
 		
 		// Set light Diffuse.	
-		v[0] = _Light[l].Diffuse[0] * lm; 
-		v[1] = _Light[l].Diffuse[1] * lm;
-		v[2] = _Light[l].Diffuse[2] * lm; 
-		v[3] = _Light[l].Diffuse[3];
-		glLightfv(GL_LIGHT_ID, GL_DIFFUSE, v);
+		v[0] = _light[l].diffuse[0] * lm; 
+		v[1] = _light[l].diffuse[1] * lm;
+		v[2] = _light[l].diffuse[2] * lm; 
+		v[3] = _light[l].diffuse[3];
+	//	glLightfv(GL_LIGHT_ID, GL_DIFFUSE, v);
 		
 		// Set light Specular.	
-		v[0] = _Light[l].Specular[0] * lm; 
-		v[1] = _Light[l].Specular[1] * lm;
-		v[2] = _Light[l].Specular[2] * lm;
-		v[3] = _Light[l].Specular[3];
-		glLightfv(GL_LIGHT_ID, GL_SPECULAR, v);
+		v[0] = _light[l].specular[0] * lm; 
+		v[1] = _light[l].specular[1] * lm;
+		v[2] = _light[l].specular[2] * lm;
+		v[3] = _light[l].specular[3];
+	//	glLightfv(GL_LIGHT_ID, GL_SPECULAR, v);
 		
 		// Set light direction (being at infinite distance, position==direction).
-		v[0] = -_Light[l].Dir[0]; 
-		v[1] = -_Light[l].Dir[1]; 
-		v[2] = -_Light[l].Dir[2]; 
+		v[0] = -_light[l].dir[0]; 
+		v[1] = -_light[l].dir[1]; 
+		v[2] = -_light[l].dir[2]; 
 		v[3] = 0.0f;
-		glLightfv(GL_LIGHT_ID, GL_POSITION, v);
+	//	glLightfv(GL_LIGHT_ID, GL_POSITION, v);
 	}
 
 	// Everything fine;
@@ -691,18 +691,18 @@ bool View::glLight()
 // *****************************************************************************
 
 //______________________________________________________________________________
-double View::glViewZ(const int& vX, const int& vY) const
+double view::glViewZ(const int& vX, const int& vY) const
 {
 	/*! VGet the depth of the first visible object at the viewport \c 'vX' and
 	 *	\c 'vY' location. */
 
 	float vZ = 0;
-	glReadPixels(vX, _Matrix.Viewport[3] - vY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &vZ);
+	glReadPixels(vX, _matrix.viewport[3] - vY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &vZ);
 	return vZ;
 }
 
 //______________________________________________________________________________
-bool View::glViewToWorld(const double* vXYZ, double* wXYZ) const
+bool view::glViewToWorld(const double* vXYZ, double* wXYZ) const
 {
 	/*! Viewport to World transform. Transform the \c 'vXYZ' viewport 
 	 *	coordinate into an object world coordinate \c 'wXYZ'. For the
@@ -711,14 +711,14 @@ bool View::glViewToWorld(const double* vXYZ, double* wXYZ) const
 	 */
 
 	// Retrieve the transformed coordinates.
-	gluUnProject(vXYZ[0], _Matrix.Viewport[3] - vXYZ[1], vXYZ[2], _Matrix.Modelview, _Matrix.Projection, _Matrix.Viewport, &wXYZ[0], &wXYZ[1], &wXYZ[2]);
+//	gluUnProject(vXYZ[0], _matrix.viewport[3] - vXYZ[1], vXYZ[2], _matrix.modelview, _matrix.projection, _matrix.viewport, &wXYZ[0], &wXYZ[1], &wXYZ[2]);
 
 	// Everything fine.
 	return false;
 }	
 
 //______________________________________________________________________________
-bool View::glWorldToView(const double* wXYZ, double* vXYZ) const
+bool view::glWorldToView(const double* wXYZ, double* vXYZ) const
 {
 	/*! World to Viewport transform. Transform the \c 'wXYZ' world
 	 *	coordinate into a viewport world coordinate \c 'vXYZ'. For the
@@ -727,7 +727,7 @@ bool View::glWorldToView(const double* wXYZ, double* vXYZ) const
 	 */
 
 	// Retrieve the transformed coordinates.
-	gluProject(wXYZ[0], wXYZ[1], wXYZ[2], _Matrix.Modelview, _Matrix.Projection, _Matrix.Viewport, &vXYZ[0], &vXYZ[1], &vXYZ[2]);
+//	gluProject(wXYZ[0], wXYZ[1], wXYZ[2], _Matrix.Modelview, _Matrix.Projection, _Matrix.Viewport, &vXYZ[0], &vXYZ[1], &vXYZ[2]);
 
 	// Everything fine.
 	return false;

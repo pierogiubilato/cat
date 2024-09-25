@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -64,7 +64,7 @@ CO::oType polygon::type() const
 }
 
 //______________________________________________________________________________
-Uint64 polygon::version() const
+cat::coVer_t polygon::version() const
 {
 	/*! Returns a numeric version. */
 	return 100;
@@ -96,7 +96,7 @@ size_t polygon::size(const bool& dynamic) const
 }
 
 //______________________________________________________________________________
-void polygon::dump(const Uint64& ind) const
+void polygon::dump(const int& ind) const
 {
 	/*! Send out all the GP data. */
 	stroked::dump(ind);
@@ -105,7 +105,7 @@ void polygon::dump(const Uint64& ind) const
 	std::string pad2(ind + CAT_DUMP_PADDING, ' ');
 	std::string pad3(ind + 2 * CAT_DUMP_PADDING, ' ');
 	std::cout << pad2 << "Polygon specific\n";
-	for (Uint64 i = 0; i < _vtx.size(); i ++) {
+	for (auto i = 0; i < _vtx.size(); i ++) {
 		std::cout << pad3 << "Vtx #" << i << ": " << _vtx[i] << "\n";
 	}
 }
@@ -121,11 +121,11 @@ bool polygon::stream(std::stringstream& o, const bool& read)
 	// Reads from stream.
 	if (read) {
 		af::stream::read(o, _closed);
-		Uint64 count = 0;
+		uint64_t count = 0;
 		af::stream::Read(o, count);
 		_vtx.clear();
 		_vtx.reserve(count);
-		for (Uint64 i = 0; i < count; i++) {
+		for (auto i = 0; i < count; i++) {
 			_vtx.push_back(ge::point());
 			_vtx[i].stream(o, read);
 		}
@@ -133,9 +133,9 @@ bool polygon::stream(std::stringstream& o, const bool& read)
 	// Writes to stream.
 	} else {
 		af::stream::write(o, _closed);
-		Uint64 count = _vtx.size();
+		uint64_t count = _vtx.size();
 		af::stream::Write(o, count);
-		for (Uint64 i = 0; i < count; i++) _vtx[i].stream(o, read);
+		for (auto i = 0; i < count; i++) _vtx[i].stream(o, read);
 	}
 
 	// Everything fine.
@@ -158,7 +158,7 @@ polygon& polygon::trsf(const ge::ref& rf, const bool& inv)
 // *****************************************************************************
 
 //______________________________________________________________________________
-ge::point polygon::vtx(const Uint64& idx) const
+ge::point polygon::vtx(const int& idx) const
 {
 	/*! Returns the Idx th vertex of the box. Returns a (0,0,0) vertex in case
 	 *	of OOB call. */
@@ -229,7 +229,7 @@ void polygon::glDraw()
 		
 		// Start listing GL vertices. 
 //		_closed ? glBegin(GL_LINE_LOOP) : glBegin(GL_LINE_STRIP); 
-		for (Uint64 i = 0; i < _vtx.size(); i++) glVertex(_vtx[i]);
+		for (auto i = 0; i < _vtx.size(); i++) glVertex(_vtx[i]);
 //		glEnd();
 
 		// Re-enable light in case.

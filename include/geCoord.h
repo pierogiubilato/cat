@@ -70,12 +70,10 @@ class coord: public GE
 			
 		// Default access public members.
 		oType type() const;								//!< Returns GP type.
-		uint32_t version() const;							//!< Returns GP version.
+		uint32_t version() const;						//!< Returns GP version.
 		std::string stem() const;						//!< Returns GP stem name.
 		size_t size() const;							//!< Returns GP size in bytes.
-		void dump(const int ind = 0) const;			//!< Dumps GP data.
-		
-		//! Stream the GP data (both read and write).
+		void dump(const int&) const;					//!< Dumps GP data.
 		bool stream(std::stringstream& o, const bool& read = false);
 		
 		// Specific support members.

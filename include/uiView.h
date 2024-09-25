@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"21 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -46,7 +46,7 @@ class view //: public UI
 		bool _needRedraw;			//!< Flag for requiring redraw.
 		
 		// 3D View constants
-		enum class k3d : Uint32 {
+		enum k3d : uint32_t {
 			projection, 
 			camera, 
 			top, 
@@ -59,9 +59,9 @@ class view //: public UI
 		
 		// Viewport.
 		struct kMatrix {
-			GLdouble modelview[16];		//!< Modelview matrix.
-			GLdouble projection[16];	//!< Projection matrix.
-			GLint viewport[4];			//!< Viewport matrix.
+			double modelview[16];		//!< Modelview matrix.
+			double projection[16];	//!< Projection matrix.
+			int32_t viewport[4];			//!< Viewport matrix.
 		};
 		
 
@@ -93,7 +93,7 @@ class view //: public UI
 
 		// 1D Axis
 		struct kAxis {
-			bool nn;					//!< Show axis.
+			bool on;					//!< Show axis.
 			bool grid;					//!< Show Grid.
 			float limit;				//!< Extension limit.
 			float step;					//!< Grid stepping.			
@@ -106,7 +106,7 @@ class view //: public UI
 		// 3D screen view parameter.
 		float _backColor[3];			//!< Background color.
 		float _zoom;					//!< Self-explaining.
-		Uint64 _mode;					//!< Preset-view (top, front, ....).
+		uint_fast32_t _mode;			//!< Preset-view (top, front, ....).
 		bool _lighting;					//!< Lighting is on.
 		
 		// View models.
@@ -126,18 +126,18 @@ class view //: public UI
 		void needRedraw(const bool&);//!< Set if the view has changed.
 
 		// ui Functions.
-		void uiBarLoad(bar&);		//!< Load a ui::Bar.
+//		void uiBarLoad(bar&);		//!< Load a ui::Bar.
 		
 		// gl/glu Functions.
 		// -----------------
 
 			//! Main functions to set a view.
-			bool glSet(cat::ui::mouseBall& mb, const bool& sel = false);
+			bool glSet(mouseBall& mb, const bool& sel = false);
 			bool glReset();				//!< Reset the OpenGL view.
 			bool glView();				//!< Sets the OpenGL view.
 		
-			//! Sets the modelview (GL_MODELVIEW).
-			bool glMatrixes(cat::ui::mouseBall& mb, const bool& sel);
+			//! Sets the model view (GL_MODELVIEW).
+			bool glMatrixes(mouseBall& mb, const bool& sel);
 						
 			//! Fits the OpenGL lighting.
 			bool glLight();

@@ -55,7 +55,7 @@ class macros: public DCs
 										const char* name = "")
 	{
 		/* Draws a tripod aligned with the parent reference frame. */
-		gp::GPHnd tripod = dcVirtual(parent, "Tripod");
+		gp::GPHnd tripod = dcEmpty(parent, "Tripod");
 		gp::GPHnd step = 0;
 		double PI = 3.141592;	
 		double arm = 0.7 * scale;
@@ -74,27 +74,27 @@ class macros: public DCs
 		// X axis.
 		dcFillColor(1, 0, 0, 1);		
 		step = dcFrame(tripod, 0, 0, 0, 0, PI / 2, 0, "X axis rotate");
-		dcCylinder(step, thick, arm, 10, 1, "Arm");
+	//	dcCylinder(step, thick, arm, 10, 1, "Arm");
 		step = dcFrame(step, 0, 0, arm, 0, 0, 0, "Translate my Z");
-		dcCone(step, base, tip, 10, 1, "Tip");
+	//	dcCone(step, base, tip, 10, 1, "Tip");
 
 		// Y axis.
 		dcFillColor(0, 1, 0, 1);		
 		step = dcFrame(tripod, 0, 0, 0, -PI / 2, 0, 0, "Y axis rotate");
-		dcCylinder(step, thick, arm, 10, 1, "Arm");
+	//	dcCylinder(step, thick, arm, 10, 1, "Arm");
 		step = dcFrame(step, 0, 0, arm, 0, 0, 0, "Translate my Z");
-		dcCone(step, base, tip, 10, 1, "Tip");
+	//	dcCone(step, base, tip, 10, 1, "Tip");
 
 		// Z axis.
 		dcFillColor(0, 0, 1, 1);
 		step = dcFrame(tripod, 0, 0, 0, 0, 0, 0, "Z axis rotate");
-		dcCylinder(step, thick, arm, 10, 1, "Arm");
+	//	dcCylinder(step, thick, arm, 10, 1, "Arm");
 		step = dcFrame(step, 0, 0, arm, 0, 0, 0, "Translate my Z");
-		dcCone(step, base, tip, 10, 1, "Tip");
+	//	dcCone(step, base, tip, 10, 1, "Tip");
 						
 		// Origin ball.
 		dcFillColor(1, 1, 1, 1);
-		dcSphere(tripod, base);
+	//	dcSphere(tripod, base);
 
 		// Restore brush and fill setting.
 		dcBrushSet(oldBrush);
@@ -125,7 +125,7 @@ class macros: public DCs
 	{
 		/* Represents a 2D array via a lego-style 3D plot. */
 		//GPHnd array2D = dcFrame(parent, 0, 0, 0, 0, 0, 0, "Array2D");
-		gp::GPHnd array2D = dcVirtual(parent, "Array2D");
+		gp::GPHnd array2D = dcEmpty(parent, "Array2D");
 
 		// Parses the array for max and min.
 		double pMax = data[0];

@@ -76,7 +76,7 @@ class scene: public GP
 		#ifdef CAT_SERVER
 			
 			// UI interaction.
-			virtual void uiBarLoad(ui::Bar&);	//!< Load a bar with the scene GPs list.	
+			//virtual void uiBarLoad(ui::Bar&);	//!< Load a bar with the scene GPs list.	
 		#endif
 };
 

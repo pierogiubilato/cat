@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -59,14 +59,14 @@ void mouseBall::posViewGet(double* vXYZ) const
 }
 
 //______________________________________________________________________________
-void mouseBall::posViewGet(Uint32* vXYZ) const
+void mouseBall::posViewGet(uint32_t* vXYZ) const
 {
 	/*! Returns last registered mouse position in viewport coordinates. */
 
 	// Retrieve viewport position.
-	vXYZ[0] = static_cast<Uint32>(_posView[0]);
-	vXYZ[1] = static_cast<Uint32>(_posView[1]);
-	vXYZ[2] = static_cast<Uint32>(_posView[2]);
+	vXYZ[0] = static_cast<uint32_t>(_posView[0]);
+	vXYZ[1] = static_cast<uint32_t>(_posView[1]);
+	vXYZ[2] = static_cast<uint32_t>(_posView[2]);
 }
 
 //______________________________________________________________________________
@@ -132,7 +132,7 @@ void mouseBall::begin(const int& x, const int& y, const int& mb, const bool& zp,
 				
 		// Prepare for scaling.
 		if (zp) {
-			_mVecScaleStart = ScreenToSphere(static_cast<float>(x), static_cast<float>(y));
+			_mVecScaleStart = screenToSphere(static_cast<float>(x), static_cast<float>(y));
 		
 		// Prepare for panning.
 		} else {		
@@ -175,7 +175,7 @@ void mouseBall::drag(const int& x, const int& y)
 	if (_mLDragging) {
 		
 		// Displacement vector.
-		_mVecRotateLast = ScreenToSphere(static_cast<float>(x), static_cast<float>(y));
+		_mVecRotateLast = screenToSphere(static_cast<float>(x), static_cast<float>(y));
 		glm::vec3 p = glm::cross(_mVecRotateStart, _mVecRotateLast);
 		
 		// Derive rotation quaternions.
@@ -332,17 +332,17 @@ bool mousePicker::process(unsigned int &_pickedFlags)
 	 */ 
 	
 	///* Restore normal rendering mode */
-	glMatrixMode(GL_PROJECTION); 
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW); // Return to model view 
-	glFlush();
-	hits = glRenderMode(GL_RENDER); // Return to render mode 
+//	glMatrixMode(GL_PROJECTION); 
+//	glPopMatrix();
+//	glMatrixMode(GL_MODELVIEW); // Return to model view 
+//	glFlush();
+//	hits = glRenderMode(GL_RENDER); // Return to render mode 
 	
 	// Prepare to search Buffer 
 	float zMin; 			// Minimum Depth  
 	int name; int flag = 0; // 'Picked' Name and Flags   
-	GLuint names, *ptr;		// Name and buffer elements
-	ptr = (GLuint *) buffer;
+	uint32_t names, *ptr;		// Name and buffer elements
+	ptr = (uint32_t*) buffer;
 	
 	// Search! Loop over each hit, and every element in the hit buffer.
 	unsigned int i, j;

@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.3"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"21 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -16,6 +16,10 @@
 // Overloading check
 #ifndef gp_H
 #define gp_H
+
+// All GPs embody their own drawing calls, so here we include the relevant
+// graphics library(es) once for all.
+#include "glad.h"
 
 // Application
 #include "co.h"
@@ -103,11 +107,11 @@ typedef uint64_t GPHnd;
 *
 *	\author Piero Giubilato
 *	\version 1.2
-*	\date 17 Sep 2024	
+*	\date 24 Sep 2024	
 */
 
 //______________________________________________________________________________
-class GP : public cat::CO
+class GP : public CO
 {
 	public:
 
@@ -157,7 +161,7 @@ class GP : public cat::CO
 		};
 
 		// Alignment constants.
-		enum class kAlign : uint_fast32_t {
+		enum kAlign : uint_fast32_t {
 			null = 0,
 			horLeft = 1,
 			horMid = 2,
@@ -296,15 +300,15 @@ class GP : public cat::CO
 		public:
 			
 			// Display and drawing.
-//			GLuint _glDspListIdx;				//!< The GP associated dDisplayList.
-//			void glBuild();						//!< Manages the DisplayList.
-//			void glDisplay();					//!< Draws the DisplayList.
-//			virtual void glDraw();				//!< Draws the GP on the current GLcontext.
-//			virtual void glDrawSel();			//!< Draws the GP in selection mode.
-//			virtual void glDrawEnd();			//!< Closes the GP drawing. Mandatory call!
-//			virtual double glAlpha();			//!< Returns the gp (hierarchical) transparency.
-//			virtual void glTrsfApply();			//!< Apply (push) the gp Ref (hierarchical) transformation.
-//			virtual void glTrsfReset();			//!< Reset (pop) the gp Ref (hierarchical) transformation.
+			uint8_t _glDspListIdx;				//!< The GP associated dDisplayList.
+			void glBuild();						//!< Manages the DisplayList.
+			void glDisplay();					//!< Draws the DisplayList.
+			virtual void glDraw();				//!< Draws the GP on the current GLcontext.
+			virtual void glDrawSel();			//!< Draws the GP in selection mode.
+			virtual void glDrawEnd();			//!< Closes the GP drawing. Mandatory call!
+			virtual double glAlpha();			//!< Returns the gp (hierarchical) transparency.
+			virtual void glTrsfApply();			//!< Apply (push) the gp Ref (hierarchical) transformation.
+			virtual void glTrsfReset();			//!< Reset (pop) the gp Ref (hierarchical) transformation.
 
 			// UI interaction.
 //			virtual void uiBarLoad(ui::Bar&);	//!< Load a bar with the GP specific properties.	

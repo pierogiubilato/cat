@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"19 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -28,8 +28,8 @@ namespace cat { namespace rc {
 // *****************************************************************************
 
 //______________________________________________________________________________
-core::core(const char* host, const Uint16& port, const Uint64& verb): 
-		_status(kss::close), 
+core::core(const char* host, const int& port, const int& verb): 
+		_status(kStatus::close), 
 		_verbose(verb)
 {
 	/*! Default Ctor. Initializes the connection with the host \c host on the
@@ -41,7 +41,7 @@ core::core(const char* host, const Uint16& port, const Uint64& verb):
 	if (init(host, port)) {
 		
 		// Core is not working
-		_status = kss::error;
+		_status = kStatus::error;
 
 		// In case of verbosity.
 		if (_verbose) std::cout << "cat::rc:core " << COL(CAT_COL_ERROR) <<
@@ -55,17 +55,17 @@ core::~core()
 	/*! Dtor. Clears everything if we close before end.  */
 	
 	// Close the connection and reset the library.
-	if (_status == kss::open) {
-		sendCommand(kc::exit, 0, 0, 0); // Exit command to the server.		
+	if (_status == kStatus::open) {
+		sendCommand(kCmd::exit, 0, 0, 0); // Exit command to the server.		
 		std::cout << "cat::rc:core Closing Core socket\n";
-		SDLNet_TCP_Close(_SD);	// CLoses the socket.
+//		SDLNet_TCP_Close(_SD);	// CLoses the socket.
 	}
 
 	// Closes SDL NET interface.
 	SDLNet_Quit();
 
 	// Delete all pending scenes.
-	for (unsigned int i = 0; i < _scene.size(); i++) delete _scene[i];
+	for (auto i = 0; i < _scene.size(); i++) delete _scene[i];
 }
 
 
@@ -89,41 +89,41 @@ bool core::init(const char* host, const Uint16& port)
 	
 	// Starts SDL_net.
 	if (SDLNet_Init() < 0) {
-		if (_verbose >= kv::error) {
+		if (_verbose >= kVerb::error) {
 			std::cout << "cat::rc::core: " << COL(CAT_COL_ERROR) 
-					  << SDLNet_GetError() << COL(DEFAULT) << "\n"; 
+					  << SDL_GetError() << COL(DEFAULT) << "\n"; 
 		}
 		return true;
 	}
  
 	// Resolve the host we are connecting to.
-	if (SDLNet_ResolveHost(&_IP, host, port) < 0) {
-		if (_verbose >= kv::error) {
-			std::cout << "cat::rc::core: " << COL(CAT_COL_ERROR)
-					  << SDLNet_GetError() << COL(DEFAULT) << "\n"; 
-		}
-		return true;
-	}
+//	if (SDLNet_ResolveHost(&_IP, host, port) < 0) {
+//		if (_verbose >= kVerb::error) {
+//			std::cout << "cat::rc::core: " << COL(CAT_COL_ERROR)
+//					  << SDL_GetError() << COL(DEFAULT) << "\n"; 
+//		}
+//		return true;
+//	}
  
 	// Open a connection with the IP provided (listen on the host's port).
-	_SD = SDLNet_TCP_Open(&_IP);
-	if (!_SD) {
-		if (_verbose >= kv::error) {
-			std::cout << "cat::rc::core: " << COL(CAT_COL_ERROR)
-					  << SDLNet_GetError() << COL(DEFAULT) << "\n"; 
-		}
-		return true;
-	}
+//	_SD = SDLNet_TCP_Open(&_IP);
+//	if (!_SD) {
+//		if (_verbose >= kv::error) {
+//			std::cout << "cat::rc::core: " << COL(CAT_COL_ERROR)
+//					  << SDLNet_GetError() << COL(DEFAULT) << "\n"; 
+//		}
+//		return true;
+//	}
 
 	// Gives info in case of verbosity
-	if (_verbose > kv::null) {
-		std::cout << "TCP client successfully connected to:\n";
-		std::cout << "TCP ip.host:   " << COL(LWHITE) << _IP.host << COL(DEFAULT) << "\n";
-		std::cout << "TCP ip.port:   " << COL(LWHITE) << _IP.port << COL(DEFAULT) << "\n";
-	}
+//	if (_verbose > kVerb::null) {
+//		std::cout << "TCP client successfully connected to:\n";
+//		std::cout << "TCP ip.host:   " << COL(LWHITE) << _IP.host << COL(DEFAULT) << "\n";
+//		std::cout << "TCP ip.port:   " << COL(LWHITE) << _IP.port << COL(DEFAULT) << "\n";
+//	}
 
 	// Sets client status.
-	_status = kss::open;
+	_status = kStatus::open;
 
 	// Sets optimal packet size (an hardcoded guess!);
 	_OPS = 0;
@@ -138,8 +138,8 @@ bool core::socketStatus() const
 	/*! Checks if the status is \c kss_Open. Warns in case. Pay attention: this 
 	 *	function returns false if the status is \c Kss_Open, true otherwise.
 	 */
-	if (_status != kss::open) {
-		if (_verbose >= kv::warn) std::cout << "cat::rc::Core: " << COL(CAT_COL_WARNING) 
+	if (_status != kStatus::open) {
+		if (_verbose >= kVerb::warn) std::cout << "cat::rc::Core: " << COL(CAT_COL_WARNING) 
 										   << "No server connected\n" << COL(DEFAULT);
 		return true;
 	} else return false;
@@ -152,8 +152,8 @@ bool core::socketStatus() const
 // *****************************************************************************
 
 //______________________________________________________________________________
-void core::streamCmd(std::stringstream& stream, const Uint64& cmd, const Uint64& arg1, 
-					   const Uint64& arg2, const Uint64& arg3) const
+void core::streamCmd(std::stringstream& stream, const kCmd& cmd, const uint64_t& arg1,
+					const uint64_t& arg2, const uint64_t& arg3) const
 {
 	/*! Adds a command and argument to the stringstream \c stream. */
 	stream.write((char*)&cmd, sizeof(cmd));
@@ -168,7 +168,7 @@ bool core::streamSend(const std::stringstream& stream) const
 	/*! Sends a stream object through the current socket */
 
 	// Check if communication is ok
-	if (_status != kss::open) {
+	if (_status != kStatus::open) {
 		if (_verbose) std::cout << "cat::rc::core: " << COL(CAT_COL_WARNING) <<
 								   "No open socket!" << COL(DEFAULT) << "\n";
 		return true;	
@@ -176,14 +176,14 @@ bool core::streamSend(const std::stringstream& stream) const
 
 	// Try sending the stream.
 	std::string strbuf = stream.str();
-	if (SDLNet_TCP_Send(_SD, (void *)strbuf.data(), (int)strbuf.size()) < (int)strbuf.size()) {
-		if (_verbose) std::cout << "cat::rc::core: " << COL(CAT_COL_ERROR) << 
-									SDLNet_GetError() << COL(DEFAULT) << "\n";
-		return true;
-	}
+//	if (SDLNet_TCP_Send(_SD, (void *)strbuf.data(), (int)strbuf.size()) < (int)strbuf.size()) {
+//		if (_verbose) std::cout << "cat::rc::core: " << COL(CAT_COL_ERROR) << 
+//									SDL_GetError() << COL(DEFAULT) << "\n";
+//		return true;
+//	}
 		
 	// Info in case
-	if (_verbose >= kv::all) {
+	if (_verbose >= kVerb::all) {
 		std::cout << "cat::rc::core: sent: (" << COL(LCYAN) << strbuf.size() <<
 					COL(DEFAULT) << ") [" << COL(LPURPLE) << strbuf << COL(DEFAULT) << "]\n";
 	}
@@ -193,7 +193,7 @@ bool core::streamSend(const std::stringstream& stream) const
 }
 
 //______________________________________________________________________________
-bool core::sendCommand(const Uint64& cmd, const Uint64& arg1, const Uint64& arg2, const Uint64& arg3) const
+bool core::sendCommand(const kCmd& cmd, const uint64_t& arg1, const uint64_t& arg2, const uint64_t& arg3) const
 {
 	/*! Sends a command (\c cmd) and its argument (\c arg) to the server. */
 
@@ -223,7 +223,7 @@ bool core::sendGP(gp::GP* gp) const
 	gp->stream(buffer);
 	
 	// Add command with the size of the buffer as argument.
-	streamCmd(command, kc::add, _select, 0, buffer.str().size());
+	streamCmd(command, kCmd::add, _select, 0, buffer.str().size());
 	
 	// Sends the GP.
 	if(streamSend(command)) return true;
@@ -276,7 +276,7 @@ bool core::sceneStatus() const
 	 *	actual drawing
 	 */
 	if (_scene.size() < 1) {
-		if (_verbose >= kv::warn) std::cout << "cat::rc::core: " << COL(CAT_COL_WARNING) 
+		if (_verbose >= kVerb::warn) std::cout << "cat::rc::core: " << COL(CAT_COL_WARNING) 
 										   << "No scene selected\n" << COL(DEFAULT);
 		return true;
 	} else return false;
@@ -294,13 +294,13 @@ void core::gpLoadBrush(gp::GP* gp)
 	//gp::Stroked* strk = (gp::Stroked*)gp; 
 
 	// Stroke style. 
-	gp->strkEnable(_brush.active);  
-	gp->strkWidth(_brush.stroke.width); 
-	gp->strkPattern(_brush.stroke.pattern);
-	gp->strkFactor(_brush.stroke.scale);
+//	gp->strkEnable(_brush.active);  
+//	gp->strkWidth(_brush.stroke.width); 
+//	gp->strkPattern(_brush.stroke.pattern);
+//	gp->strkFactor(_brush.stroke.scale);
 	
 	// Stroke color.
-	gp->strkColor(_brush.col.col);
+//	gp->strkColor(_brush.col.col);
 }
 
 //______________________________________________________________________________
@@ -311,24 +311,24 @@ void core::gpLoadFill(gp::GP* gp)
 	
 	// Check.
 	if (!gp) return;
-	if (!gp->flagStroked())	return;
-	gp::Filled* fill = (gp::filled*)gp;
+//	if (!gp->flagStroked())	return;
+//	gp::Filled* fill = (gp::filled*)gp;
 
 	// Status.
-	fill->fillEnable(_fill.active);
-	fill->fillColor(_fill.col.col);
+//	fill->fillEnable(_fill.active);
+//	fill->fillColor(_fill.col.col);
 
 	// Material.
-	fill->mtrlEnable(_material.active);
-	fill->mtrlAmbient(_material.ambient);
-	fill->mtrlDiffuse(_material.diffuse);
-	fill->mtrlSpecular(_material.specular);
-	fill->mtrlEmission(_material.emission);
-	fill->mtrlShininess(_material.shininess);
+//	fill->mtrlEnable(_material.active);
+//	fill->mtrlAmbient(_material.ambient);
+//	fill->mtrlDiffuse(_material.diffuse);
+//	fill->mtrlSpecular(_material.specular);
+//	fill->mtrlEmission(_material.emission);
+//	fill->mtrlShininess(_material.shininess);
 }
 
 //______________________________________________________________________________
-void Core::gpLoadInherit(gp::GP* gp)
+void core::gpLoadInherit(gp::GP* gp)
 {
 	/*! Loads the current inheritance settings into a gp. */
 	
@@ -336,31 +336,31 @@ void Core::gpLoadInherit(gp::GP* gp)
 	if (!gp) return;	
 
 	// Sets GP inheritance.
-	gp->inhrAppear(_inherit.enabled);
-	gp->inhrVisible(_inherit.visibility);
-	gp->inhrAlpha(_inherit.alpha);
-	gp->inhrWire(_inherit.wire);
-	gp->inhrRef(_inherit.ref);
+//	gp->inhrAppear(_inherit.enabled);
+//	gp->inhrVisible(_inherit.visibility);
+//	gp->inhrAlpha(_inherit.alpha);
+//	gp->inhrWire(_inherit.wire);
+//	gp->inhrRef(_inherit.ref);
 }
 
 //______________________________________________________________________________
-void core::gpLoadFont(gp* gp)
+void core::gpLoadFont(gp::GP* gp)
 {
 	/*! Loads the current font settings into a gp. */
 	
 	// Check.
 	if (!gp) return;
-	if (!gp->flagStroked())	return;
-	gp::fonted* font = (gp::fonted*)gp;
+//	if (!gp->flagStroked())	return;
+//	gp::fonted* font = (gp::fonted*)gp;
 
 	// Sets GP font.
-	font->fontFamily(_font.family);
-	font->fontStyle(_font.style);
-	font->fontSize(_font.size);
+//	font->fontFamily(_font.family);
+//	font->fontStyle(_font.style);
+//	font->fontSize(_font.size);
 }
 
 //______________________________________________________________________________
-void Core::gpLoadTrsf(gp::GP* gp, const bool& inv)
+void core::gpLoadTrsf(gp::GP* gp, const bool& inv)
 {
 	/*! Loads (applies) the current transformation into a gp. Load the inverse
 	 *	one if \c inv is set to true. */
@@ -379,7 +379,7 @@ void Core::gpLoadTrsf(gp::GP* gp, const bool& inv)
 // *****************************************************************************
 
 //______________________________________________________________________________
-gpHnd core::dcSceneBegin(const char* name)
+gp::GPHnd core::dcSceneBegin(const char* name)
 {
 	/*! Start a new Scene. Returns the scene handle. The current active Scene 
 	 *	is automatically switched to the new one.
@@ -404,7 +404,7 @@ gpHnd core::dcSceneBegin(const char* name)
 	_scene[_select]->stream(buffer);
 	
 	// Add command with the size of the buffer as argument.
-	streamCmd(command, kc::begin, _select, 0, buffer.str().size());
+	streamCmd(command, kCmd::begin, _select, 0, buffer.str().size());
 	
 	// Send the begin command and the buffer to the server.
 	if(streamSend(command)) return true;
@@ -448,7 +448,7 @@ bool core::dcSceneClose()
 	_scene[_select] = NULL;
 
 	// Send the close command for this scene to the server.
-	return sendCommand(kc::close, _select, 0, 0); 
+	return sendCommand(kCmd::close, _select, 0, 0); 
 }
 
 //______________________________________________________________________________
@@ -465,7 +465,7 @@ bool core::dcSceneFlush()
 	if (sceneStatus()) return true;
 
 	// Sends all the pending GPs in the scene.
-	for (gpHnd i = _flush[_select]; i < _scene[_select]->gpSize(); i++) {
+	for (gp::GPHnd i = _flush[_select]; i < _scene[_select]->gpSize(); i++) {
 		
 		// If the GP(i) is ok (no one deleted it)
 		if(_scene[_select]->gpGet(i)) {
@@ -475,7 +475,7 @@ bool core::dcSceneFlush()
 			// Adds command and GP buffer to the stream.
 			buffer.str("");
 			_scene[_select]->gpGet(i)->stream(buffer);
-			streamCmd(packet, kc::add, _select, 0, buffer.str().size());
+			streamCmd(packet, kCmd::add, _select, 0, buffer.str().size());
 			packet << buffer.str();			
 
 			// Send and reset the packet in case.

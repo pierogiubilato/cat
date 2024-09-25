@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -28,7 +28,7 @@ namespace cat { namespace gp {
  *	
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 23 Sep 2024
+ *	\date 24 Sep 2024
  */
 
 //______________________________________________________________________________
@@ -38,8 +38,8 @@ class sphere: public filled
 	
 		// The cylinder parameters.
 		double _radius;
-		Uint32 _slices;
-		Uint32 _stacks;
+		uint16_t _slices;
+		uint16_t _stacks;
 	
 	protected:
 	
@@ -54,10 +54,10 @@ class sphere: public filled
 		
 		// Default access public members.
 		CO::oType type() const;					//!< Returns GP type.
-		Uint64 version() const;					//!< Returns GP version.
+		coVer_t version() const;				//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
-		void dump(const Uint64& ind = 0) const;	//!< Dumps GP data.
+		void dump(const int& ind = 0) const;	//!< Dumps GP data.
 		bool stream(std::stringstream& o, const bool& read = false);
 
 		// Provide Access to the internal Point Components.

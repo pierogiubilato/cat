@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -41,7 +41,7 @@ padGL::padGL(pad* owner)
 	 */
 		
 	// Set up the parent
-	oOwner = owner;
+	_owner = owner;
 
 }
 
@@ -64,55 +64,55 @@ void padGL::glSet()
 	 */
 		
     // Store bit-planes attributes
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-    glPushClientAttrib(GL_CLIENT_ALL_ATTRIB_BITS);
+//	glPushAttrib(GL_ALL_ATTRIB_BITS);
+ //   glPushClientAttrib(GL_CLIENT_ALL_ATTRIB_BITS);
 
 	// Stores the matrixes.
-	glMatrixMode(GL_TEXTURE);
-    glPushMatrix();
-    glLoadIdentity();
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
+//	glMatrixMode(GL_TEXTURE);
+ //   glPushMatrix();
+  //  glLoadIdentity();
+//    glMatrixMode(GL_MODELVIEW);
+//    glPushMatrix();
+//    glLoadIdentity();
+//    glMatrixMode(GL_PROJECTION);
+//    glPushMatrix();
     
 
-	GLint Vp[4];
-    glGetIntegerv(GL_VIEWPORT, Vp);
-    //if(Width > 0 && Height > 0 )
-    //{
-    //    Vp[0] = 0;
-    //    Vp[1] = 0;
-    //    Vp[2] = Width - 1;
-    //    Vp[3] = Height - 1;
-    //    glViewport(Vp[0], Vp[1], Vp[2], Vp[3]);
-    //}
-    glLoadIdentity();
-    glOrtho(Vp[0], Vp[0] + Vp[2], Vp[1]+Vp[3], Vp[1], -1, 1);
-    //glGetIntegerv(GL_VIEWPORT, m_ViewportInit);
-    //glGetFloatv(GL_PROJECTION_MATRIX, m_ProjMatrixInit);
+	//GLint Vp[4];
+ //   glGetIntegerv(GL_VIEWPORT, Vp);
+ //   //if(Width > 0 && Height > 0 )
+ //   //{
+ //   //    Vp[0] = 0;
+ //   //    Vp[1] = 0;
+ //   //    Vp[2] = Width - 1;
+ //   //    Vp[3] = Height - 1;
+ //   //    glViewport(Vp[0], Vp[1], Vp[2], Vp[3]);
+ //   //}
+ //   glLoadIdentity();
+ //   glOrtho(Vp[0], Vp[0] + Vp[2], Vp[1]+Vp[3], Vp[1], -1, 1);
+ //   //glGetIntegerv(GL_VIEWPORT, m_ViewportInit);
+ //   //glGetFloatv(GL_PROJECTION_MATRIX, m_ProjMatrixInit);
 
-    //glGetFloatv(GL_LINE_WIDTH, &m_PrevLineWidth);
-    glDisable(GL_POLYGON_STIPPLE);
-    glLineWidth(1);
-    glDisable(GL_LINE_SMOOTH);
-    glDisable(GL_LINE_STIPPLE);
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-	//glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, &m_PrevTexEnv);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    //glGetIntegerv(GL_POLYGON_MODE, m_PrevPolygonMode);
-    
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDisable(GL_ALPHA_TEST);
-    glDisable(GL_FOG);
-    glDisable(GL_LOGIC_OP);
-    glDisable(GL_SCISSOR_TEST);
+ //   //glGetFloatv(GL_LINE_WIDTH, &m_PrevLineWidth);
+ //   glDisable(GL_POLYGON_STIPPLE);
+ //   glLineWidth(1);
+ //   glDisable(GL_LINE_SMOOTH);
+ //   glDisable(GL_LINE_STIPPLE);
+ //   glDisable(GL_CULL_FACE);
+ //   glDisable(GL_DEPTH_TEST);
+ //   glDisable(GL_LIGHTING);
+ //   glEnable(GL_BLEND);
+ //   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+ //   
+	////glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, &m_PrevTexEnv);
+ //   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+ //   //glGetIntegerv(GL_POLYGON_MODE, m_PrevPolygonMode);
+ //   
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+ //   glDisable(GL_ALPHA_TEST);
+ //   glDisable(GL_FOG);
+ //   glDisable(GL_LOGIC_OP);
+ //   glDisable(GL_SCISSOR_TEST);
     
 }
 
@@ -123,16 +123,16 @@ void padGL::glReset()
 	 */
 	
 	// Retrieves the matrixes.
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	glMatrixMode(GL_TEXTURE);
-	glPopMatrix();
-	
-	// Retrieve bit-planes attributes.
-	glPopClientAttrib();
-	glPopAttrib();
+	//glMatrixMode(GL_PROJECTION);
+	//glPopMatrix();
+	//glMatrixMode(GL_MODELVIEW);
+	//glPopMatrix();
+	//glMatrixMode(GL_TEXTURE);
+	//glPopMatrix();
+	//
+	//// Retrieve bit-planes attributes.
+	//glPopClientAttrib();
+	//glPopAttrib();
 
 	/*
 	glBindTexture(GL_TEXTURE_2D, m_PrevTexture);
@@ -196,34 +196,34 @@ void padGL::glReset()
 
 //______________________________________________________________________________
 void padGL::glLine(const int& x1, const int& y1, const int& x2, const int& y2,
-					const Uint32& col1, const Uint32& col2, const bool& alias)
+					const int& col1, const int& col2, const bool& alias)
 {
 	/*! Draws a line. */
-	const GLfloat dx = +0.5f;
-    const GLfloat dy = -0.5f;
-    
-	// Anti aliasing On/Off
-	(alias) ? glEnable(GL_LINE_SMOOTH): glDisable(GL_LINE_SMOOTH);
-    
-	// set the gl.
-	glDisable(GL_TEXTURE_2D);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	
-	// Line appearance.
-	glDisable(GL_POLYGON_STIPPLE);
-    glLineWidth(1);
-    
-	// Draw the line.
-	glBegin(GL_LINES);
-		glColor4ub(GLubyte(col1 >> 16), GLubyte(col1 >> 8), GLubyte(col1), GLubyte(col1 >> 24));
-		glVertex2f((GLfloat)x1 + dx, (GLfloat)y1 + dy);
-		glColor4ub(GLubyte(col2 >> 16), GLubyte(col2 >> 8), GLubyte(col2), GLubyte(col2 >> 24));
-		glVertex2f((GLfloat)x2 + dx, (GLfloat)y2 + dy);
-	glEnd();
-	
-	// Reset smoothing.
-	glDisable(GL_LINE_SMOOTH);
+	//const GLfloat dx = +0.5f;
+ //   const GLfloat dy = -0.5f;
+ //   
+	//// Anti aliasing On/Off
+	//(alias) ? glEnable(GL_LINE_SMOOTH): glDisable(GL_LINE_SMOOTH);
+ //   
+	//// set the gl.
+	//glDisable(GL_TEXTURE_2D);
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+	//
+	//// Line appearance.
+	//glDisable(GL_POLYGON_STIPPLE);
+ //   glLineWidth(1);
+ //   
+	//// Draw the line.
+	//glBegin(GL_LINES);
+	//	glColor4ub(GLubyte(col1 >> 16), GLubyte(col1 >> 8), GLubyte(col1), GLubyte(col1 >> 24));
+	//	glVertex2f((GLfloat)x1 + dx, (GLfloat)y1 + dy);
+	//	glColor4ub(GLubyte(col2 >> 16), GLubyte(col2 >> 8), GLubyte(col2), GLubyte(col2 >> 24));
+	//	glVertex2f((GLfloat)x2 + dx, (GLfloat)y2 + dy);
+	//glEnd();
+	//
+	//// Reset smoothing.
+	//glDisable(GL_LINE_SMOOTH);
 }
 
 

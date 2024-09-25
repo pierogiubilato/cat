@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -48,13 +48,13 @@ line::line(const double& x1, const double& y1, const double& z1,
 }
 
 //______________________________________________________________________________
-line::line(const double* _vtx)
+line::line(const double* vtx)
 {	
 	/*! Overloaded line constructor, takes a 6 floats array to define the line
 	 *	Array order is {x1, y1, z1, x2, y2, z2}.
 	 */
-	_vtx[0].xyz(_vtx[0], _vtx[1], _vtx[2]);
-	_vtx[1].xyz(_vtx[3], _vtx[4], _vtx[5]);  
+	_vtx[0].xyz(vtx[0], vtx[1], vtx[2]);
+	_vtx[1].xyz(vtx[3], vtx[4], vtx[5]);  
 }
 
 	
@@ -70,7 +70,7 @@ CO::oType line::type() const
 }
 
 //______________________________________________________________________________
-Uint64 line::version() const
+cat::coVer_t line::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
@@ -100,7 +100,7 @@ size_t line::size(const bool& dynamic) const
 	else return sizeof(*this) + tSize;	
 }
 //______________________________________________________________________________
-void line::dump(const Uint64& ind) const
+void line::dump(const int& ind) const
 {
 	/*! Send out all the GP data. */
 	stroked::dump(ind);
@@ -122,7 +122,7 @@ bool line::stream(std::stringstream& o, const bool& read)
 	stroked::stream(o, read);
 		
 	// Streams the vertexes
-	for (Uint64 i = 0; i < 2; i++) _vtx[i].stream(o, read);
+	for (auto i = 0; i < 2; i++) _vtx[i].stream(o, read);
 	
 	// Everything fine.
 	return false;
@@ -145,9 +145,9 @@ line& line::trsf(const ge::ref& rf, const bool& inv)
 // *****************************************************************************
 
 //______________________________________________________________________________
-ge::point line::_vtx(const Uint64& idx) const
+ge::point line::vtx(const int& idx) const
 {
-	/*! Returns the Idx th vertex of the box. Returns a (0,0,0) vertex in case
+	/*! Returns the Idx th vertex of the line. Returns a (0,0,0) vertex in case
 	 *	of OOB call. 
 	 */
 	if (idx < 2) return _vtx[idx];

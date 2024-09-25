@@ -8,14 +8,14 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
 // Application components
 #include "uiPadGUI.h"
 #include "acLoop.h"
-#include "afUtilities.h"
+//#include "afUtilities.h"
 
 // To be checked for different environments!
 #define SDL_MOUSE_WHEEL_STEP 120
@@ -49,10 +49,10 @@ padGUI::padGUI(pad* owner)
 		
 	// Set the mouse/draw utilities.
 	_mWheelPos = 0;
-	_mArcBall.SetViewportSize(_owner->_window->width(), _owner->_window->height());	
+	_mArcBall.setViewportSize(_owner->_window->width(), _owner->_window->height());	
 	
 	// Layout.
-	_barMove = 0;
+	//_barMove = 0;
 	layoutSet(kl_Side);
 }
 
@@ -148,12 +148,12 @@ void padGUI::updateTwBar()
 void padGUI::updateBars()
 {
 	/*! Updates all the bars of the GUI. */
-	updateBarMain();
-	updateBarScene();
-	updateBarGP();
-	updateBarView();
-	updateBarSpot(false);
-	updateBarHelp();
+	//updateBarMain();
+	//updateBarScene();
+	//updateBarGP();
+	//updateBarView();
+	//updateBarSpot(false);
+	//updateBarHelp();
 }
 
 //______________________________________________________________________________
@@ -361,7 +361,7 @@ void padGUI::updateBarScene()
 }
 
 //______________________________________________________________________________
-void padGUI::updateBarGP(GPHnd gpHnd)
+void padGUI::updateBarGP(gp::GPHnd gpHnd)
 {
 	/*! Fills the GP bar with the currently selected GP. Actually the filling
 	 *	happens directly into the GP (and derivatives) itself, this way being 
@@ -476,14 +476,14 @@ void padGUI::updateBarHelp()
 }
 
 //______________________________________________________________________________
-Uint32 padGUI::layoutGet() const
+uint_fast32_t padGUI::layoutGet() const
 {
 	/*! Returns the current layout mode. */
 	return _layout;
 }
 
 //______________________________________________________________________________
-void padGUI::layoutSet(const Uint32& mode)
+void padGUI::layoutSet(const uint_fast32_t& mode)
 {
 	/*! Updates the layout of the pad elements accordingly to the pad size. 
 	 *	and the provided \c mode. */
@@ -495,7 +495,7 @@ void padGUI::layoutSet(const Uint32& mode)
 //	TwWindowSize(_Owner->_Window->Width(), _Owner->_Window->Height());
 	
 	// Stores the new mode if different from NULL
-	if (mode != kl_Null) _Layout = mode;
+	if (mode != kl_Null) _layout = mode;
 
 	// Static to store the old size of the window.
 	static int wOldWidth = _owner->_window->width();
@@ -526,7 +526,7 @@ void padGUI::layoutSet(const Uint32& mode)
 	}
 
 	// Read curren bars position and size, and snap-constrain them.
-	for (int i = 0; i < barCount; i++) {
+	for (auto i = 0; i < barCount; i++) {
 
 		// Get bar and references indexes.
 		x = i * 2 + 0;
@@ -567,7 +567,7 @@ void padGUI::layoutSet(const Uint32& mode)
 	
 		// Now set the other bars on the left or right of the screen, and adapt 
 		// their size to the reference bar if on the same side.
-		for (int i = 0; i < barCount; i++) {
+		for (auto i = 0; i < barCount; i++) {
 		
 			// Skip the reference bar.
 			if (i != refBarIdx) {
@@ -593,7 +593,7 @@ void padGUI::layoutSet(const Uint32& mode)
 		
 		// Put all the non-iconified bars.
 		std::vector<int> barIdx;
-		for (int i = 0; i < barCount; i++) {
+		for (auto i = 0; i < barCount; i++) {
 			
 			// Get bar iconification status.
 			Uint32 icon = 0;
@@ -612,7 +612,7 @@ void padGUI::layoutSet(const Uint32& mode)
 			swapped = false;
 		
 			// Swapping cycle
-			for (int i = 1; i < barIdx.size(); i++) {
+			for (auto i = 1; i < barIdx.size(); i++) {
 			
 				// Get references.
 				int xA = barIdx[i-1] * 2 + 0; int yA = barIdx[i - 1] * 2 + 1;
@@ -648,12 +648,12 @@ void padGUI::layoutSet(const Uint32& mode)
 	} // End of SIDE layout.
 	
 	// Assign bars adjusted positions and sizes.
-	for (int i = 0; i < barCount; i++) {
+	for (auto i = 0; i < barCount; i++) {
 
 		// Get bar and references indexes.
 		x = i * 2 + 0;
 		y = i * 2 + 1;
-		TwBar* twBar = TwGetBarByIndex(i);
+//		TwBar* twBar = TwGetBarByIndex(i);
 	
 		// Assign back.
 //		TwSetParam(twBar, NULL,	"position", TW_PARAM_INT32, 2, &barPos[x]);
@@ -679,14 +679,14 @@ void padGUI::layoutSet2(const Uint32& snap)
 //	TwWindowSize(_Owner->_Window->Width(), _Owner->_Window->Height());
 	
 	// Creates an XY ordered list of all the visible, non iconified bars.
-	std::vector<sar> barList;
-	bar::sortByXY(_Bar, barList); 
+//	std::vector<bar> barList;
+//	bar::sortByXY(_bar, barList); 
 	
 	// Gets the currently targeted bar (but avoids the help bar or the spot bar).
 //	TwBar* barRef = Bar::PickTop(); 
 	
 	// No visible bars: exit!
-	if (barList.size() < 1) return;
+//	if (barList.size() < 1) return;
 
 	// If we have a top bar, use it as a reference by forcing it atop the bar list.
 	//bar swap;
@@ -721,7 +721,7 @@ void padGUI::updateMouse()
 	/*! Updates mouse tracking boundary conditions (window size, etc.) */
 
 	// Defines new window size.
-	_mArcBall.setViewportSize(_owner->_window->width(), _owner->_Window->height());
+	_mArcBall.setViewportSize(_owner->_window->width(), _owner->_window->height());
 }
 
 
@@ -743,36 +743,36 @@ bool padGUI::evnBar(SDL_Event evn)
 
 	// Handle different event types.
 	switch (evn.type) {
-		case SDL_MOUSEBUTTONUP:	//result = (TwMouseButton(TW_MOUSE_RELEASED, 
+		case SDL_EVENT_MOUSE_BUTTON_UP:	//result = (TwMouseButton(TW_MOUSE_RELEASED, 
 								//static_cast<TwMouseButtonID>(evn.button.button)) != 0);
 								break;
 		
-		case SDL_MOUSEBUTTONDOWN:	//result = (TwMouseButton(TW_MOUSE_PRESSED, 
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:	//result = (TwMouseButton(TW_MOUSE_PRESSED, 
 								//static_cast<TwMouseButtonID>(evn.button.button)) != 0);
 								break;
 
-		case SDL_MOUSEMOTION:	//result = (TwMouseMotion(evn.motion.x, evn.motion.y) != 0);
+		case SDL_EVENT_MOUSE_MOTION:	//result = (TwMouseMotion(evn.motion.x, evn.motion.y) != 0);
 								break;
 	
-		case SDL_MOUSEWHEEL:	_mWheelPos += evn.wheel.y / SDL_MOUSE_WHEEL_STEP;
+		case SDL_EVENT_MOUSE_WHEEL:	_mWheelPos += evn.wheel.y / SDL_MOUSE_WHEEL_STEP;
 								//result = (TwMouseWheel(_mWheelPos) != 0);
 								break;
 
-		case SDL_KEYDOWN:		//result = (TwKeyPressed(evn.key.keysym.sym, evn.key.keysym.mod) != 0);
+		case SDL_EVENT_KEY_DOWN:		//result = (TwKeyPressed(evn.key.keysym.sym, evn.key.keysym.mod) != 0);
 								break;   
 	}
 		
 	// Manages bars moving.
-	if (_barMove == 0 && result && evn.type == SDL_MOUSEBUTTONDOWN) _barMove = 1;
-	else if (_barMove == 1 && result && evn.type == SDL_MOUSEMOTION) _barMove = 2;
-	else if (_barMove == 2 && result && evn.type == SDL_MOUSEMOTION) _barMove = 2;
-	else if (_barMove == 2 && result && evn.type == SDL_MOUSEBUTTONUP) {
-		_barMove = 0;
-		layoutSet();
-	}
-	else _BarMove = 0;
+//	if (_barMove == 0 && result && evn.type == SDL_MOUSEBUTTONDOWN) _barMove = 1;
+//	else if (_barMove == 1 && result && evn.type == SDL_MOUSEMOTION) _barMove = 2;
+//	else if (_barMove == 2 && result && evn.type == SDL_MOUSEMOTION) _barMove = 2;
+//	else if (_barMove == 2 && result && evn.type == SDL_MOUSEBUTTONUP) {
+//		_barMove = 0;
+//		layoutSet();
+//	}
+//	else _BarMove = 0;
 
-	// Returns if the event was intercepteb by the bar.
+	// Returns if the event was intercepted by the bar.
 	return result;  	
 }
 
@@ -788,7 +788,7 @@ bool padGUI::evnMouse(SDL_Event evn)
 	switch (evn.type) {
 		
 		// Mouse button down. 	
-		case SDL_MOUSEBUTTONDOWN:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
 						
 			// Reset dragging.
 			_mDrag = false;
@@ -800,38 +800,38 @@ bool padGUI::evnMouse(SDL_Event evn)
 				updateBarSpot(false);
 
 				// Begin mouse rotation. 									
-				_mArcBall.Begin(evn.button.x, evn.button.y, 0, zp, _owner->_view[0]);
+				_mArcBall.begin(evn.button.x, evn.button.y, 0, zp, _owner->_view[0]);
 
 				// Switch picking status anyway. If movement will follow, picking info
 				// will actually serve only to help optimizing zooming/rotating actions.
-				_mPick.Begin(evn.button.x, evn.button.y);
+				_mPick.begin(evn.button.x, evn.button.y);
 			}
 			
 			// Right button: starts scaling/panning.
 			if (evn.button.button == SDL_BUTTON_RIGHT) {			
-				_mArcBall.Begin(evn.button.x, evn.button.y, 1, zp, _owner->_view[0]);
+				_mArcBall.begin(evn.button.x, evn.button.y, 1, zp, _owner->_view[0]);
 			}
 			
 			// Event intercepted.
 			return false;
 						
-		// Mouse button realesed. Here we check if any dragging has started
+		// Mouse button released. Here we check if any dragging has started
 		// after button down: if not, let's start a picking action.
-		case SDL_MOUSEBUTTONUP:
+		case SDL_EVENT_MOUSE_BUTTON_UP:
 			
 			// Mouse dragged after button down (so it cannot be a pick).
 			if (_mDrag) {
 				if (evn.button.button == SDL_BUTTON_LEFT || evn.button.button == SDL_BUTTON_RIGHT) {
-					_mArcBall.End();
+					_mArcBall.end();
 					_mDrag = false; 
 				}
 			
 			// Mouse didn't drag after button down.
 			} else {
-				_mArcBall.End(); // Abort eventual balling. 
+				_mArcBall.end(); // Abort eventual balling. 
 								
 				// Left button, let's change the pick status.
-				if (evn.button.button == SDL_BUTTON_LEFT) _mPick.StatusStep();
+				if (evn.button.button == SDL_BUTTON_LEFT) _mPick.statusStep();
 				
 				// Right button, show spot view bar!
 				if (evn.button.button == SDL_BUTTON_RIGHT) updateBarSpot(true);
@@ -841,22 +841,22 @@ bool padGUI::evnMouse(SDL_Event evn)
 			return false;
 						
 		// Mouse Dragging! Keep Tracking   
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 			
 			// Set dragging is happening.	
 			_mDrag = true;
 			
 			// Acts dragging.
-			if (_owner->_view[0]) _mArcBall.Drag(evn.motion.x, evn.motion.y);
+			if (_owner->_view[0]) _mArcBall.drag(evn.motion.x, evn.motion.y);
 			
 			// Event intercepted.
 			return false;
 
 		// Mouse wheeling: zoom/unzoom.
-		case SDL_MOUSEWHEEL:
+		case SDL_EVENT_MOUSE_WHEEL:
 			
 			// Change scale factor.
-			_mArcBall.ScaleChange(0.1f * (evn.wheel.y / SDL_MOUSE_WHEEL_STEP)); 
+			_mArcBall.scaleChange(0.1f * (evn.wheel.y / SDL_MOUSE_WHEEL_STEP)); 
 			return false;
 	}
 			
@@ -889,111 +889,111 @@ bool padGUI::evnSelect(const std::vector<gp::GPHnd>& sel)
 // *****************************************************************************
 
 //______________________________________________________________________________
-void padGUI::cbkMain(void* bIdx) {
-	
-	/*! Main callback. Handles all the main bar main buttons.  Note that this 
-	 *	function is STATIC, not a member. */
-
-	// 64 bits compatible recasting
-	Uint64 arg = (Uint64)bIdx;
-
-	// Select button(command)	
-	switch (arg) {
-		
-		// Dump the current scene (if any).
-		case ktbb_main_Dump:	if (_owner->scene_Get(0)) _owner->scene_Get(0)->Dump();
-						break;
-		// Test.
-		case ktbb_main_Test: pear::af::util::testSceneBoxes(1000); break;
-		case ktbb_main_Test1000: pear::af::util::testSceneBoxes(1000000); break;
-
-		// About.
-		case ktbb_main_About: new pear::ui::splash(5000); break;
-		
-		// Quit.
-		case ktbb_main_Quit: pear::ac::_loop->cmdAppQuit(_owner->idx());
-	}
-}
-
-//______________________________________________________________________________
-void padGUI::cbkMainScene(void* sIdx) {
-	
-	/*! Main bar callback, Scene selection. Make the scene \c sIdx the current 
-	 *	active one. Note that this function is STATIC, not a member. */
-	
-	// 64 bits compatible recasting
-	Uint64 arg = (Uint64)sIdx;
-	
-	// Select scene.
-	_owner->sceneSel(arg);
-}
+//void padGUI::cbkMain(void* bIdx) {
+//	
+//	/*! Main callback. Handles all the main bar main buttons.  Note that this 
+//	 *	function is STATIC, not a member. */
+//
+//	// 64 bits compatible recasting
+//	Uint64 arg = (Uint64)bIdx;
+//
+//	// Select button(command)	
+//	switch (arg) {
+//		
+//		// Dump the current scene (if any).
+//		case ktbb_main_Dump:	if (_owner->scene_Get(0)) _owner->scene_Get(0)->Dump();
+//						break;
+//		// Test.
+//		case ktbb_main_Test: pear::af::util::testSceneBoxes(1000); break;
+//		case ktbb_main_Test1000: pear::af::util::testSceneBoxes(1000000); break;
+//
+//		// About.
+//		case ktbb_main_About: new pear::ui::splash(5000); break;
+//		
+//		// Quit.
+//		case ktbb_main_Quit: pear::ac::_loop->cmdAppQuit(_owner->idx());
+//	}
+//}
 
 //______________________________________________________________________________
-void padGUI::cbkSceneGP(void* arg) {
-	
-	/*! Scene bar callback, GP selection/expansion. Contraxt/expand the gp 
-	 *	\c gpIdx. Note that this function is STATIC, not a member.
-	 */
-	
-	// 64 bits compatible recasting.
-	gp::GPHnd gpHnd = (gp::GPHnd)arg;
-	gp::GP* gp = _owner->sceneGet()->gpGet(gpHnd);
-	
-	// Swap the expanded state
-	gp->modeExpanded(!gp->modeExpanded());   
+//void padGUI::cbkMainScene(void* sIdx) {
+//	
+//	/*! Main bar callback, Scene selection. Make the scene \c sIdx the current 
+//	 *	active one. Note that this function is STATIC, not a member. */
+//	
+//	// 64 bits compatible recasting
+//	Uint64 arg = (Uint64)sIdx;
+//	
+//	// Select scene.
+//	_owner->sceneSel(arg);
+//}
 
-	// Select the clicked GP(s).
-	_owner->selClear(); 
-	_owner->selAdd(gpHnd);
-
-	// Redraw the bar (The GP one is updated through the gp drawing/selection).
-	_owner->GUI->updateBarScene();
-}
-
-//______________________________________________________________________________
-void padGUI::cbkGP(void* gpHnd) {
-	
-	/*! GP bar callback, GP properties modification. ReBuild the GP Display
-	 *	list after every modification. Note that this function is STATIC, not 
-	 *	a member.
-	 */
-	
-	// 64 bits compatible recasting
-	//GPHnd arg = (GPHnd)gpHnd;
-
-	// Swap the expanded state.
-	//_Owner->scene_Get()->gp_Get(arg)->glBuild();   
-}
-
-//______________________________________________________________________________
-void padGUI::cbkSpot(void* bIdx) {
-	
-	/*! Spot view callback. Handles all the spot view popup bar buttons.
-	 *	Note that this function is STATIC, not a member.
-	 */
-
-	// 64 bits compatible recasting
-	Uint64 arg = (Uint64)bIdx;
-
-	// Select button(command)	
-	switch (arg) {
-		
-		// Panning.
-		case ktbb_spot_pan_Selected:	;break;
-		case ktbb_spot_pan_Origin:		;break;
-
-		// Zooming.
-		case ktbb_spot_zoom_All:		;break;
-		
-		// View.
-		case ktbb_spot_view_Top:		;break;
-		case ktbb_spot_view_Bottom:		;break;
-		case ktbb_spot_view_Left:		;break;
-		case ktbb_spot_view_Right:		;break;
-		case ktbb_spot_view_Front:		;break;
-		case ktbb_spot_view_Back:		;break;
-	}
-}
+////______________________________________________________________________________
+//void padGUI::cbkSceneGP(void* arg) {
+//	
+//	///*! Scene bar callback, GP selection/expansion. Contraxt/expand the gp 
+//	// *	\c gpIdx. Note that this function is STATIC, not a member.
+//	// */
+//	//
+//	//// 64 bits compatible recasting.
+//	//gp::GPHnd gpHnd = (gp::GPHnd)arg;
+//	//gp::GP* gp = _owner->sceneGet()->gpGet(gpHnd);
+//	//
+//	//// Swap the expanded state
+//	//gp->modeExpanded(!gp->modeExpanded());   
+//
+//	//// Select the clicked GP(s).
+//	//_owner->selClear(); 
+//	//_owner->selAdd(gpHnd);
+//
+//	//// Redraw the bar (The GP one is updated through the gp drawing/selection).
+//	//_owner->GUI->updateBarScene();
+//}
+//
+////______________________________________________________________________________
+//void padGUI::cbkGP(void* gpHnd) {
+//	
+//	///*! GP bar callback, GP properties modification. ReBuild the GP Display
+//	// *	list after every modification. Note that this function is STATIC, not 
+//	// *	a member.
+//	// */
+//	//
+//	//// 64 bits compatible recasting
+//	////GPHnd arg = (GPHnd)gpHnd;
+//
+//	//// Swap the expanded state.
+//	////_Owner->scene_Get()->gp_Get(arg)->glBuild();   
+//}
+//
+////______________________________________________________________________________
+//void padGUI::cbkSpot(void* bIdx) {
+//	
+//	///*! Spot view callback. Handles all the spot view popup bar buttons.
+//	// *	Note that this function is STATIC, not a member.
+//	// */
+//
+//	//// 64 bits compatible recasting
+//	//Uint64 arg = (Uint64)bIdx;
+//
+//	//// Select button(command)	
+//	//switch (arg) {
+//	//	
+//	//	// Panning.
+//	//	case ktbb_spot_pan_Selected:	;break;
+//	//	case ktbb_spot_pan_Origin:		;break;
+//
+//	//	// Zooming.
+//	//	case ktbb_spot_zoom_All:		;break;
+//	//	
+//	//	// View.
+//	//	case ktbb_spot_view_Top:		;break;
+//	//	case ktbb_spot_view_Bottom:		;break;
+//	//	case ktbb_spot_view_Left:		;break;
+//	//	case ktbb_spot_view_Right:		;break;
+//	//	case ktbb_spot_view_Front:		;break;
+//	//	case ktbb_spot_view_Back:		;break;
+//	//}
+//}
 
 ////______________________________________________________________________________
 //void TW_CALL pad_GUI::cbkLayoutSet(const void* value, void* client)

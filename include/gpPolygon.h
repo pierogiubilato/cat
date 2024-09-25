@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"243 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -27,7 +27,7 @@ namespace cat { namespace gp {
  *	
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 18 Sep 2024
+ *	\date 24 Sep 2024
  */
 
 //______________________________________________________________________________
@@ -53,10 +53,10 @@ class polygon: public stroked
 		
 		// Default access public members
 		CO::oType type() const;					//!< Returns GP type.
-		Uint64 version() const;					//!< Returns GP version.
+		coVer_t version() const;				//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
-		void dump(const Uint64& ind = 0) const;	//!< Dumps GP data.
+		void dump(const int& ind = 0) const;	//!< Dumps GP data.
 		bool stream(std::stringstream& o, const bool& read = false);
 
 		// Public transformation overloads.
@@ -65,7 +65,7 @@ class polygon: public stroked
 		polygon& trsfOut(const ge::ref& ref) {return trsf(ref, true);}	//!< Transform the GP from ref.
 	
 		// Provide Access to the internal Vertex Components.
-		inline ge::point vtx(const Uint64&) const;
+		inline ge::point vtx(const int&) const;
 		
 		// Returns number of vertexes composing the polygon.
 		size_t vtxCount() const;

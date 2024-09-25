@@ -48,8 +48,8 @@ class stroked: public GP
 		// Style.
 		bool _strkEnable;		//!< Stroke status.
 		float _strkWidth;		//!< Line width in pixels.
-		Uint16 _strkPattern;	//!< The dot-dash pattern.
-		Uint32 _strkFactor;		//!< Pattern strectch factor.
+		uint16_t _strkPattern;	//!< The dot-dash pattern.
+		uint32_t _strkFactor;	//!< Pattern stretch factor.
 		
 		// Color.
 		float _strkColor[4];	//!< Stroke color.
@@ -73,10 +73,10 @@ class stroked: public GP
 		void strkEnable(const bool&);			//!< Sets stroke status.	
 		float strkWidth() const;				//!< Returns stroke width.
 		void strkWidth(const float&);			//!< Sets stroke width.
-		Uint16 strkPattern() const;				//!< Returns stroke pattern bitmask.
-		void strkPattern(const Uint16&);		//!< Sets stroke pattern.
-		Uint32 strkFactor() const;				//!< Returns stroke pattern scaling.
-		void strkFactor(const Uint32&);			//!< Sets stroke pattern scaling.
+		uint16_t strkPattern() const;			//!< Returns stroke pattern bitmask.
+		void strkPattern(const uint16_t&);		//!< Sets stroke pattern.
+		uint32_t strkFactor() const;			//!< Returns stroke pattern scaling.
+		void strkFactor(const uint32_t&);		//!< Sets stroke pattern scaling.
 		const float* strkColor() const;			//!< Returns stroke color.
 		void strkColor(const float*);			//!< Sets the stroke color.
 
@@ -94,7 +94,7 @@ class stroked: public GP
 			double glAlpha();		//!< Return transparency status.
 
 			// UI interaction.
-			virtual void uiBarLoad(ui::Bar&);	//!< Load a bar with the GP specific properties.
+			//virtual void uiBarLoad(ui::Bar&);	//!< Load a bar with the GP specific properties.
 		
 		#endif
 };

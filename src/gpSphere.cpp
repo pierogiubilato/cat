@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -36,7 +36,7 @@ sphere::sphere()
 }
 
 //______________________________________________________________________________
-sphere::sphere(const double& radius, const Uint32& slices, const Uint32& stacks)
+sphere::sphere(const double& radius, const uint_fast16_t& slices, const uint_fast16_t& stacks)
 {
 	/*! Sphere constructor with radius and number of slices around the z axis 
 	 *	(slices) and subdivisions along the z axis (stacks).
@@ -59,7 +59,7 @@ CO::oType sphere::type() const
 }
 
 //______________________________________________________________________________
-Uint64 sphere::version() const
+cat::coVer_t sphere::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
@@ -90,7 +90,7 @@ size_t sphere::size(const bool& dynamic) const
 }
 
 //______________________________________________________________________________
-void sphere::dump(const Uint64& ind) const
+void sphere::dump(const int& ind) const
 {
 	/*! Send out all the GP data. */
 	

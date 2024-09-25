@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -57,7 +57,7 @@ CO::oType fonted::type() const
 }
 
 //______________________________________________________________________________
-Uint64 fonted::version() const
+cat::coVer_t fonted::version() const
 {
 	/*! Returns object version. This function MUST be overloaded to differentiate 
 	 *	any derived class! Version numbering is made in unit of hundreds for the
@@ -91,7 +91,7 @@ size_t fonted::size(const bool& dynamic) const
 }
 
 //______________________________________________________________________________
-void fonted::dump(const Uint64& ind) const
+void fonted::dump(const int& ind) const
 {
  	/*! Dumps on the standard output the relevant gp::Fonted properties. */
 
@@ -176,14 +176,14 @@ void fonted::fontStyle(const std::string& style)
 }
 
 //______________________________________________________________________________
-Uint32 fonted::fontSize() const
+uint32_t fonted::fontSize() const
 {
 	/*! Returns the font size. */
 	return _fontSize;
 }
 
 //______________________________________________________________________________
-void fonted::fontSize(const Uint32& size)
+void fonted::fontSize(const uint_fast32_t& size)
 {
 	/*! Sets the font size. */
 	_fontSize = size;	

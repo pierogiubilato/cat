@@ -47,9 +47,9 @@ coord::coord(const double& x, const double& y, const double& z): GE(),
 
 //______________________________________________________________________________
 coord::coord(const coord& ref): GE(), 
-	_x(ref.X()), 
-	_y(ref.Y()),
-	_z(ref.Z())
+	_x(ref.x()), 
+	_y(ref.y()),
+	_z(ref.z())
 {
 	/*! Casting<U> Copy constructor. */
 	
@@ -83,9 +83,9 @@ coord& coord::operator = (const coord& c)
 	// Not copying Object on purpose!
 
 	// Copy
-	_x = c.X();
-	_y = c.Y();
-	_z = c.Z();
+	_x = c.x();
+	_y = c.y();
+	_z = c.z();
 
 	// Return
 	return *this;
@@ -112,7 +112,7 @@ coord& coord::operator = (const double& s)
 // *****************************************************************************
 
 //______________________________________________________________________________
-oType coord::type() const
+CO::oType coord::type() const
 {
 	/*! Returns the entity type (the class type itself). */
 	return oType::geCoord; 
@@ -168,6 +168,8 @@ void coord::dump(const int& ind) const
 {
 	/*! Outputs the coordinates. */
 	std::cout << std::string(ind, ' ') << *this;
+	//std::string pad(ind, ' ');
+	//std::cout << pad << "(p0: )" << _x << ", " << _y << ", " << _z << ")";
 }
 
 
@@ -414,7 +416,7 @@ coord coord::unit() const
 {
    /*! Returns a unit vector parallel to the caller. */
    double tot = mag2();
-   gd::coord p(_x, _y, _z);
+   ge::coord p(_x, _y, _z);
    return (tot > 0.0) ? p *= (1.0 / sqrt(tot)) : p;
 }
 
@@ -429,7 +431,7 @@ double coord::dot(const coord& c) const
 coord coord::cross(const coord& c) const
 {
 	/*! Calculates the cross product between the caller and the argument. */
-	return gd::coord(_y * c.z() - c.y() * _z, 
+	return ge::coord(_y * c.z() - c.y() * _z, 
 					_z * c.x() - c.z() * _x, 
 					_x * c.y() - c.x() * _y);
 }
@@ -450,7 +452,7 @@ double coord::angle(const coord& c) const
 }
 
 //______________________________________________________________________________
-coord& coord::Maxize(const coord& c) 
+coord& coord::maxize(const coord& c) 
 {
 	/*! Set every coordinate of the caller as the maximum between the caller
 		coordinate and the argument one. */
@@ -476,7 +478,7 @@ coord& coord::minize(const coord& c)
 }
 
 //______________________________________________________________________________
-coord& coord::RotX(const double& a)
+coord& coord::rotX(const double& a)
 {
 	/*! Rotates coordinates around X axis. */
 	double s = sin(a);
@@ -554,4 +556,4 @@ unsigned char coord::precisionGet() const
 
 // #############################################################################
 // Close Namespaces
-}
+}}

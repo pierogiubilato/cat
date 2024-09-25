@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -28,7 +28,7 @@ namespace cat { namespace gp {
  *	
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 18 Sep 2024
+ *	\date 24 Sep 2024
  */
 
 //______________________________________________________________________________
@@ -42,8 +42,8 @@ class tube: public filled
 	    double _riTop;		//!< Top inner radius.
 		double _roTop;		//!< Top outer radius.
   		double _height;		//!< Height.
-		Uint32 _slices;		//!< Radial sectors.
-		Uint32 _stacks;		//!< Height sectors.
+		uint16_t _slices;	//!< Radial sectors.
+		uint16_t _stacks;	//!< Height sectors.
 	
 	protected:
 	
@@ -56,14 +56,14 @@ class tube: public filled
 		tube(const double& riBase, const double& roBase,
 			 const double& riTop, const double& roTop,
 			 const double& height,
-			 const Uint32& slices = 10, const Uint32& stacks = 1);
+			 const uint_fast16_t& slices = 10, const uint_fast16_t& stacks = 1);
 		
 		// Default access public members.
 		CO::oType type() const;					//!< Returns GP type.
-		Uint64 version() const;					//!< Returns GP version.
+		coVer_t version() const;					//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
-		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
+		void dump(const int& = 0) const;		//!< Dumps GP data.
 		bool stream(std::stringstream& o, const bool& read = false);
 
 		// Public transformation overloads.
@@ -95,7 +95,7 @@ class tube: public filled
  *	
  *	\author Piero Giubilato
  *	\version 1.0
- *	\date 23 Sep 2024
+ *	\date 24 Sep 2024
  */
 //______________________________________________________________________________
 class cylinder: public tube
@@ -106,7 +106,7 @@ class cylinder: public tube
 	
 		//! Standard Constructor.
 		cylinder(const double& rBase, const double& rTop, const double& height,
-				 const Uint32& slices = 10, const Uint32& stacks = 1)
+				 const uint_fast16_t& slices = 10, const uint_fast16_t& stacks = 1)
 				 : tube(0, rBase, 0, rTop, height, slices, stacks) {;};
 		
 		// Default access public members.
@@ -121,7 +121,7 @@ class cylinder: public tube
  *	
  *	\author Piero Giubilato
  *	\version 1.1
- *	\date 23 Sep 2024
+ *	\date 24 Sep 2024
  */
 //______________________________________________________________________________
 class cone: public tube
@@ -132,7 +132,7 @@ class cone: public tube
 	
 		//! Standard Constructor.
 		cone(const double& rBase, const double& height,
-				 const Uint32& slices = 10, const Uint32& stacks = 1)
+				 const Uint32& slices = 10, const uint_fast16_t& stacks = 1)
 				 : tube(0, rBase, 0, 0, height, slices, stacks) {;};
 		
 		// Default access public members.

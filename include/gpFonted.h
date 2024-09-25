@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -34,8 +34,8 @@ namespace cat { namespace gp {
  *	add-up to those already present in the cat::GP base class.	
  *
  *	\author Piero Giubilato
- *	\version 1.0
- *	\date 23 Sep 2024
+ *	\version 1.1
+ *	\date 24 Sep 2024
 */
 
 //______________________________________________________________________________
@@ -46,9 +46,9 @@ class fonted: public stroked
 	protected:
    
 		// Font.
-		std::string _fontFamily;		//!< Font family (calibri, arial, ...).
+		std::string _fontFamily;		//!< Font family (Calibri, arial, ...).
 		std::string _fontStyle;			//!< Font style (normal, italic, ...).
-		Uint32 _fontSize;				//!< Font size in points (1/64 of inch).
+		uint32_t _fontSize;				//!< Font size in points (1/64 of inch).
 						
 	public:
 		
@@ -58,9 +58,9 @@ class fonted: public stroked
 		
 		// To be overloaded public members (already virtual from pear::GO).
 		CO::oType type() const;					//!< Returns GP type.
-		Uint64 version() const;					//!< Returns GP version.
+		coVer_t version() const;					//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
-		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
+		void dump(const int& = 0) const;		//!< Dumps GP data.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
 		bool stream(std::stringstream& o, const bool& read = false);
 				
@@ -69,8 +69,8 @@ class fonted: public stroked
 		void fontFamily(const std::string&);	//!< Sets the font family.
 		std::string fontStyle() const;			//!< Returns the font style.
 		void fontStyle(const std::string&);		//!< Sets the font style.
-		Uint32 fontSize() const;				//!< Returns the font size.
-		void fontSize(const Uint32&);			//!< Sets the font size.
+		uint32_t fontSize() const;				//!< Returns the font size.
+		void fontSize(const uint_fast32_t&);	//!< Sets the font size.
 
 		// Special flagging.
 		bool flagFonted() const {return true;}	//!< Signal this is a fonted one.

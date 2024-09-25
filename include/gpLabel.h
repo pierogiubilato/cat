@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -23,11 +23,11 @@
 // #############################################################################
 namespace cat { namespace gp {
 
-/*! pear::gp::Label creates a Label.
+/*! cat::gp::Label creates a Label.
  *	
  *	\author Piero Giubilato, Sarah Zalusky
  *	\version 1.0
- *	\date 04 Sep 2011
+ *	\date 24 Sep 2024
  */
 //______________________________________________________________________________
 class label: public fonted
@@ -35,19 +35,19 @@ class label: public fonted
 	private:   
 	
 		// The 5 vertex points defining the label space (1 anchor + 1 quad).
-		ge::point _Vtx[5];
-		Uint32 _alignment;		// Label alignment respect _Vtx[0].
-		float _rotation;		// Label rotation respect the horizontal viewport axis.
-		bool _view2D;			// Project the label into the 2D viewport.
+		ge::point _vtx[5];
+		uint16_t _alignment;		// Label alignment respect _Vtx[0].
+		float _rotation;			// Label rotation respect the horizontal viewport axis.
+		bool _view2D;				// Project the label into the 2D viewport.
 
 		// The plain text.
-		std::string _text;		// Text contained into the label.
+		std::string _text;			// Text contained into the label.
 		
 		// The generated pixMap.
-		#ifdef PEAR_SERVER
-			GLubyte* _pxmData;	// The actual data (an RGBA array).
-			Uint32 _pxmWidth;	// Width of the array (pixels).
-			Uint32 _pxmHeight;	// Height of the array (pixels).
+		#ifdef CAT_SERVER
+			uint8_t* _pxmData;		// The actual data (an RGBA array).
+			uint32_t _pxmWidth;		// Width of the array (pixels).
+			uint32_t _pxmHeight;	// Height of the array (pixels).
 		#endif
 
 	protected:
@@ -61,15 +61,15 @@ class label: public fonted
 		//! Standard Constructor with (text, position and font).
 		label(const std::string& text, 
 			  const double& x = 0, const double& y = 0, const double& z = 0, 
-			  const Uint32& alignment = 0, const double& rotation = 0,
+			  const uint16_t& alignment = 0, const double& rotation = 0,
 			  const bool& view2D = false);
 				
 		// Default access public members
 		CO::oType type() const;					//!< Returns GP type.
-		Uint64 version() const;					//!< Returns GP version.
+		coVer_t version() const;					//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
-		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
+		void dump(const int& = 0) const;		//!< Dumps GP data.
 		bool stream(std::stringstream& o, const bool& read = false);
 
 		// Public transformation overloads.
@@ -79,12 +79,12 @@ class label: public fonted
 
 		// Text and relate properties access.
 		std::string& text() {return _text;}
-		Uint32& alignment() {return _alignment;}
+		uint16_t& alignment() {return _alignment;}
 		float& rotation() {return _rotation;}
 		bool& view2D() {return _view2D;}
 
 		// Access to the internal ge::point Components.
-		ge::point vtx(const Uint64&) const;
+		ge::point vtx(const int&) const;
 		
 		// Drawing functions are ONLY defined for the SERVER side!
 		#ifdef CAT_SERVER
@@ -96,7 +96,7 @@ class label: public fonted
 			double glAlpha();	//!< Overloaded from GP.
 
 			// UI interaction.	
-			void uiBarLoad(ui::Bar&);			//!< Load the GP properties bar.
+//			void uiBarLoad(ui::Bar&);			//!< Load the GP properties bar.
 			//TwType uiTwEnumFtFamily() const;	//!< Creates a TwEnum for the Font Families.
 			//TwType uiTwEnumFtStyle() const;		//!< Creates a TwEnum for the Family's Font Styles.
 //			TwType uiTwEnumTxAlign() const;		//!< Creates a TwEnum for the Text's alignment mode.

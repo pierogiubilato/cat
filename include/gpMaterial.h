@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -58,11 +58,11 @@ class material: public GP
 		virtual ~material();						//!< Virtual dtor.
 		
 		// To be overloaded public members (already virtual from pear::GO).
-		Uint64 type() const;					//!< Returns GP type.
-		Uint64 version() const;					//!< Returns GP version.
+		oType type() const;						//!< Returns GP type.
+		coVer_t version() const;				//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
-		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
+		void dump(const int& = 0) const;		//!< Dumps GP data.
 		bool stream(std::stringstream& o, const bool& read = false);
 				
 		// Public specific members.

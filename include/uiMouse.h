@@ -14,13 +14,16 @@
 // [Author]			"Sarah Zalusky"
 // [Version]		"1.2"
 // [Modified by]	"Sarah Zalusky, Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
 #if !defined uiMouse_H
 #define uiMouse_H
+
+// STL.
+#include<iostream>
 
 // GLAD bindings (used to manage the display frame buffers).
 //#include "glad.h"
@@ -49,7 +52,7 @@ class view;
  * 
  *	\author Piero Giubilato, Sarah Zalusky
  *	\version 1.2
- *	\date 19 Sep 2024
+ *	\date 24 Sep 2024
  */
 class mouseBall  //: public UI
 {
@@ -95,7 +98,7 @@ class mouseBall  //: public UI
 		
 		// Position.
 		void posViewGet(double* vXYZ) const;		//!< Retrieve mouse View position (double*).
-		void posViewGet(Uint32* vXYZ) const;		//!< Retrieve mouse View position (UInt32*).
+		void posViewGet(uint32_t* vXYZ) const;		//!< Retrieve mouse View position (UInt32*).
 		void posWorldGet(double* wXYZ) const;		//!< Retrieve mouse World position (double*).
 		void posWorldGet(glm::vec3& wXYZ) const;	//!< Retrieve mouse World position (glm::vec3&).
 		
@@ -172,7 +175,8 @@ class mouseBall  //: public UI
  *	
  *	\author Piero Giubilato, Sarah Zalusky
  *	\version 1.0
- *	\date 26 Jul 2012 
+ *	\date 24 Sep 2024 
+ * 
  */
 class mousePicker // : public UI
 {
@@ -185,7 +189,7 @@ class mousePicker // : public UI
 	public:
 		
 		// Picking action status constants.
-		enum class kPk : Uint32 {
+		enum kPk : uint32_t {
 			null, 
 			started, 
 			rendered, 
@@ -209,9 +213,9 @@ class mousePicker // : public UI
 		int x() const {return _mX;}
 		int y() const {return _mY;}
 
-		GLuint buffer[64];
-		GLuint hits; 
-		GLint view[4];
+		uint32_t buffer[64];
+		uint32_t hits; 
+		int32_t view[4];
 		
 		std::vector<int> _pickedFlags;
 	 

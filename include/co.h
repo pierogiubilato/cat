@@ -20,9 +20,10 @@
 // STL.
 #include<sstream>
 #include<ostream>
+#include<stdfloat>
 
 // Application
-#include "acGlobal.h"
+#include "acMain.h"
 #include "afStream.h"
 
 
@@ -76,7 +77,7 @@ class CO
 	public:
 	
 		// Object types.
-		enum class oType : coType_t {
+		enum oType : coType_t {
 
 			// The virtual base object
 			coBase,
@@ -93,6 +94,7 @@ class CO
 			// GP (Graphics Primitives).
 			gpNull,
 			gpBase,
+			gpEmpty,
 			gpStroked,	// | These are layer GPs, i.e. GPs 
 			gpFilled,	// | providing specific properties
 			gpFonted,	// | to others GPS.

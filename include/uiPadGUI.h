@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"21 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -19,7 +19,7 @@
 // Application components.
 #include "ui.h"
 #include "uiMouse.h"
-#include "uiBar.h"
+//#include "uiBar.h"
 #include "uiSplash.h"
 #include "gp.h"
 
@@ -64,12 +64,12 @@ class padGUI //: public UI
 		enum k3d {k3d_Projection, k3d_Camera, k3d_Top, k3d_Front, k3d_Bottom, k3d_Back, k3d_Left, k3d_Right};
 		
 		// Handles to the different bars, with status and other support info.
-		std::vector<bar> _bar;
+		//std::vector<bar> _bar;
 		
 		// Status and properties
 		static pad* _owner;					//!< The pad using the GUI.
-		Uint32 _layout;						//!< Pad elements layout.				
-		Uint32 _barMove;					//!< Bar moving status.
+		uint_fast32_t _layout;				//!< Pad elements layout.				
+		//uint_fast32_t _barMove;				//!< Bar moving status.
 
 		// Mouse/Drawing utilities
 		int _mWheelPos;						//!< Mouse wheel cumulative position.
@@ -100,7 +100,7 @@ class padGUI //: public UI
 		void updateMouse();								//!< Updates the mouse.	
 
 		// Layout functions.
-		Uint32 layoutGet() const;						//!< Get current layout mode.
+		uint_fast32_t layoutGet() const;				//!< Get current layout mode.
 		void layoutSet(const Uint32& mode = 0);			//!< Set/Update layout/mode.
 		void layoutSet2(const Uint32& snap = 10);		//!< Set/Update layout/mode.
 

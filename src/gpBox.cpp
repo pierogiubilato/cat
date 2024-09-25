@@ -8,14 +8,14 @@
 // [Author]			"Sarah Zalusky"
 // [Version]		"1.0"
 // [Modified by]	"Sarah Zalusky, Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
-
 
 // Application components.
 #include "gpBox.h"
 
+#include <glad.h>
 
 // #############################################################################
 namespace cat { namespace gp {
@@ -95,7 +95,7 @@ box::box(const double* vtx)
 {	
 	/*! Overloaded box ctor, takes a 24 floats array to define the box vertexes.
 		The array order is {x1, y1, z1, x2, y2, z2, ......, x8, y8, z8}. */
-	for (Uint64 i = 0; i < 8; i++) _vtx[i].xyz(vtx[i*3], vtx[i*3+1], vtx[i*3+2]); 
+	for (auto i = 0; i < 8; i++) _vtx[i].xyz(vtx[i*3], vtx[i*3+1], vtx[i*3+2]); 
 }
 	
 // *****************************************************************************
@@ -110,7 +110,7 @@ CO::oType box::type() const
 }
 
 //______________________________________________________________________________
-Uint64 box::version() const
+cat::coVer_t box::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
@@ -140,7 +140,7 @@ size_t box::size(const bool& dynamic) const
 	else return sizeof(*this) + tSize;	
 }
 //______________________________________________________________________________
-void box::dump(const Uint64& ind) const
+void box::dump(const int& ind) const
 {
 	/*! Send out all the GP data. */
 	filled::dump(ind);
@@ -149,7 +149,7 @@ void box::dump(const Uint64& ind) const
 	std::string pad2(ind + CAT_DUMP_PADDING, ' ');
 	std::string pad3(ind + 2 * CAT_DUMP_PADDING, ' ');
 	std::cout << pad2 << "box specific\n";
-	for (Uint64 i = 0; i < 8; i ++) {
+	for (auto i = 0; i < 8; i ++) {
 		std::cout << pad3 << "Vtx #" << i << ": " << _vtx[i] << "\n";
 	}
 }
@@ -163,19 +163,19 @@ bool box::stream(std::stringstream& o, const bool& read)
 	if(GP::stream(o, read)) return true;
 		
 	// Streams the vertexes
-	for (Uint64 i = 0; i < 8; i++) _vtx[i].stream(o, read);
+	for (auto i = 0; i < 8; i++) _vtx[i].stream(o, read);
 	
 	// Everything fine.
 	return false;
 }
 
 //______________________________________________________________________________
-box& box::trsf(const go::Ref& rf, const bool& inv)
+box& box::trsf(const ge::ref& rf, const bool& inv)
 {
 	/*! Transforms the box coordinates applying the rf transformation directly
 	 *	if inv = false, and by applying the inverse transformation if inv = true. 
 	 */
-	for (unsigned int i = 0; i < 8; i++) rf.trsf(_vtx[i], inv);
+	for (auto i = 0; i < 8; i++) rf.trsf(_vtx[i], inv);
 	return *this;
 }	
 
@@ -185,12 +185,12 @@ box& box::trsf(const go::Ref& rf, const bool& inv)
 // *****************************************************************************
 
 //______________________________________________________________________________
-ge::point box::vtx(const Uint64& Idx) const
+ge::point box::vtx(const int& Idx) const
 {
 	/*! Returns the Idx th vertex of the box. Returns a (0,0,0) vertex in case
 		of OOB call. */
 	if (Idx < 8) return _vtx[Idx];
-	else return go::Point(0, 0, 0);
+	else return ge::point(0, 0, 0);
 }
 
 
@@ -217,32 +217,32 @@ void box::glDrawSel()
 	// We are drawing the selection even if the object is invisible!.
 	
 	// Assign object color.
-	glColor4fv(_selColor);
+//	glColor4fv(_selColor);
 		
 	// Switch off lighting in case for the stroke part of the drawing.
-	glLightSuspend();
+//	glLightSuspend();
 		
 	// Start listing GL vertices 
-	glBegin(GL_LINES); 
+//	glBegin(GL_LINES); 
 		
-	glVertex(_vtx[0]); glVertex(_vtx[1]);
-	glVertex(_vtx[0]); glVertex(_vtx[3]);
-	glVertex(_vtx[0]); glVertex(_vtx[4]);
-	glVertex(_vtx[2]); glVertex(_vtx[1]);
-	glVertex(_vtx[2]); glVertex(_vtx[3]);
-	glVertex(_vtx[2]); glVertex(_vtx[6]);
-	glVertex(_vtx[7]); glVertex(_vtx[3]);
-	glVertex(_vtx[7]); glVertex(_vtx[4]);
-	glVertex(_vtx[7]); glVertex(_vtx[6]);
-	glVertex(_vtx[5]); glVertex(_vtx[1]);
-	glVertex(_vtx[5]); glVertex(_vtx[4]);
-	glVertex(_vtx[5]); glVertex(_vtx[6]);
+//	glVertex(_vtx[0]); glVertex(_vtx[1]);
+//	glVertex(_vtx[0]); glVertex(_vtx[3]);
+//	glVertex(_vtx[0]); glVertex(_vtx[4]);
+//	glVertex(_vtx[2]); glVertex(_vtx[1]);
+//	glVertex(_vtx[2]); glVertex(_vtx[3]);
+//	glVertex(_vtx[2]); glVertex(_vtx[6]);
+//	glVertex(_vtx[7]); glVertex(_vtx[3]);
+//	glVertex(_vtx[7]); glVertex(_vtx[4]);
+//	glVertex(_vtx[7]); glVertex(_vtx[6]);
+//	glVertex(_vtx[5]); glVertex(_vtx[1]);
+//	glVertex(_vtx[5]); glVertex(_vtx[4]);
+//	glVertex(_vtx[5]); glVertex(_vtx[6]);
 		
 	// box complete!
-	glEnd();
+//	glEnd();
 
 	// Re-enable light in case.
-	glLightRestore();
+//	glLightRestore();
 }
 
 //______________________________________________________________________________
@@ -279,76 +279,76 @@ void box::glDraw()
 	if (_strkEnable) {
 
 		// Assign object color.
-		glColor4fv(_strkColor);
+//		glColor4fv(_strkColor);
 		
 		// Switch off lighting in case for the stroke part of the drawing.
-		glLightSuspend();
+//		glLightSuspend();
 		
 		// Start listing GL vertices 
-		glBegin(GL_LINES); 
+//		glBegin(GL_LINES); 
 		
 		// Draw al 12 edges.
-		glVertex(_vtx[0]); glVertex(_vtx[1]);
-		glVertex(_vtx[0]); glVertex(_vtx[3]);
-		glVertex(_vtx[0]); glVertex(_vtx[4]);
-		glVertex(_vtx[2]); glVertex(_vtx[1]);
-		glVertex(_vtx[2]); glVertex(_vtx[3]);
-		glVertex(_vtx[2]); glVertex(_vtx[6]);
-		glVertex(_vtx[7]); glVertex(_vtx[3]);
-		glVertex(_vtx[7]); glVertex(_vtx[4]);
-		glVertex(_vtx[7]); glVertex(_vtx[6]);
-		glVertex(_vtx[5]); glVertex(_vtx[1]);
-		glVertex(_vtx[5]); glVertex(_vtx[4]);
-		glVertex(_vtx[5]); glVertex(_vtx[6]);
+//		glVertex(_vtx[0]); glVertex(_vtx[1]);
+//		glVertex(_vtx[0]); glVertex(_vtx[3]);
+//		glVertex(_vtx[0]); glVertex(_vtx[4]);
+//		glVertex(_vtx[2]); glVertex(_vtx[1]);
+//		glVertex(_vtx[2]); glVertex(_vtx[3]);
+//		glVertex(_vtx[2]); glVertex(_vtx[6]);
+//		glVertex(_vtx[7]); glVertex(_vtx[3]);
+//		glVertex(_vtx[7]); glVertex(_vtx[4]);
+//		glVertex(_vtx[7]); glVertex(_vtx[6]);
+//		glVertex(_vtx[5]); glVertex(_vtx[1]);
+//		glVertex(_vtx[5]); glVertex(_vtx[4]);
+//		glVertex(_vtx[5]); glVertex(_vtx[6]);
 		
 		// box complete!
-		glEnd();
+//		glEnd();
 
 		// Re-enable light in case.
-		glLightRestore();
+//		glLightRestore();
 	}
 	
 	// Solid filling.
 	if (_fillEnable) {
 
 		// Assign object color
-		glColor4fv(_fillColor);
+//		glColor4fv(_fillColor);
 		
 		// Draw model in two passes (In case of transparency) rendering the 
 		// back faces on the first pass and front faces on the second pass.
-		//for(int pass = 0; pass < 2; ++pass ) {	
+		//for(auto pass = 0; pass < 2; ++pass ) {	
 		
 			//glCullFace((pass == 0) ? GL_FRONT : GL_BACK);
 		
 			// Start listing GL vertices 
-			glBegin(GL_QUADS); 
+//			glBegin(GL_QUADS); 
 		
 			// Back Face.
-			glNormal(_vtx[0], _vtx[4], _vtx[1]);
-			glVertex(_vtx[0]); glVertex(_vtx[4]); glVertex(_vtx[5]); glVertex(_vtx[1]);
+//			glNormal(_vtx[0], _vtx[4], _vtx[1]);
+//			glVertex(_vtx[0]); glVertex(_vtx[4]); glVertex(_vtx[5]); glVertex(_vtx[1]);
 
 			// Front Face.
-			glNormal(_vtx[3], _vtx[2], _vtx[7]);
-			glVertex(_vtx[3]); glVertex(_vtx[2]); glVertex(_vtx[6]); glVertex(_vtx[7]);
+//			glNormal(_vtx[3], _vtx[2], _vtx[7]);
+//			glVertex(_vtx[3]); glVertex(_vtx[2]); glVertex(_vtx[6]); glVertex(_vtx[7]);
 
 			// Left Face.
-			glNormal(_vtx[0], _vtx[3], _vtx[4]);
-			glVertex(_vtx[0]); glVertex(_vtx[3]); glVertex(_vtx[7]); glVertex(_vtx[4]);
+//			glNormal(_vtx[0], _vtx[3], _vtx[4]);
+//			glVertex(_vtx[0]); glVertex(_vtx[3]); glVertex(_vtx[7]); glVertex(_vtx[4]);
 
 			// Right Face.
-			glNormal(_vtx[1], _vtx[5], _vtx[2]);
-			glVertex(_vtx[1]); glVertex(_vtx[5]); glVertex(_vtx[6]); glVertex(_vtx[2]);
+//			glNormal(_vtx[1], _vtx[5], _vtx[2]);
+//			glVertex(_vtx[1]); glVertex(_vtx[5]); glVertex(_vtx[6]); glVertex(_vtx[2]);
 
 			// Bottom Face.
-			glNormal(_vtx[0], _vtx[1], _vtx[3]);
-			glVertex(_vtx[0]); glVertex(_vtx[1]); glVertex(_vtx[2]); glVertex(_vtx[3]);
+//			glNormal(_vtx[0], _vtx[1], _vtx[3]);
+//			glVertex(_vtx[0]); glVertex(_vtx[1]); glVertex(_vtx[2]); glVertex(_vtx[3]);
 
 			// Top Face.
-			glNormal(_vtx[4], _vtx[7], _vtx[5]);
-			glVertex(_vtx[4]); glVertex(_vtx[7]); glVertex(_vtx[6]); glVertex(_vtx[5]);
+//			glNormal(_vtx[4], _vtx[7], _vtx[5]);
+//			glVertex(_vtx[4]); glVertex(_vtx[7]); glVertex(_vtx[6]); glVertex(_vtx[5]);
 	
 			// Done writing vertex list!	
-			glEnd();
+//			glEnd();
 		//}
 	}
 }

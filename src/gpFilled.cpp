@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -55,7 +55,7 @@ CO::oType filled::type() const
 }
 
 //______________________________________________________________________________
-Uint64 filled::version() const
+cat::coVer_t filled::version() const
 {
 	/*! Returns object version. This function MUST be overloaded to differentiate 
 	 *	any derived class! Version numbering is made in unit of hundreds for the
@@ -89,11 +89,11 @@ size_t filled::size(const bool& dynamic) const
 }
 
 //______________________________________________________________________________
-void filled::dump(const Uint64& ind) const
+void filled::dump(const int& ind) const
 {
  	/*! Dumps on the standard output the relevant GP properties. */
 
-	// Quich out definitions.
+	// Quick out definitions.
 	#define CD COL(DEFAULT)
 	#define CLW COL(LWHITE)
 	#define CLR COL(LRED)
@@ -141,14 +141,14 @@ bool filled::stream(std::stringstream& o, const bool& read)
 	stroked::stream(o, read);
 		
 	// Style.
-	af::stream::RW(o, _fillEnable, read);
-	af::stream::RW(o, _fillMaterial, read);
+	af::stream::rw(o, _fillEnable, read);
+	af::stream::rw(o, _fillMaterial, read);
 	
 	// Colors.
-	af::stream::RW(o, _fillColor[0], read);
-	af::stream::RW(o, _fillColor[1], read);
-	af::stream::RW(o, _fillColor[2], read);
-	af::stream::RW(o, _fillColor[3], read);
+	af::stream::rw(o, _fillColor[0], read);
+	af::stream::rw(o, _fillColor[1], read);
+	af::stream::rw(o, _fillColor[2], read);
+	af::stream::rw(o, _fillColor[3], read);
 	
 	// Everything fine!
 	return false;
@@ -292,29 +292,29 @@ void filled::glDrawEnd()
 // **								ui Functions							  **
 // *****************************************************************************
 
-//______________________________________________________________________________
-void filled::uiBarLoad(ui::Bar& bar)
-{
-	/*!	Load the provided AntTweakBar \c twBar with the specific properties of 
-	 *	the GP. This member should be overloaded to change/add the properties
-	 *	shown on the properties bar by every GP.
-	 */
-	
-	// The parent first!
-	stroked::uiBarLoad(bar); 
-
-	// Retrieve the TwBarr associated with the owner uiBar.
-//	TwBar* twBar = bar._TwBar;
-	
-	// Fill
-//	bar.GroupAdd("Fill");
-//	TwAddVarRW(twBar, "fillEnable", TW_TYPE_BOOLCPP, &_fillEnable, "label='Enable' group='Fill'");	
-//	TwAddVarRW(twBar, "fillMaterial", TW_TYPE_UINT32, &_fillMaterial, "label='Use material' group='Fill'");
-//	TwAddVarRW(twBar, "fillColor", TW_TYPE_COLOR4F, _fillColor, "label='Color' colororder=rgba coloralpha=true group='Fill'");
-
-	// Move material group under fill group.
-	//TwSetParam(twBar, "Material", "group", TW_PARAM_CSTRING, 1, "Fill");
-}
+////______________________________________________________________________________
+//void filled::uiBarLoad(ui::Bar& bar)
+//{
+//	/*!	Load the provided AntTweakBar \c twBar with the specific properties of 
+//	 *	the GP. This member should be overloaded to change/add the properties
+//	 *	shown on the properties bar by every GP.
+//	 */
+//	
+//	// The parent first!
+//	stroked::uiBarLoad(bar); 
+//
+//	// Retrieve the TwBarr associated with the owner uiBar.
+////	TwBar* twBar = bar._TwBar;
+//	
+//	// Fill
+////	bar.GroupAdd("Fill");
+////	TwAddVarRW(twBar, "fillEnable", TW_TYPE_BOOLCPP, &_fillEnable, "label='Enable' group='Fill'");	
+////	TwAddVarRW(twBar, "fillMaterial", TW_TYPE_UINT32, &_fillMaterial, "label='Use material' group='Fill'");
+////	TwAddVarRW(twBar, "fillColor", TW_TYPE_COLOR4F, _fillColor, "label='Color' colororder=rgba coloralpha=true group='Fill'");
+//
+//	// Move material group under fill group.
+//	//TwSetParam(twBar, "Material", "group", TW_PARAM_CSTRING, 1, "Fill");
+//}
 
 // End of PEAR_SERVER if.
 #endif

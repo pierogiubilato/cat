@@ -8,8 +8,8 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
-// [Language]		"C++"
+// [Date]			"24 Sep 2024"
+// [Language]		"c++"
 //______________________________________________________________________________
 
 // Overloading check
@@ -17,7 +17,7 @@
 #define uiPad_H
 
 // SDL library (used to create the window).
-#include "SDL.h"
+#include <SDL3/SDL.h>
 
 // GLAD bindings (used to manage the display frame buffers).
 #include "glad.h"
@@ -38,7 +38,7 @@
 // #############################################################################
 namespace cat { namespace ui {
 
-//! Basic graphic interface
+//! Basic graphic window
 /*! A cat::ui::pad handles a graphic display, an OpenGL layer and also manages 
  *	the user interaction. It uses a cat::Window class as base window, and it 
  *	puts an OpenGL viewport on it. Events management is handled through the SDL
@@ -48,7 +48,7 @@ namespace cat { namespace ui {
  *
  *	\author Piero Giubilato
  *	\version 1.2
- *	\date 27 Sep 2024
+ *	\date 24 Sep 2024
  */
 class pad
 {
@@ -57,8 +57,8 @@ class pad
 		// The personal timer used to check speed.
 		af::timer _tmrTimer;
 		af::timer _tmrTimer2;
-		Uint32 _tmrCycle;
-		Uint32 _tmrCycleCount;
+		uint32_t _tmrCycle;
+		uint32_t _tmrCycleCount;
 
 		// OpenGL status.
 		GLint _glAuxFrameBufCount;		// Available auxiliary frame buffers.
@@ -87,17 +87,17 @@ class pad
 		padGL* _GL;								//!< Pad's personal raster drawing primitives.
 
 		// Status and properties
-		Uint64 _idx;							// Main loop assigned identifier.
-		Uint64 _sHnd;							// Linked socket handle.
-		Uint64 _size;							// Last "measured" memory occupation.
+		uint64_t _idx;							// Main loop assigned identifier.
+		uint64_t _sHnd;							// Linked socket handle.
+		uint64_t _size;							// Last "measured" memory occupation.
 		std::string _title;						// Main title.
 		
 		// The hosted scene(s)
-		Uint64 _sceneIdx;						// The current scene Idx.
+		uint64_t _sceneIdx;						// The current scene Idx.
 		std::vector<cat::gp::scene*> _scene;	// The scene database.		
 		std::vector<view*> _view;				// The scene(s) view(s).						
-		Uint64 _GPsCount;						// Number of GPs in the currently selected scene.
-		Uint64 _GPsSize;						// Total size of the GPs in the currently selected scene.
+		uint64_t _GPsCount;						// Number of GPs in the currently selected scene.
+		uint64_t _GPsSize;						// Total size of the GPs in the currently selected scene.
 	
 		// Drawing/Selection status
 		static const int _selBufferSize = 1024;	// Selection buffer size.
@@ -107,7 +107,7 @@ class pad
 		bool _selForceRedraw;					// Force redraw due to selection.
 
 		// Special members
-		pad(const Uint64& Idx, const char* title, const bool& resizable = true); 
+		pad(const uint64_t& Idx, const char* title, const bool& resizable = true);
 		~pad();
 		
 		// Loop and event handlers.
@@ -124,17 +124,17 @@ class pad
 
 		// Scene(s) management.
 		Uint64 sceneCount();						//!< The number of hosted scenes.
-		gp::scene* sceneGet(gp::GPHnd = 0);			//!< The hosted scene access.
+		gp::scene* sceneGet(const int& = 0);		//!< The hosted scene access.
 		gp::GPHnd sceneAdd(gp::scene*);				//!< Sets ownership over a new scene.
-		void sceneDel(gp::GPHnd);					//!< Delete a owned scene.
-		void sceneSel(gp::GPHnd);					//!< Select the active scene.
+		void sceneDel(const int& = 0);					//!< Delete a owned scene.
+		void sceneSel(const int& = 0);					//!< Select the active scene.
 				
 		// Pad management.
 		void run(const bool& openLoop = false);		//!< Runs the pad.
 		void refresh();								//!< Refresh the pad.
-		Uint64 size();								//!< Returns the Pad total allocated memory (bytes).
-		Uint64 idx() const;							//!< Returns the pad Idx.
-		void idx(const Uint64&);					//!< Resets the pad Idx.
+		size_t size();								//!< Returns the Pad total allocated memory (bytes).
+		int idx() const;							//!< Returns the pad Idx.
+		void idx(const int&);						//!< Resets the pad Idx.
 		void info() const;							//!< Dumps pad info.
 
 		// GL Drawing.

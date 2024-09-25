@@ -57,7 +57,7 @@ CO::oType stroked::type() const
 }
 
 //______________________________________________________________________________
-uint32_t stroked::version() const
+cat::coVer_t stroked::version() const
 {
 	/*! Returns object version. This function MUST be overloaded to differentiate 
 	 *	any derived class! Version numbering is made in unit of hundreds for the
@@ -138,16 +138,16 @@ bool stroked::stream(std::stringstream& o, const bool& read)
 	GP::stream(o, read);
 
 	// Style.
-	af::stream::RW(o, _strkEnable, read);
-	af::stream::RW(o, _strkWidth, read);
-	af::stream::RW(o, _strkPattern, read);
-	af::stream::RW(o, _strkFactor, read);
+	af::stream::rw(o, _strkEnable, read);
+	af::stream::rw(o, _strkWidth, read);
+	af::stream::rw(o, _strkPattern, read);
+	af::stream::rw(o, _strkFactor, read);
 
 	// Color.
-	af::stream::RW(o, _strkColor[0], read);
-	af::stream::RW(o, _strkColor[1], read);
-	af::stream::RW(o, _strkColor[2], read);
-	af::stream::RW(o, _strkColor[3], read);
+	af::stream::rw(o, _strkColor[0], read);
+	af::stream::rw(o, _strkColor[1], read);
+	af::stream::rw(o, _strkColor[2], read);
+	af::stream::rw(o, _strkColor[3], read);
 	
 	// Everything fine!
 	return false;
@@ -186,28 +186,28 @@ void stroked::strkWidth(const float& width)
 }
 
 //______________________________________________________________________________
-Uint16 stroked::strkPattern() const
+uint16_t stroked::strkPattern() const
 {
 	/*! Returns stroke pattern bitmask. */
 	return _strkPattern;
 }
 
 //______________________________________________________________________________
-void stroked::strkPattern(const Uint16& pattern)
+void stroked::strkPattern(const uint16_t& pattern)
 {
 	/*! Sets stroke pattern. */
 	_strkPattern = pattern;
 }
 
 //______________________________________________________________________________
-Uint32 stroked::strkFactor() const
+uint32_t stroked::strkFactor() const
 {
 	/*! Returns stroke pattern scaling. */
 	return _strkFactor;
 }
 
 //______________________________________________________________________________
-void stroked::strkFactor(const Uint32& factor)
+void stroked::strkFactor(const uint32_t& factor)
 {
 	/*! Sets stroke pattern scaling. */
 	_strkFactor = factor;
@@ -308,31 +308,31 @@ void stroked::glDrawEnd()
 // *****************************************************************************
 
 //______________________________________________________________________________
-void stroked::uiBarLoad(ui::Bar& bar)
-{
-	/*!	Load the provided AntTweakBar \c twBar with the specific properties of 
-	 *	the GP. This member should be overloaded to change/add the properties
-	 *	shown on the properties bar by every GP.
-	 */
-	
-	// The parent first!
-	//GP::uiBarLoad(bar); 
-
-	//// Retrieve the TwBarr associated with the owner uiBar.
-	//TwBar* twBar = bar._TwBar;
-	//
-	//// General.
-	//bar.GroupAdd("Stroke");
-	//TwAddVarRW(twBar, "strkActive", TW_TYPE_BOOLCPP, &_strkEnable, "label='Active' group='Stroke'");	
-	//
-	//// Style.
-	//TwAddVarRW(twBar, "strkWidth", TW_TYPE_FLOAT, &_strkWidth, "label='Width' min=0.1 max=100 step=0.1 group='Stroke'");
-	//TwAddVarRW(twBar, "strkPattern", TW_TYPE_UINT16, &_strkPattern, "label='Pattern' group='Stroke'");
-	//TwAddVarRW(twBar, "strkScale", TW_TYPE_UINT32, &_strkFactor, "label='Scale' min=1 max=256 step=1 group='Stroke'");
-	//
-	//// Color.	
-	//TwAddVarRW(twBar, "strkColor", TW_TYPE_COLOR4F, _strkColor, "label='Color' colororder=rgba coloralpha=true group='Stroke'");
-}
+//void stroked::uiBarLoad(ui::Bar& bar)
+//{
+//	/*!	Load the provided AntTweakBar \c twBar with the specific properties of 
+//	 *	the GP. This member should be overloaded to change/add the properties
+//	 *	shown on the properties bar by every GP.
+//	 */
+//	
+//	// The parent first!
+//	//GP::uiBarLoad(bar); 
+//
+//	//// Retrieve the TwBarr associated with the owner uiBar.
+//	//TwBar* twBar = bar._TwBar;
+//	//
+//	//// General.
+//	//bar.GroupAdd("Stroke");
+//	//TwAddVarRW(twBar, "strkActive", TW_TYPE_BOOLCPP, &_strkEnable, "label='Active' group='Stroke'");	
+//	//
+//	//// Style.
+//	//TwAddVarRW(twBar, "strkWidth", TW_TYPE_FLOAT, &_strkWidth, "label='Width' min=0.1 max=100 step=0.1 group='Stroke'");
+//	//TwAddVarRW(twBar, "strkPattern", TW_TYPE_UINT16, &_strkPattern, "label='Pattern' group='Stroke'");
+//	//TwAddVarRW(twBar, "strkScale", TW_TYPE_UINT32, &_strkFactor, "label='Scale' min=1 max=256 step=1 group='Stroke'");
+//	//
+//	//// Color.	
+//	//TwAddVarRW(twBar, "strkColor", TW_TYPE_COLOR4F, _strkColor, "label='Color' colororder=rgba coloralpha=true group='Stroke'");
+//}
 
 // End of PEAR_SERVER if.
 #endif

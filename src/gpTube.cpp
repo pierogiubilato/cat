@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -35,15 +35,15 @@ tube::tube()
 	_roBase = 1;
 	_riTop = 0;
 	_roTop = 1;
-	_Height = 2;
+	_height = 2;
 	_Slices = 10;
 	_Stacks = 1;	
 }
 
 //______________________________________________________________________________
 tube::tube(const double& riBase, const double& roBase, const double& riTop, 
-		   const double& roTop, const double& height, const Uint32& slices, 
-		   const Uint32& stacks)
+		   const double& roTop, const double& height, const uint_fast16_t& slices,
+		   const uint_fast16_t& stacks)
 {
 	/*! Constructor with base and top radiuses (riBase, roBase, riTop, roTop), 
 	 *	height and number of faces around the z axis (slices) and subdivisions 
@@ -58,7 +58,7 @@ tube::tube(const double& riBase, const double& roBase, const double& riTop,
 	_stacks = stacks;	if (_stacks < 1) _stacks = 1;
 }
 
-	
+
 // *****************************************************************************
 // **					    Overloaded GP public members					  **
 // *****************************************************************************
@@ -71,7 +71,7 @@ CO::oType tube::type() const
 }
 
 //______________________________________________________________________________
-Uint64 tube::version() const
+cat::coVer_t tube::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
@@ -101,7 +101,7 @@ size_t tube::size(const bool& dynamic) const
 	else return sizeof(*this) + tSize;	
 }
 //______________________________________________________________________________
-void tube::dump(const Uint64& ind) const
+void tube::dump(const int& ind) const
 {
 	/*! Send out all the GP data. */
 	
@@ -142,7 +142,7 @@ bool tube::stream(std::stringstream& o, const bool& read)
 	af::stream::RW(o, _roBase, read);
 	af::stream::RW(o, _riTop, read);
 	af::stream::RW(o, _roTop, read);
-	af::stream::RW(o, _Height, read);
+	af::stream::RW(o, _height, read);
 	af::stream::RW(o, _slices, read);
 	af::stream::RW(o, _stacks, read);
 		

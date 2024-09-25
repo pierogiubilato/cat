@@ -27,9 +27,12 @@ namespace cat { namespace ge {
 
 //______________________________________________________________________________
 ref::ref(): GE(), 
-	_p0(point(0, 0, 0)),
-	_v0(0, 0, 1, 0),
-	_s0(vector(1, 1, 1))
+		_p0(0, 0, 0),
+		//_a0(0, 0, 0),
+		_s0(1, 1, 1),
+		_v0(0, 0, 1),
+		_vA(0),
+		_trsf{1,0,0,0,1,0,0,0,1}
 {
 	/*! Only the default and coordinate ctor are provided, as the default copy 
 	 *	ctor, dtor and operator= are fine with the shallow data copy required.
@@ -42,26 +45,31 @@ ref::ref(): GE(),
 
 }
 
-//______________________________________________________________________________
-ref::ref(const point& p, const vector& a): GE(),
-	_p0(p),
-	_a0(a),
-	_s0(gd::vector(1, 1, 1))
-{
-	/*! Initialize the reference frame with displacement \c p0 respect to the XYZ
-	 *	parent frame and Euler angles equal to \c a. \c p is expressed in XYZ frame
-	 *	coordinates, while \c a expresses Euler angles following the ZX'Z'' rule,
-	 *	so actually mixing the two reference frames.
-	 */
-		
-	// Sets displacement and rotation matrix.
-}
+////______________________________________________________________________________
+//ref::ref(const point& p, const vector& a): GE(),
+//		_p0(p),
+//		_s0(1, 1, 1),
+//		_v0(0, 0, 1),
+//		_vA(0)
+//
+//{
+//	/*! Initialize the reference frame with displacement \c p0 respect to the XYZ
+//	 *	parent frame and Euler angles equal to \c a. \c p is expressed in XYZ frame
+//	 *	coordinates, while \c a expresses Euler angles following the ZX'Z'' rule,
+//	 *	so actually mixing the two reference frames.
+//	 */
+//		
+//	// Sets displacement and rotation matrix.
+//}
 
 //______________________________________________________________________________
 ref::ref(const point& p, const vector& u, const vector& v): GE(),
-	_p0(p),
-	_UVW(u, v),
-	_s0(vector(1, 1, 1))
+		_p0(p),
+		//_a0(0, 0, 0),
+		_s0(1, 1, 1),
+		_v0(0, 0, 1),
+		_vA(0),
+		_trsf{ 1,0,0,0,1,0,0,0,1 }
 {
 	/*! Initialize the reference frame with displacement \c p respect to the XYZ
 	 *	parent frame and rotation defined by the UVW base vectors respect the XYZ 
@@ -69,13 +77,17 @@ ref::ref(const point& p, const vector& u, const vector& v): GE(),
 	 */
 		
 	// Sets displacement and basis representation.
+	uvw(u, v);
 }
 
 //______________________________________________________________________________
 ref::ref(const point& p, const vector& v, const double& a): GE(),
-	_p0(p),
-	_v0(v, a),
-	_s0(vector(1, 1, 1)),
+		_p0(p),
+		//_a0(0, 0, 0),
+		_s0(1, 1, 1),
+		_v0(v),
+		_vA(a),
+		_trsf{ 1,0,0,0,1,0,0,0,1 }
 {
 	/*! Initialize the reference frame with displacement \c p respect to the XYZ
 	 *	parent frame and rotation defined by the \c v vector (rotation axis) and
@@ -88,7 +100,7 @@ ref::ref(const point& p, const vector& v, const double& a): GE(),
 // *****************************************************************************
 
 //______________________________________________________________________________
-oType ref::type() const
+CO::oType ref::type() const
 {
 	/*! Returns a numeric identification. */
 	return oType::geRef;
@@ -113,7 +125,7 @@ size_t ref::size() const
 {
 	/*! Returns the size of the GP in bytes. */
 	size_t total = GE::size();
-	total += (sizeof(double) * (3 + 4 + 3 + 9));
+	total += sizeof(this);
 	return total;
 }
 //______________________________________________________________________________
@@ -135,20 +147,20 @@ bool ref::stream(std::stringstream& o, const bool& read)
 	
 	
 	// Origin.
-	af::stream::RW(o, _p0[0], read);
-	af::stream::RW(o, _p0[1], read);
-	af::stream::RW(o, _p0[2], read);
+	af::stream::rw(o, _p0[0], read);
+	af::stream::rw(o, _p0[1], read);
+	af::stream::rw(o, _p0[2], read);
 	
 	// Axis and angle.
-	af::stream::RW(o, _v0[0], read);
-	af::stream::RW(o, _v0[1], read);
-	af::stream::RW(o, _v0[2], read);
-	af::stream::RW(o, _vA, read);
+	af::stream::rw(o, _v0[0], read);
+	af::stream::rw(o, _v0[1], read);
+	af::stream::rw(o, _v0[2], read);
+	af::stream::rw(o, _vA, read);
 	
 	// Scale.
-	af::stream::RW(o, _s0[0], read);
-	af::stream::RW(o, _s0[1], read);
-	af::stream::RW(o, _s0[2], read);
+	af::stream::rw(o, _s0[0], read);
+	af::stream::rw(o, _s0[1], read);
+	af::stream::rw(o, _s0[2], read);
 	
 	// If read, recalculate the transformation matrix!
 	if (read) v0(_v0[0], _v0[1], _v0[2], _vA);
@@ -237,7 +249,7 @@ void ref::s0(const vector& s)
 }
 
 //______________________________________________________________________________
-void ref::UVW(const vector& u, const vector& v)
+void ref::uvw(const vector& u, const vector& v)
 {
 	/*! Defines the reference frame orientation by describing its UVW base with
 	 *	the parent frame XYZ base.	\c u , \c v  must be orthogonal coordinate 
@@ -245,18 +257,18 @@ void ref::UVW(const vector& u, const vector& v)
 	 */
 	
 	// Builds the UVW base vectors;
-	vector _u = u.Unit();
-	vector _v = v.Unit();
-	vector _w = _u.Cross(_v);
+	vector _u = u.unit();
+	vector _v = v.unit();
+	vector _w = _u.cross(_v);
 
 	// Fills transformation matrix. How that works: transformation matrix is 
 	// fully defined by the new base, so assuming u v w being orthonormal base 
 	// vectors, it is enough to write them as ROWS of the matrix to get the
 	// XYZ to UVW transformation matrix. Use it transposed to get the UVW to
 	// XYZ transformation.
-	_trsf[0] = _u.X(); _trsf[1] = _u.Y(); _trsf[2] = _u.Z();
-	_trsf[3] = _v.X(); _trsf[4] = _v.Y(); _trsf[5] = _v.Z();
-	_trsf[6] = _w.X(); _trsf[7] = _w.Y(); _trsf[8] = _w.Z();
+	_trsf[0] = _u.x(); _trsf[1] = _u.y(); _trsf[2] = _u.z();
+	_trsf[3] = _v.x(); _trsf[4] = _v.y(); _trsf[5] = _v.z();
+	_trsf[6] = _w.x(); _trsf[7] = _w.y(); _trsf[8] = _w.z();
 
 	// Check it, warns in case
 	if (!check()) {
@@ -356,12 +368,12 @@ void ref::a0(const vector& a)
 	*/
 	
 	// Pivot sines/cosines.
-	double sX = sin(a[0]);
-	double cX = cos(a[0]);
-	double sY = sin(a[1]);
-	double cY = cos(a[1]);
-	double sZ = sin(a[2]);
-	double cZ = cos(a[2]);
+	double sX = sin(a.x());
+	double cX = cos(a.x());
+	double sY = sin(a.y());
+	double cY = cos(a.y());
+	double sZ = sin(a.z());
+	double cZ = cos(a.z());
 		
 	// Fills transformation matrix. How that works: transformation matrix is 
 	// fully defined by the Euler angles and here created to describe the XYZ
@@ -425,7 +437,8 @@ void ref::v0(const vector& v, const double& a)
    /*!	Defines the reference frame orientation by describing its eigenvector
 	*	\c v and the rotation angle \c a around this vector.
 	*/
-	_v0(v[0], v[1], v[2], a);
+	_v0 = v;
+	_vA = a;
 }
 
 //______________________________________________________________________________
@@ -475,7 +488,7 @@ vector ref::eZ() const
 }
 
 //______________________________________________________________________________
-vector gd::ref::toUVW(const vector& v) const
+vector ref::toUVW(const vector& v) const
 {
 	/*! Transforms the vector \c v coordinates from parent space reference 
 	 *	frame XYZ to the container reference frame coordinates UVW. */
@@ -501,7 +514,7 @@ point ref::toUVW(const point& p) const
 	 *	frame XYZ to the container reference frame coordinates UVW. */
 	
 	// Translate the point (displacement is in XYZ base), then rotate it
-	return ToUVW(vector(p[0] - _p0[0], p[1] - _p0[1], p[2] - _p0[2]));
+	return toUVW(vector(p[0] - _p0[0], p[1] - _p0[1], p[2] - _p0[2]));
 }
 
 //______________________________________________________________________________

@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -35,7 +35,7 @@ namespace cat { namespace gp {
  *
  *	\author Piero Giubilato
  *	\version 1.1
- *	\date 17 Sep 2024
+ *	\date 24 Sep 2024
 */
 
 //______________________________________________________________________________
@@ -60,9 +60,9 @@ class filled: public stroked
 		
 		// To be overloaded public members (already virtual from pear::CO).
 		CO::oType type() const;					//!< Returns GP type.
-		Uint64 version() const;					//!< Returns GP version.
+		coVer_t version() const;				//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
-		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
+		void dump(const int& = 0) const;		//!< Dumps GP data.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
 		bool stream(std::stringstream& o, const bool& read = false);
 				
@@ -85,7 +85,7 @@ class filled: public stroked
 			double glAlpha();			//!< Return transparency status.
 
 			// UI interaction.
-			virtual void uiBarLoad(ui::Bar&);	//!< Load a bar with the GP specific properties.
+//			virtual void uiBarLoad(ui::Bar&);	//!< Load a bar with the GP specific properties.
 		
 		#endif
 };

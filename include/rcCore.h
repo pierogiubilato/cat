@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -70,7 +70,7 @@ namespace cat { namespace rc {
 
 	
 	//! Client verbosity constants.
-	enum class kVerb : Uint64 {
+	enum class kVerb : uint64_t {
 		null,
 		error,
 		warn,
@@ -78,7 +78,7 @@ namespace cat { namespace rc {
 	};
 
 	//! Commands constants.
-	enum class kCmd : Uint64 {
+	enum class kCmd : uint64_t {
 		clear,
 		begin,
 		add,
@@ -89,7 +89,7 @@ namespace cat { namespace rc {
 	};
 
 	//! Connection status constants.
-	enum class kStatus : Uint64 {
+	enum class kStatus : uint64_t {
 		null,
 		close,
 		open,
@@ -118,13 +118,13 @@ class core
 	protected:
 		
 		// Client status.
-		Uint64 _verbose;						// Verbosity level.
-		Uint64 _status;							// Connection status.
+		int _verbose;							// Verbosity level.
+		kStatus _status;						// Connection status.
 		
 		// Connection.
-		//IPaddress _IP;							// Server address.
-		//TCPsocket _SD;							// Socket descriptor.
- 		Uint64 _OPS;							// Optimal Packet Size (bytes).
+		//IPaddress _IP;						// Server address.
+		//TCPsocket _SD;						// Socket descriptor.
+ 		int _OPS;								// Optimal Packet Size (bytes).
 
 		// Drawing elements and flags.
 		std::vector<gp::scene*> _scene;			// Scene vector.
@@ -155,13 +155,13 @@ class core
 		bool streamSend(const std::stringstream&) const;	// Send a stream.
 		
 		// Add a command to a stream.
-		void streamCmd(std::stringstream&, const Uint64&, const Uint64&, 
-										   const Uint64&, const Uint64&) const;
+		void streamCmd(std::stringstream&, const kCmd&, const uint64_t&, 
+										   const uint64_t&, const uint64_t&) const;
 		
 		//! Sends a command to the server.
-		bool sendCommand(const Uint64&, const Uint64&, const Uint64&, const Uint64&) const;
+		bool sendCommand(const kCmd&, const uint64_t&, const uint64_t&, const uint64_t&) const;
 		bool sendGP(gp::GP* gp) const;			//!< Sends a single gp to the server.
-		bool sendScene(gp::scene* scene);		//!< Sends a complete scene to the server.
+		//bool sendScene(gp::scene* scene);		//!< Sends a complete scene to the server.
 		bool socketStatus() const;				//!< Check if the socket status is valid.		
 	
 	public:
@@ -171,11 +171,11 @@ class core
 
 		
 		// Special members.
-		CAT_API CAT_CALL core(const char* host, const Uint16& port, const Uint64& verb = 0); 
+		CAT_API CAT_CALL core(const char* host, const int& port, const int& verb = 0); 
 		CAT_API CAT_CALL ~core();
 	 	
 		//! Returns the client status.
-		CAT_API Uint64 CAT_CALL status() const {return _status;}
+		CAT_API kStatus CAT_CALL status() const {return _status;}
 	
 		//// Drawing constants
 		//// ----------------

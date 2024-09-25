@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"20 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -17,7 +17,7 @@
 #define uiPadGL_H
 
 // Components
-#include <ui.h>
+//#include <ui.h>
 
 // #############################################################################
 namespace cat { namespace ui {
@@ -30,8 +30,8 @@ class pad;
  *	OpenGL current viewport as a classic raster bitmap 2D screen.
  *
  *	\author Piero Giubilato
- *	\version 1.0
- *	\date 20 Sep 2024
+ *	\version 1.1
+ *	\date 24 Sep 2024
  */
 
 class padGL //: public UI 
@@ -56,7 +56,8 @@ class padGL //: public UI
 		void glReset();	
 		
 		//! Draws a line.
-		void glLine(const int& x1, const int& y1, const int& x2, const int& y2, const Uint32& c1, const Uint32& c2, const bool& alias = false);
+		void glLine(const int& x1, const int& y1, const int& x2, const int& y2, 
+					const int& c1, const int& c2, const bool& alias = false);
 		
 		//! Draws a circle.		
 };

@@ -8,7 +8,7 @@
 // [Author]			"Sarah Zalusky"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -27,7 +27,7 @@ namespace cat { namespace gp {
  *	
  *	\author Sarah Zalusky
  *	\version 1.0
- *	\date 23 Sep 2024
+ *	\date 24 Sep 2024
  */
 
 //______________________________________________________________________________
@@ -36,7 +36,7 @@ class box: public filled
 	private:   
 	
 		// The 8 vertex points defining the volume.
-		ge::point _Vtx[8];
+		ge::point _vtx[8];
 	      
 	protected:
 	
@@ -57,19 +57,19 @@ class box: public filled
 	
 		// Default access public members
 		CO::oType type() const;					//!< Returns GP type.
-		Uint64 version() const;					//!< Returns GP version.
+		coVer_t version() const;					//!< Returns GP version.
 		std::string stem() const;				//!< Returns GP stem name.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
-		void dump(const Uint64& = 0) const;		//!< Dumps GP data.
+		void dump(const int& = 0) const;		//!< Dumps GP data.
 		bool stream(std::stringstream& o, const bool& read = false);
 		
-		// Public transformation ovelorads.
+		// Public transformation overloads.
 		box& trsf(const ge::ref& ref, const bool& inv);			//!< Transform the GP.
 		box& trsfIn(const ge::ref& ref) {return trsf(ref, false);}	//!< Transform the GP into ref.	 	
 		box& trsfOut(const ge::ref& ref) {return trsf(ref, true);}	//!< Transform the GP from ref.
 
 		// Provide Access to the internal Vertex Components.
-		ge::point vtx(const Uint64& idx) const;	// Return Idxth vertx.
+		ge::point vtx(const int& idx) const;	// Return Idxth vertex.
 
 		// Drawing functions are ONLY defined for the SERVER side!
 		#ifdef CAT_SERVER

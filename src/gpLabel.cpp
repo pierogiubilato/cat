@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -49,7 +49,7 @@ label::label()
 	_text = "Empty";
 	
 	// Alignment and others.
-	_alignment = GP::kal_Default;
+	_alignment = GP::kAlign::null;
 	_rotation = 0;
 	_view2D = true;
 
@@ -62,9 +62,9 @@ label::label()
 }
 
 //______________________________________________________________________________
-label::Label(const std::string& text, 
+label::label(const std::string& text, 
 			 const double& x, const double& y, const double& z, 
-			 const Uint32& alignment, const double& rotation,
+			 const uint16_t& alignment, const double& rotation,
 			 const bool& view2D)
 {
 	/*! Label constructor with text (\c text ), label position (\c x \c y ),
@@ -81,7 +81,7 @@ label::Label(const std::string& text,
 	_vtx[4].xyz(x - 1.0f, y + 1.0f, z + 0.0f);
 
 	// The text.
-	_Text = text;
+	_text = text;
 	
 	// Alignment and others.
 	_alignment = alignment;
@@ -119,7 +119,7 @@ CO::oType label::type() const
 }
 
 //______________________________________________________________________________
-Uint64 label::version() const
+cat::coVer_t label::version() const
 {
 	/*! Returns a numeric identification. */
 	return 100;
@@ -152,7 +152,7 @@ size_t label::size(const bool& dynamic) const
 	else return sizeof(*this) + tSize;	
 }
 //______________________________________________________________________________
-void label::dump(const Uint64& ind) const
+void label::dump(const int& ind) const
 {
 	/*! Send out all the GP data. */
 	fonted::dump(ind);
@@ -183,10 +183,10 @@ void label::dump(const Uint64& ind) const
 		//std::cout << pad3 << "[" << COL(LWHITE) << "Map" << COL(DEFAULT) << "]\n";
 		
 		// Loop over all the data point of the pivot layer.
-		for (unsigned int r = 0; r < _pxmHeight; r++) {
+		for (auto r = 0; r < _pxmHeight; r++) {
 			std::cout << pad3 << COL(BLACK + BG * WHITE);
-			for (unsigned int c = 0; c < _pxmWidth; c++) {
-				unsigned int p = _pxmData[((_pxmHeight - r - 1) * _pxmWidth + c) * 4 + 3];
+			for (auto c = 0; c < _pxmWidth; c++) {
+				auto p = _pxmData[((_pxmHeight - r - 1) * _pxmWidth + c) * 4 + 3];
 				p ? brush = (symbol[(unsigned int)((float)p / max * 5)]) : brush = ' ';
 				std::cout << brush;
 			}
@@ -210,13 +210,13 @@ bool label::stream(std::stringstream& o, const bool& read)
 	GP::stream(o, read);
 		
 	// Streams the vertexes
-	for (Uint64 i = 0; i < 5; i++) _vtx[i].stream(o, read);
+	for (auto i = 0; i < 5; i++) _vtx[i].stream(o, read);
 	
 	// Read/Write from/to stream.
-	af::stream::RW(o, _text, read);
-	af::stream::RW(o, _alignment, read);
-	af::stream::RW(o, _rotation, read);   
-	af::stream::RW(o, _view2D, read);
+	af::stream::rw(o, _text, read);
+	af::stream::rw(o, _alignment, read);
+	af::stream::rw(o, _rotation, read);   
+	af::stream::rw(o, _view2D, read);
 
 	// Everything fine.
 	return false;
@@ -228,7 +228,7 @@ label& label::trsf(const ge::ref& rf, const bool& inv)
 	/*! Transforms the box coordinates applying the rf transformation directly
 	 *	if inv = false, and by applying the inverse transformation if inv = true. 
 	 */
-	for (unsigned int i = 0; i < 5; i++) rf.trsf(_vtx[i], inv);
+	for (auto i = 0; i < 5; i++) rf.trsf(_vtx[i], inv);
 	return *this;
 }	
 
@@ -237,7 +237,7 @@ label& label::trsf(const ge::ref& rf, const bool& inv)
 // *****************************************************************************
 
 //______________________________________________________________________________
-ge::point label::vtx(const Uint64& idx) const
+ge::point label::vtx(const int& idx) const
 {
 	/*! Returns the Idx th vertex of the box. Returns a (0,0,0) vertex in case
 	 *	of OOB call. 
@@ -292,22 +292,22 @@ void label::glDraw()
 	if (!modeVisible()) return;
 		
 	// Get a string for the text, and a pointer to an array of color.
-	std::string text = _Text;	// The string with all control sequences.
-	std::vector<Uint32> color;	// The array containing the char color.
+	std::string text = _text;	// The string with all control sequences.
+	std::vector<uint32_t> color;	// The array containing the char color.
 	
 	// Get the starting color for the text.
-	Uint32 defaultCol = 0;
-	defaultCol = ((Uint32)(_strkColor[0] * 255)) << 24;		// Red.
-	defaultCol += ((Uint32)(_strkColor[1] * 255)) << 16;	// Green.
-	defaultCol += ((Uint32)(_strkColor[2] * 255)) << 8;		// Blue.
-	defaultCol += ((Uint32)(_strkColor[3] * 255)) << 0;		// Alpha.
+	uint32_t defaultCol = 0;
+	defaultCol = ((uint32_t)(_strkColor[0] * 255)) << 24;		// Red.
+	defaultCol += ((uint32_t)(_strkColor[1] * 255)) << 16;	// Green.
+	defaultCol += ((uint32_t)(_strkColor[2] * 255)) << 8;		// Blue.
+	defaultCol += ((uint32_t)(_strkColor[3] * 255)) << 0;		// Alpha.
 
 	// Analyze label text to search for special control sequences ('//' style),
 	// Assigning the per-character color array.	
 	cat::af::_font->textParse(text, color, defaultCol);
 
 	// Prepares the text pixmap. The text routines sets the size for the map.
-	cat::af::_font->textFont(_fontFamily, _fontStyle, _fontSize, _Rotation);  
+	cat::af::_font->textFont(_fontFamily, _fontStyle, _fontSize, _rotation);  
 	cat::af::_font->textDraw(text, color, _pxmWidth, _pxmHeight, _pxmData);  
 
 	// Stroke outline.
@@ -318,23 +318,23 @@ void label::glDraw()
 		
 		// Set label position, 2D style respect the center.
 		if (_view2D) {
-			glRasterPos3f(0, 0, 0);
-			glBitmap(0, 0, 0, 0, _vtx[0].X(), _vtx[0].Y(), NULL); 
+//			glRasterPos3f(0, 0, 0);
+//			glBitmap(0, 0, 0, 0, _vtx[0].X(), _vtx[0].Y(), NULL); 
 			
 		// Set label position, 3D derived from the anchor point.
 		} else {
-			glRasterPos3f(_vtx[0].X(), _vtx[0].Y(), _vtx[0].Z());
+//			glRasterPos3f(_vtx[0].X(), _vtx[0].Y(), _vtx[0].Z());
 		}
 
 		// Adds the offset to correctly align the label to the anchor point.
 		cat::gp::GPDim dim;
 		dim.x = (float)_pxmWidth;
 		dim.y = (float)_pxmHeight;
-		pear::GPPos off = offset(dim, _Alignment);
-		glBitmap(0, 0, 0, 0, off.x, -off.y, NULL); 
+		GPPos off = offset(dim, _alignment);
+//		glBitmap(0, 0, 0, 0, off.x, -off.y, NULL); 
 
 		// Actually draw the label pixmap.
-		glDrawPixels(_pxmWidth, _pxmHeight, GL_RGBA, GL_UNSIGNED_BYTE, _pxmData);
+//		glDrawPixels(_pxmWidth, _pxmHeight, GL_RGBA, GL_UNSIGNED_BYTE, _pxmData);
 	}
 }
 
@@ -350,72 +350,72 @@ void label::glDrawEnd()
 // **							   ui Functions								  **
 // *****************************************************************************
 
-//______________________________________________________________________________
-void TW_CALL label::uiTextSet(const void *value, void *clientData)
-{ 
-    /*! Set the _Text value in a TWBar compaible way. It uses the Dynamic string
-	 *	AntTweakBar call as at the moment it seems that the stl::string one
-	 *	implementation does not works properly.
-	 */
-	//static_cast<Label*>(clientData)->Text() = std::string(*(const char**)value);	
-}
-			
-//______________________________________________________________________________
-void TW_CALL Label::uiTextGet(void *value, void *clientData)
-{ 
-    /*! Put the _Text value in a TWBar compaible way. It uses the Dynamic string
-	 *	AntTweakBar call as at the moment it seems that the stl::string one
-	 *	implementation does not works properly.
-	 */
-	//TwCopyCDStringToLibrary(static_cast<char**>(value), static_cast<Label*>(clientData)->Text().c_str());
-}
-
-//______________________________________________________________________________
-TwType Label::uiTwEnumTxAlign() const
-{ 
-    /*! Creates a TwType containing the available text alignments. */
-/*
-	const TwEnumVal twEnum[] = {
-		{kal_Default, "Default"}, 
-		{kal_Hor_Left + kal_Ver_Top, "Left, Top"},			// Left, Top. 
-		{kal_Hor_Mid + kal_Ver_Top, "Center, Top"},			// Mid, Top.
-		{kal_Hor_Right + kal_Ver_Top, "Right, Top"},		// Right, Top.
-		{kal_Hor_Left + kal_Ver_Mid, "Left, Center"},		// Left, Mid. 
-		{kal_Hor_Mid + kal_Ver_Mid, "Center, Center"},		// Mid, Mid.
-		{kal_Hor_Right + kal_Ver_Mid, "Right, Center"},		// Right, Mid.
-		{kal_Hor_Left + kal_Ver_Bottom, "Left, Bottom"},	// Left, Bottom. 
-		{kal_Hor_Mid + kal_Ver_Bottom, "Center, Bottom"},	// Mid, Bottom.
-		{kal_Hor_Right + kal_Ver_Bottom, "Right, Bottom"}	// Right, Bottom.
-    };
-	return TwDefineEnum("ViewMode", twEnum, SDL_arraysize(twEnum));
-*/
-}
-
-//______________________________________________________________________________
-void Label::uiBarLoad(ui::Bar& bar)
-{
-	/*!	Load the provided AntTweakBar \c twBar with the specific properties of 
-	 *	the GP. This member should be overloaded to change/add the properties
-	 *	shown on the properties bar by every GP.
-	 */
-/*
-	// The parent first!
-	Fonted::uiBarLoad(bar); 
-
-	// Add the specific properties 
-	TwBar* twBar = bar._TwBar; 
-
-	// Label text.
-	bar.GroupAdd("Text");
-	TwAddVarCB(twBar, "txText", TW_TYPE_CDSTRING, Label::uiTextSet, Label::uiTextGet, this, "label='Text' group='Text'");
-	
-	// Alignment.
-	bar.GroupAdd("Alignment");
-	TwAddVarRW(twBar, "alRotation", TW_TYPE_FLOAT, &_Rotation, "label='Rotation' group='Alignment' min=0.00 max=6.28 step=0.01");	
-	TwAddVarRW(twBar, "alAlignment", uiTwEnumTxAlign(), &_Alignment, "label='Alignment' group='Alignment'");
-	TwAddVarRW(twBar, "al2DView", TW_TYPE_BOOLCPP, &_View2D, "label='Force 2D' group='Alignment'");	
- */
- }
+////______________________________________________________________________________
+//void TW_CALL label::uiTextSet(const void *value, void *clientData)
+//{ 
+//    /*! Set the _text value in a TWBar compatible way. It uses the Dynamic string
+//	 *	AntTweakBar call as at the moment it seems that the stl::string one
+//	 *	implementation does not works properly.
+//	 */
+//	//static_cast<Label*>(clientData)->Text() = std::string(*(const char**)value);	
+//}
+//			
+////______________________________________________________________________________
+//void TW_CALL Label::uiTextGet(void *value, void *clientData)
+//{ 
+//    /*! Put the _Text value in a TWBar compaible way. It uses the Dynamic string
+//	 *	AntTweakBar call as at the moment it seems that the stl::string one
+//	 *	implementation does not works properly.
+//	 */
+//	//TwCopyCDStringToLibrary(static_cast<char**>(value), static_cast<Label*>(clientData)->Text().c_str());
+//}
+//
+////______________________________________________________________________________
+//TwType Label::uiTwEnumTxAlign() const
+//{ 
+//    /*! Creates a TwType containing the available text alignments. */
+///*
+//	const TwEnumVal twEnum[] = {
+//		{kal_Default, "Default"}, 
+//		{kal_Hor_Left + kal_Ver_Top, "Left, Top"},			// Left, Top. 
+//		{kal_Hor_Mid + kal_Ver_Top, "Center, Top"},			// Mid, Top.
+//		{kal_Hor_Right + kal_Ver_Top, "Right, Top"},		// Right, Top.
+//		{kal_Hor_Left + kal_Ver_Mid, "Left, Center"},		// Left, Mid. 
+//		{kal_Hor_Mid + kal_Ver_Mid, "Center, Center"},		// Mid, Mid.
+//		{kal_Hor_Right + kal_Ver_Mid, "Right, Center"},		// Right, Mid.
+//		{kal_Hor_Left + kal_Ver_Bottom, "Left, Bottom"},	// Left, Bottom. 
+//		{kal_Hor_Mid + kal_Ver_Bottom, "Center, Bottom"},	// Mid, Bottom.
+//		{kal_Hor_Right + kal_Ver_Bottom, "Right, Bottom"}	// Right, Bottom.
+//    };
+//	return TwDefineEnum("ViewMode", twEnum, SDL_arraysize(twEnum));
+//*/
+//}
+//
+////______________________________________________________________________________
+//void Label::uiBarLoad(ui::Bar& bar)
+//{
+//	/*!	Load the provided AntTweakBar \c twBar with the specific properties of 
+//	 *	the GP. This member should be overloaded to change/add the properties
+//	 *	shown on the properties bar by every GP.
+//	 */
+///*
+//	// The parent first!
+//	Fonted::uiBarLoad(bar); 
+//
+//	// Add the specific properties 
+//	TwBar* twBar = bar._TwBar; 
+//
+//	// Label text.
+//	bar.GroupAdd("Text");
+//	TwAddVarCB(twBar, "txText", TW_TYPE_CDSTRING, Label::uiTextSet, Label::uiTextGet, this, "label='Text' group='Text'");
+//	
+//	// Alignment.
+//	bar.GroupAdd("Alignment");
+//	TwAddVarRW(twBar, "alRotation", TW_TYPE_FLOAT, &_Rotation, "label='Rotation' group='Alignment' min=0.00 max=6.28 step=0.01");	
+//	TwAddVarRW(twBar, "alAlignment", uiTwEnumTxAlign(), &_Alignment, "label='Alignment' group='Alignment'");
+//	TwAddVarRW(twBar, "al2DView", TW_TYPE_BOOLCPP, &_View2D, "label='Force 2D' group='Alignment'");	
+// */
+// }
 
 // End of PEAR_SERVER if
 #endif

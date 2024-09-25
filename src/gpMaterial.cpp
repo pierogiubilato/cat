@@ -4,11 +4,11 @@
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-// [File name]		"gpmaterial.cpp"
+// [File name]		"gpMaterial.cpp"
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"18 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 // [Project]		"CAT"
 //______________________________________________________________________________
@@ -44,16 +44,16 @@ material::~material()
 } 
 
 //______________________________________________________________________________
-Uint64 material::type() const
+CO::oType material::type() const
 {
 	/*! Returns object type. This function MUST be overloaded to differentiate 
 	 *	any derived class, and must also be addictive! 
 	 */
-   return GP::Type() + kgp_material;
+   return CO::oType::gpMaterial;
 }
 
 //______________________________________________________________________________
-Uint64 material::version() const
+cat::coVer_t material::version() const
 {
 	/*! Returns object version. This function MUST be overloaded to differentiate 
 	 *	any derived class! Version numbering is made in unit of hundreds for the
@@ -87,7 +87,7 @@ size_t material::size(const bool& dynamic) const
 }
 
 //______________________________________________________________________________
-void material::dump(const Uint64& ind) const
+void material::dump(const int& ind) const
 {
  	/*! Dumps on the standard output the relevant GP properties. */
 
@@ -105,7 +105,7 @@ void material::dump(const Uint64& ind) const
 	std::string pad3(ind + 2 * CAT_DUMP_PADDING, ' ');
 
 	// Set output formatting.
-	std::cout << std::showpos << std::fixed << std::setprecision(PEAR_DUMP_PREC_COLOR);
+	std::cout << std::showpos << std::fixed << std::setprecision(CAT_DUMP_PREC_COLOR);
 	
 	// Colors.
 	std::cout << pad2 << "material\n"
@@ -150,13 +150,13 @@ bool material::stream(std::stringstream& o, const bool& read)
 	GP::stream(o, read);
 		
 	// Colors.
-	for (Uint64 i = 0; i < 4; i++) {
-		af::stream::RW(o, _mtrlAmbient[i], read);
-		af::stream::RW(o, _mtrlDiffuse[i], read);
-		af::stream::RW(o, _mtrlSpecular[i], read);
-		af::stream::RW(o, _mtrlEmission[i], read);
+	for (auto i = 0; i < 4; i++) {
+		af::stream::rw(o, _mtrlAmbient[i], read);
+		af::stream::rw(o, _mtrlDiffuse[i], read);
+		af::stream::rw(o, _mtrlSpecular[i], read);
+		af::stream::rw(o, _mtrlEmission[i], read);
 	}
-	af::stream::RW(o, _mtrlShininess, read);
+	af::stream::rw(o, _mtrlShininess, read);
 
 	// Everything fine!
 	return false;
@@ -222,7 +222,7 @@ void material::mtrlSpecular(const float* col)
 }
 
 //______________________________________________________________________________
-const float* material::mtrlEmisison() const
+const float* material::mtrlEmission() const
 {
 	/*! Returns the material emission color: pointer to a 4 elements float 
 	 *	array (RGBA). */
@@ -272,30 +272,30 @@ void material::mtrlShininess(const float& shine)
 // *****************************************************************************
 
 //______________________________________________________________________________
-void material::uiBarLoad(ui::Bar& bar)
-{
-	/*!	Load the provided AntTweakBar \c twBar with the specific properties of 
-	 *	the GP. This member should be overloaded to change/add the properties
-	 *	shown on the properties bar by every GP.
-	 */
-	
-	// The parent first!
-	GP::uiBarLoad(bar); 
-
-	// Retrieve the TwBarr associated with the owner uiBar.
-//	TwBar* twBar = bar._TwBar;
-	
-	// material
-//	bar.GroupAdd("material");
-//	TwAddVarRW(twBar, "mtrlAmbient", TW_TYPE_COLOR4F, _mtrlAmbient, "label='Ambient' colororder=rgba coloralpha=true group='material'");
-//	TwAddVarRW(twBar, "mtrlDiffuse", TW_TYPE_COLOR4F, _mtrlDiffuse, "label='Diffuse' colororder=rgba coloralpha=true group='material'");
-//	TwAddVarRW(twBar, "mtrlSpecular", TW_TYPE_COLOR4F, _mtrlSpecular, "label='Specular' colororder=rgba coloralpha=true group='material'");
-//	TwAddVarRW(twBar, "mtrlEmission", TW_TYPE_COLOR4F, _mtrlEmission, "label='Emission' colororder=rgba coloralpha=true group='material'");
-//	TwAddVarRW(twBar, "mtrlShininess", TW_TYPE_FLOAT, &_mtrlShininess, "label='Shininess' min=0.1 max=128 step=0.1 group='material'");
-	
-	// Move material group under fill group.
-	//TwSetParam(twBar, "material", "group", TW_PARAM_CSTRING, 1, "Fill");
-}
+//void material::uiBarLoad(ui::Bar& bar)
+//{
+//	/*!	Load the provided AntTweakBar \c twBar with the specific properties of 
+//	 *	the GP. This member should be overloaded to change/add the properties
+//	 *	shown on the properties bar by every GP.
+//	 */
+//	
+//	// The parent first!
+//	GP::uiBarLoad(bar); 
+//
+//	// Retrieve the TwBarr associated with the owner uiBar.
+////	TwBar* twBar = bar._TwBar;
+//	
+//	// material
+////	bar.GroupAdd("material");
+////	TwAddVarRW(twBar, "mtrlAmbient", TW_TYPE_COLOR4F, _mtrlAmbient, "label='Ambient' colororder=rgba coloralpha=true group='material'");
+////	TwAddVarRW(twBar, "mtrlDiffuse", TW_TYPE_COLOR4F, _mtrlDiffuse, "label='Diffuse' colororder=rgba coloralpha=true group='material'");
+////	TwAddVarRW(twBar, "mtrlSpecular", TW_TYPE_COLOR4F, _mtrlSpecular, "label='Specular' colororder=rgba coloralpha=true group='material'");
+////	TwAddVarRW(twBar, "mtrlEmission", TW_TYPE_COLOR4F, _mtrlEmission, "label='Emission' colororder=rgba coloralpha=true group='material'");
+////	TwAddVarRW(twBar, "mtrlShininess", TW_TYPE_FLOAT, &_mtrlShininess, "label='Shininess' min=0.1 max=128 step=0.1 group='material'");
+//	
+//	// Move material group under fill group.
+//	//TwSetParam(twBar, "material", "group", TW_PARAM_CSTRING, 1, "Fill");
+//}
 
 // End of PEAR_SERVER if.
 #endif

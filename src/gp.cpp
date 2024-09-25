@@ -13,6 +13,11 @@
 // [Project]		"CAT"
 //______________________________________________________________________________
 
+
+// Application components
+#include "afStream.h"
+
+
 // Application components
 #include "gp.h"
 
@@ -24,19 +29,19 @@
 #include "gpFilled.h"
 #include "gpFonted.h"
 #include "gpEmpty.h"
-//#include "pear_gp_Material.h"
+//#include "gpMaterial.h"
 #include "gpFrame.h"
 #include "gpPoint.h"
-//#include "pear_gp_Line.h"
+#include "gpLine.h"
 //#include "pear_gp_Polygon.h"
 #include "gpBox.h"	
 //#include "pear_gp_Tube.h"
 //#include "pear_gp_Sphere.h"
-//#include "pear_gp_Label.h"
+#include "gpLabel.h"
 
 
 //##############################################################################
-namespace cat { namesppace gp {
+namespace cat { namespace gp {
 
 
 // *****************************************************************************
@@ -125,16 +130,16 @@ gp::GPPos GP::offset(const gp::GPDim& dim, const int& alignment)	const
 	 */
 
 	// Preset result.
-	gpPos result = {0, 0, 0};						
+	GPPos result = {0, 0, 0};						
 	
 	// Calculates offset.
-	if (alignment & kal::horLeft)	result.x = 0;
-	if (alignment & kal::horRight) result.x = - dim.x;
-	if (alignment & kal::horMid)	result.x = - dim.x / 2;
-	if (alignment & kal::verTop)	result.y = + dim.y;
-	if (alignment & kal::verBottom) result.y = 0;
-	if (alignment & kal::verMid)	result.y = + dim.y / 2;
-	if (alignment & kal::null)		{result.x = 0; result.y = dim.y /2;}
+	if (alignment & kAlign::horLeft)	result.x = 0;
+	if (alignment & kAlign::horRight)	result.x = - dim.x;
+	if (alignment & kAlign::horMid)		result.x = - dim.x / 2;
+	if (alignment & kAlign::verTop)		result.y = + dim.y;
+	if (alignment & kAlign::verBottom)	result.y = 0;
+	if (alignment & kAlign::verMid)		result.y = + dim.y / 2;
+	if (alignment & kAlign::null)		{result.x = 0; result.y = dim.y /2;}
 
 	// Done.
 	return result;
@@ -156,22 +161,22 @@ gp::GP* GP::build(const uint64_t& type) const
    
 	// Create it!
 	switch (type) {
-	case cat::CO::oType::stroked: return new gp::stroked();
-	case cat::CO::oType::filled:	return new gp::filled();
-		case cat::CO::oType::fonted:	return new gp::fonted();
-		case cat::CO::oType::scene:	return new gp::scene();
-		case cat::CO::oType::empty:	return new gp::empty();
-		case cat::CO::oType::material: return new gp::Material();
-		case cat::CO::oType::frame:	return new gp::frame();
-		case cat::CO::oType::point:	return new gp::point();
-		case cat::CO::oType::line:	return new gp::line();
-		case cat::CO::oType::polygon: return new gp::polygon();
-		case cat::CO::oType::box:	return new gp::box();
-		case cat::CO::oType::tube:	return new gp::tube();
-		case cat::CO::oType::cylinder: return new gp::cylinder();
-		case cat::CO::oType::cone:	return new gp::cone();
-		case cat::CO::oType::sphere: return new gp::sphere();
-		case cat::CO::oType::gpLabel: return new gp::label();
+		case CO::oType::gpStroked:	return new gp::stroked();
+		case CO::oType::gpFilled:	return new gp::filled();
+		case CO::oType::gpFonted:	return new gp::fonted();
+		case CO::oType::gpScene:	return new gp::scene();
+		case CO::oType::gpEmpty:	return new gp::empty();
+	//	case CO::oType::gpMaterial: return new gp::Material();
+		case CO::oType::gpFrame:	return new gp::frame();
+		case CO::oType::gpPoint:	return new gp::point();
+		case CO::oType::gpLine:		return new gp::line();
+	//	case CO::oType::gpPolygon:	return new gp::polygon();
+		case CO::oType::gpBox:		return new gp::box();
+	//	case CO::oType::gpTube:		return new gp::tube();
+	//	case CO::oType::gpCylinder: return new gp::cylinder();
+	//	case CO::oType::gpCone:		return new gp::cone();
+	//	case CO::oType::gpSphere:	return new gp::sphere();
+		case CO::oType::gpLabel:	return new gp::label();
 	}
 
 	// Not recognized type!
@@ -187,7 +192,7 @@ gp::GP* GP::build(const uint64_t& type) const
 gp::scene* GP::owner() const
 {
 	/*! Returns the GP owner handle (the scene containing the GP). */
-	return _OwnerPtr;
+	return _ownerPtr;
 }
 
 //______________________________________________________________________________
@@ -258,7 +263,7 @@ GPHnd GP::childGet(int cIdx) const
 }
 
 //______________________________________________________________________________
-GPHnd GP::childCount() const
+int GP::childCount() const
 {
 	/*! Returns the number of childs. */
 	return _childHnd.size();
@@ -293,7 +298,7 @@ CO::oType GP::type() const
 }
 
 //______________________________________________________________________________
-uint64_t GP::version() const
+cat::coVer_t GP::version() const
 {
 	/*! Returns object version. This function MUST be overloaded to differentiate 
 	 *	any derived class! Version numbering is made in unit of hundreds for the
@@ -373,7 +378,7 @@ void GP::dump(const int& ind) const
 	// Childrens.
 	if (childCount()) {
 		std::cout << pad2 << "Childs [";		
-		for (uint64_t i = 0; i < childCount(); i++) {
+		for (auto i = 0; i < childCount(); i++) {
 			std::cout << COL(CAT_DUMP_COL_CHILD) << _childHnd[i] << CD << "\n";
 			if (i < childCount() - 1) std::cout << ", ";
 		}
@@ -400,11 +405,11 @@ bool GP::stream(std::stringstream& o, const bool& read)
 		uint64_t versionCheck = 0;
 		af::stream::read(o, typeCheck); 
 		if (typeCheck != type()) {
-			throw std::runtime_error("cat::GP::stream uncorrect Type!");
+			throw std::runtime_error("cat::GP::stream incorrect Type!");
 		}
 		af::stream::read(o, versionCheck); 
 		if (versionCheck != version()) {
-			throw std::runtime_error("cat::GP::Stream uncorrect Version!");
+			throw std::runtime_error("cat::GP::Stream incorrect Version!");
 		}
 	
 	// Write type and version for later checking.
@@ -416,23 +421,23 @@ bool GP::stream(std::stringstream& o, const bool& read)
 	// Read/Write all the GP properties from/into the stream.
 	
 	// General.
-	af::stream::RW(o, _handle, read);
-	af::stream::RW(o, _parentHnd, read);
-	af::stream::RW(o, _name, read);
-	af::stream::RW(o, _info, read);
+	af::stream::rw(o, _handle, read);
+	af::stream::rw(o, _parentHnd, read);
+	af::stream::rw(o, _name, read);
+	af::stream::rw(o, _info, read);
 
 	// Style.
-	af::stream::RW(o, _modeVisible, read);
-	af::stream::RW(o, _modeWire, read);
-	af::stream::RW(o, _modeFrozen, read);
-	af::stream::RW(o, _modeSelected, read);
+	af::stream::rw(o, _modeVisible, read);
+	af::stream::rw(o, _modeWire, read);
+	af::stream::rw(o, _modeFrozen, read);
+	af::stream::rw(o, _modeSelected, read);
 
 	// Inheritance.
-	af::stream::RW(o, _inhrAppear, read);
-	af::stream::RW(o, _inhrVisible, read);
-	af::stream::RW(o, _inhrAlpha, read);
-	af::stream::RW(o, _inhrWire, read);
-	af::stream::RW(o, _inhrRef, read);
+	af::stream::rw(o, _inhrAppear, read);
+	af::stream::rw(o, _inhrVisible, read);
+	af::stream::rw(o, _inhrAlpha, read);
+	af::stream::rw(o, _inhrWire, read);
+	af::stream::rw(o, _inhrRef, read);
 
 	// Everything fine!
 	return false;
@@ -488,7 +493,7 @@ void GP::info(const char* info)
 	else pivot << info;
 	
 	// Updates the name.
-	delete[] _Info;
+	delete[] _info;
 	_info = new char[pivot.str().size() + 1];
 	strcpy(_info, pivot.str().c_str());
 		
@@ -514,7 +519,7 @@ void GP::modeSelected(const bool& sel)
 
 	// Propagates to all childrens.
 	for (uint64_t i = 0; i < _childHnd.size(); i++) {
-		GP* child =	_ownerPtr->gp_Get(_childHnd[i]);
+		GP* child =	_ownerPtr->gpGet(_childHnd[i]);
 		if (child) child->modeSelected(sel);
 	}
 		
@@ -526,8 +531,8 @@ void GP::modeSelected(const bool& sel)
 bool GP::modeVisible() const
 {
 	/*! Return the visibility status of the GP. It is hierarchical. */
-	if (_inhrAppear && _inhrVisible && _ParentPtr) {
-		return _ParentPtr->modeVisible() && _modeVisible; 
+	if (_inhrAppear && _inhrVisible && _parentPtr) {
+		return _parentPtr->modeVisible() && _modeVisible; 
 		
 	// No inheritance enabled.
 	} else {
@@ -548,14 +553,14 @@ void GP::modeVisible(const bool& visible)
 //______________________________________________________________________________
 bool GP::modeWireframe() const
 {
-	/*! Return the frozeness status of the GP. */
+	/*! Return the frozenness status of the GP. */
 	return _modeWire;
 }
 
 //______________________________________________________________________________
 void GP::modeWireframe(const bool& wireframe)
 {
-	/*! Sets the frozeness status of the GP. */
+	/*! Sets the frozenness status of the GP. */
 	_modeWire = wireframe;
 	
 	// Set modified status.
@@ -565,14 +570,14 @@ void GP::modeWireframe(const bool& wireframe)
 //______________________________________________________________________________
 bool GP::modeFrozen() const
 {
-	/*! Return the frozeness status of the GP. */
+	/*! Return the frozenness status of the GP. */
 	return _modeFrozen;
 }
 
 //______________________________________________________________________________
 void GP::modeFrozen(const bool& frozen)
 {
-	/*! Sets the frozeness status of the GP. */
+	/*! Sets the frozenness status of the GP. */
 	_modeFrozen = frozen;
 }
 
@@ -630,14 +635,14 @@ void GP::modeNeedRedraw(const bool& need)
 //______________________________________________________________________________
 bool GP::inhrAppear() const
 {
-	/*! Return gloabl appearance inheritance. */
+	/*! Return global appearance inheritance. */
 	return _inhrAppear;
 }
 
 //______________________________________________________________________________
 void GP::inhrAppear(const bool& inhr)
 {
-	/*! Return gloabl appearance inheritance. */
+	/*! Return global appearance inheritance. */
 	_inhrAppear = inhr;
 }
 
@@ -720,7 +725,7 @@ void GP::modeSet(const uint8_t& flag, const bool& status)
 // *****************************************************************************
 
 // Drawing function are available only for the SERVER.
-#ifdef PEAR_SERVER
+#ifdef CAT_SERVER
 
 //______________________________________________________________________________
 double GP::glAlpha()
@@ -786,7 +791,7 @@ void GP::glDisplay()
 	 */
 
 	// Update the name stack. (actually effective in selection mode only).
-	glPushName((GLuint)_handle); 
+//	glPushName((GLuint)_handle); 
 		
 	// If the object is actually selected, do not build the display list,
 	// but directly draw it, as it can change from draw to draw 
@@ -795,7 +800,7 @@ void GP::glDisplay()
 		// Delete the existing list in case, so at the selection period end
 		// a new one will be automatically regenerated.
 		if (_glDspListIdx) {
-			glDeleteLists(_glDspListIdx, 1);
+//			glDeleteLists(_glDspListIdx, 1);
 			_glDspListIdx = 0;
 		}
 
@@ -807,11 +812,11 @@ void GP::glDisplay()
 	// then just displays the list.
 	} else {
 		if (!_glDspListIdx) glBuild();
-		glCallList(_glDspListIdx);
+//		glCallList(_glDspListIdx);
 	}
 
 	// Take away the name used for the name stack.
-	glPopName();
+//	glPopName();
 }
 
 //______________________________________________________________________________
@@ -826,13 +831,13 @@ void GP::glBuild()
 	 */
 
 	// If a list for this object has already been created, remove it.
-	if (_glDspListIdx) glDeleteLists(_glDspListIdx, 1);
+//	if (_glDspListIdx) glDeleteLists(_glDspListIdx, 1);
 	
 	// Obtains a new list index.
-	_glDspListIdx = glGenLists(1);
+//	_glDspListIdx = glGenLists(1);
 	
 	// Creates the list, but do not display it.
-	glNewList(_glDspListIdx, GL_COMPILE);
+//	glNewList(_glDspListIdx, GL_COMPILE);
 
 	// This will call the overloaded glDraw of the derived GP.
 	// The glDrawEnd() call is mandatory to properly complete.
@@ -840,7 +845,7 @@ void GP::glBuild()
 	glDrawEnd();
 
 	// Close the list.
-	glEndList();
+//	glEndList();
 
 	// Now the list is saved in memory and ready to be used. Bye!
 }
@@ -850,16 +855,16 @@ void GP::glDrawSel()
 {
 	/*! The glDrawSel draws a specific selection "skeleton" to highlight the 
 	 *	selected object. Each GP should provide its own specialized glDrawSel 
-	 *	overload, aas no basic one is implemented.
+	 *	overload, as no basic one is implemented.
 	 */
 
 	// Get transformation chain applied.
 	glTrsfApply();
 
 	// Set stroke accordingly to the selection static parameters.
-	glLineWidth(_selWidth);
-	glLineStipple(_selFactor, _selPattern);
-	glEnable(GL_LINE_STIPPLE);
+//	glLineWidth(_selWidth);
+//	glLineStipple(_selFactor, _selPattern);
+//	glEnable(GL_LINE_STIPPLE);
 }
 
 //______________________________________________________________________________
@@ -875,13 +880,13 @@ void GP::glDraw()
 
 	// Enable wireframe mode. 
 	if (modeWireframe()) {
-		glDisable(GL_CULL_FACE);	// Disable non-drawing of deeper objects.
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Only Render Lines.
+//		glDisable(GL_CULL_FACE);	// Disable non-drawing of deeper objects.
+//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Only Render Lines.
 	
 	// Enable default mode.
 	} else { 
-		glEnable(GL_CULL_FACE);		// Enable non-drawing of deeper objects.
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // Render Solids.
+//		glEnable(GL_CULL_FACE);		// Enable non-drawing of deeper objects.
+//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // Render Solids.
 	}
 }
 
@@ -904,15 +909,15 @@ void GP::glDrawEnd()
 // *****************************************************************************
 
 //______________________________________________________________________________
-void TW_CALL GP::cbkSizeGet(void* value, void* client)
-{
-	/*! Get the layout mode. */
-	*static_cast<uint32_t*>(value) = static_cast<GP*>(client)->size();
-}
+//void TW_CALL GP::cbkSizeGet(void* value, void* client)
+//{
+//	/*! Get the layout mode. */
+//	*static_cast<uint32_t*>(value) = static_cast<GP*>(client)->size();
+//}
 
 //______________________________________________________________________________
-void GP::uiBarLoad(ui::Bar& bar)
-{
+//void GP::uiBarLoad(ui::Bar& bar)
+//{
 	/*!	Load the provided AntTweakBar \c twBar with the specific properties of 
 	 *	the GP. This member should be overloaded to change/add the properties
 	 *	shown on the properties bar by every GP.
@@ -944,7 +949,7 @@ void GP::uiBarLoad(ui::Bar& bar)
 	TwAddVarRW(twBar, "inhrWireframe", TW_TYPE_BOOLCPP, &_inhrWire, "label='Inherit wireframe' group='Inheritance'");
 	TwAddVarRW(twBar, "inhrReference", TW_TYPE_BOOLCPP, &_inhrRef, "label='Inherit reference' group='Inheritance'");
 */
-}
+//}
 
 // End of PEAR_SERVER if.
 #endif

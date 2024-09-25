@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -91,11 +91,11 @@ class DCs: public core
 		//! Complete Brush call with single channel R, G, B, A float color.
 		CAT_API void CAT_CALL dcBrushSet(const bool& active, const double& R = 0.5, const double& G = 0.5,
 										   const double& B = 0.5, const double& A = 1.0, 
-										   const double& width = 1, const Uint16& pattern = 0, const Uint32& scale = 1);
+										   const double& width = 1, const Uint16& pattern = 0, const uint32_t& scale = 1);
 
 		//! Complete Brush call with single RGBA unsigned int 32 color mask.
-		CAT_API void CAT_CALL dcBrushSet(const bool& active, const Uint32& color = 0xFF888888,
-										   const double& width = 1, const Uint16& pattern = 0, const Uint32& scale = 1);
+		CAT_API void CAT_CALL dcBrushSet(const bool& active, const uint32_t& color = 0xFF888888,
+										   const double& width = 1, const Uint16& pattern = 0, const uint32_t& scale = 1);
 	
 		//! Switch the brush On/off.
 		CAT_API void CAT_CALL dcBrushActive(const bool& active);
@@ -105,10 +105,10 @@ class DCs: public core
 											 const double& B, const double& A = 1.0f);
 
 		//! Change the brush color and Alpha with single RGBA argument.
-		CAT_API void CAT_CALL dcBrushColor(const Uint32& RGBA);
+		CAT_API void CAT_CALL dcBrushColor(const uint32_t& RGBA);
 
 		//! Change the brush width and pattern.
-		CAT_API void CAT_CALL dcBrushStroke(const double& width = 1,  const Uint16& pattern = 0, const Uint32& scale = 1); 
+		CAT_API void CAT_CALL dcBrushStroke(const double& width = 1,  const Uint16& pattern = 0, const uint32_t& scale = 1); 
 										  
 		
 		// *** Fill ***
@@ -125,7 +125,7 @@ class DCs: public core
 									   const double& B = 0.5, const double& A = 1.0, const bool& wire = false);
 	
 		//! Complete Fill call with single RGBA unsigned int 32 color mask.
-		CAT_API void CAT_CALL dcFillSet(const bool& active, const Uint32& color = 0xFF888888, 
+		CAT_API void CAT_CALL dcFillSet(const bool& active, const uint32_t& color = 0xFF888888, 
 										const bool& wire = false);
 
 		//! Switch the fill On/off.
@@ -136,7 +136,7 @@ class DCs: public core
 											 const double& B, const double& A = 1.0);
 
 		//! Change the brush color and Alpha with single RGBA argument.
-		CAT_API void CAT_CALL dcFillColor(const Uint32& rgba);
+		CAT_API void CAT_CALL dcFillColor(const uint32_t& rgba);
 
 
 		// *** Material ***
@@ -156,10 +156,10 @@ class DCs: public core
 		CAT_API void CAT_CALL dcMaterialSet(const bool& active, const double& shininess = 1, 
 											  const double* ambient = 0, const double* diffuse = 0,
 											  const double* specular = 0, const double* emission = 0);
-		//! Complete Material call with Active, Shininess and 4 color Uint32.
+		//! Complete Material call with Active, Shininess and 4 color uint32_t.
 		CAT_API void CAT_CALL dcMaterialSet(const bool& active, const double& shininess = 1, 
-											  const Uint32& ambient = 0, const Uint32& diffuse = 0,
-											  const Uint32& specular = 0, const Uint32& emission = 0);
+											  const uint32_t& ambient = 0, const uint32_t& diffuse = 0,
+											  const uint32_t& specular = 0, const uint32_t& emission = 0);
 		
 		// *** Inheritance ***
 		// *******************
@@ -186,7 +186,7 @@ class DCs: public core
 		
 		//! Set current font.
 		CAT_API void CAT_CALL dcFontSet(const char* family, const char* style,
-										  const Uint32& size = 64);
+										  const uint32_t& size = 64);
 		
 
 		// *** Transformation ***
@@ -218,10 +218,10 @@ class DCs: public core
 		// ****************************
 
 		//! A virtual primitive.
-		CAT_API gp::GPHnd CAT_CALL dcVirtual(const gp::GPHnd& parent, const char* name = "");
+		CAT_API gp::GPHnd CAT_CALL dcEmpty(const gp::GPHnd& parent, const char* name = "");
 		
 		//! A parentless virtual primitive.
-		CAT_API gp::GPHnd CAT_CALL dcVirtual(const char* name = "");
+		CAT_API gp::GPHnd CAT_CALL dcEmpty(const char* name = "");
 		
 		//! A frame defined by a point, a vector and an angle.
 		CAT_API gp::GPHnd CAT_CALL dcFrame(const gp::GPHnd& parent,
@@ -265,16 +265,17 @@ class DCs: public core
 		CAT_API gp::GPHnd CAT_CALL dcLine(const double& x1, const double& y1, const double& z1,
 										const double& x2, const double& y2, const double& z2,
 										const char* name = "");
+/*
 
 		//! Polygon with parent.
 		CAT_API gp::GPHnd CAT_CALL dcPolygon(const gp::GPHnd& parent,
-										const double* vtx, const Uint64& vtxCount,
+										const double* vtx, const uint64_t& vtxCount,
 										const bool& closed, const char* name = "");
 		
 		//! Parentless polygon.
-		CAT_API gp::GPHnd CAT_CALL dcPolygon(const double* vtx, const Uint64& vtxCount,
+		CAT_API gp::GPHnd CAT_CALL dcPolygon(const double* vtx, const uint64_t& vtxCount,
 										const bool& closed, const char* name = "");
-
+*/
 		//! Box with parent, 8*3 double vertex list.
 		CAT_API gp::GPHnd CAT_CALL dcBox(const gp::GPHnd& parent, const double* vtx,
 										const char* name = "");
@@ -292,61 +293,61 @@ class DCs: public core
 		CAT_API gp::GPHnd CAT_CALL dcBox(const double& cX, const double& cY, const double& cZ,
 										const double& sX, const double& sY, const double& sZ,										
 										const char* name = "");
-		
+	/*
 		//! Tube with parent.
 		CAT_API gp::GPHnd CAT_CALL dcTube(const gp::GPHnd& parent,
 										const double& riBase, const double& roBase, 
 										const double& riTop, const double& roTop, 
-										const double& height, const Uint32& slices = 10, 
-										const Uint32& stacks = 1, const char* name = "");
+										const double& height, const uint32_t& slices = 10, 
+										const uint32_t& stacks = 1, const char* name = "");
 		
 		//! Tube with no parent.
 		CAT_API gp::GPHnd CAT_CALL dcTube(const double& riBase, const double& roBase,
 										const double& riTop, const double& roTop, 
-										const double& height, const Uint32& slices = 10, 
-										const Uint32& stacks = 1, const char* name = "");
+										const double& height, const uint32_t& slices = 10, 
+										const uint32_t& stacks = 1, const char* name = "");
 
 		//! Cylinder with parent.
 		CAT_API gp::GPHnd CAT_CALL dcCylinder(const gp::GPHnd& parent,
 										const double& radius, const double& height, 
-										const Uint32& slices = 10, const Uint32& stacks = 1, 
+										const uint32_t& slices = 10, const uint32_t& stacks = 1, 
 										const char* name = "");
 		
 		//! Cylinder with no parent.
 		CAT_API gp::GPHnd CAT_CALL dcCylinder(const double& radius, const double& height,
-										const Uint32& slices = 10, const Uint32& stacks = 1, 
+										const uint32_t& slices = 10, const uint32_t& stacks = 1, 
 										const char* name = "");
 
 		//! Cone with parent.
 		CAT_API gp::GPHnd CAT_CALL dcCone(const gp::GPHnd& parent,
 										const double& radius, const double& height, 
-										const Uint32& slices = 10, const Uint32& stacks = 1, 
+										const uint32_t& slices = 10, const uint32_t& stacks = 1, 
 										const char* name = "");
 		
 		//! Cone with no parent.
 		CAT_API gp::GPHnd CAT_CALL dcCone(const double& radius, const double& height,
-										const Uint32& slices = 10, const Uint32& stacks = 1, 
+										const uint32_t& slices = 10, const uint32_t& stacks = 1, 
 										const char* name = "");
 
 		//! Sphere with parent.
 		CAT_API gp::GPHnd CAT_CALL dcSphere(const gp::GPHnd& parent,
-										const double& radius, const Uint32& slices = 10, 
-										const Uint32& stacks = 10, const char* name = "");
+										const double& radius, const uint32_t& slices = 10, 
+										const uint32_t& stacks = 10, const char* name = "");
 		
 		//! Sphere with no parent.
-		CAT_API gp::GPHnd CAT_CALL dcSphere(const double& radius, const Uint32& slices = 10,
-										const Uint32& stacks = 10, const char* name = "");
-		
+		CAT_API gp::GPHnd CAT_CALL dcSphere(const double& radius, const uint32_t& slices = 10,
+										const uint32_t& stacks = 10, const char* name = "");
+	*/	
 		//! Label with parent.
 		CAT_API gp::GPHnd CAT_CALL dcLabel(const gp::GPHnd& parent, const char* text,
 										const double& cX, const double& cY, const double& cZ,
-										const Uint32& alignement = 0, const double& rotation = 0, 
+										const uint32_t& alignement = 0, const double& rotation = 0, 
 										const bool& view2D = false, const char* name = "");
 										
 		//! Label with no parent.
 		CAT_API gp::GPHnd CAT_CALL dcLabel(const char* text,
 										const double& cX, const double& cY, const double& cZ,
-										const Uint32& alignement = 0, const double& rotation = 0,
+										const uint32_t& alignement = 0, const double& rotation = 0,
 										const bool& view2D = false, const char* name = "");
 		
 };

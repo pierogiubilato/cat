@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
-// [Date]			"23 Sep 2024"
+// [Date]			"24 Sep 2024"
 // [Language]		"c++"
 //______________________________________________________________________________
 
@@ -27,7 +27,7 @@ namespace cat { namespace gp {
  *	
  *	\author Piero Giubilato
  *	\version 1.1
- *	\date 23 Sep 2024
+ *	\date 24 Sep 2024
  */
 
 //______________________________________________________________________________
@@ -51,9 +51,9 @@ class point: public stroked
 		
 		// Default access public members
 		CO::oType type() const;		//!< Returns GP type.
-		Uint64 version() const;		//!< Returns GP version.
+		coVer_t version() const;	//!< Returns GP version.
 		std::string stem() const;	//!< Returns GP stem name.
-		void dump(const Uint64& = 0) const;	//!< Dumps GP data.
+		void dump(const int& = 0) const;	//!< Dumps GP data.
 		size_t size(const bool& = false) const;	//!< Returns GP size in bytes.
 		
 		//! Stream the GP data (both read and write).
@@ -86,7 +86,7 @@ class point: public stroked
 //	*****************************************************************************
 
 //______________________________________________________________________________
-inline std::ostream& operator << (std::ostream& o, const cat::ge::point& obj)
+inline std::ostream& operator << (std::ostream& o, const cat::gp::point& obj)
 {
 	/*! Overloads standard output operator << for a generic pear::gp::Point. */ 
 	obj.dump();

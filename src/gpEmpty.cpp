@@ -50,8 +50,8 @@ void empty::dump(const int& ind) const
 {
 	/*! Send out all the box data. */
 	std::string pad(ind, ' ');
-	std::cout << pad << "[" << COL(LWHITE) << Stem() << COL(DEFAULT) << ": ";
-	GP::Dump();
+	std::cout << pad << "[" << COL(LWHITE) << stem() << COL(DEFAULT) << ": ";
+	GP::dump();
 	std::cout << " ]";
 }
 
@@ -61,7 +61,7 @@ bool empty::stream(std::stringstream& o, const bool& read)
 	/*! Streams the primitive. */
 
 	// The parent
-	GP::Stream(o, read);
+	GP::stream(o, read);
 
 	// To be implemented
 	return false;

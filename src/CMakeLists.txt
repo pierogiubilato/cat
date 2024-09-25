@@ -27,25 +27,47 @@ endif()
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-# The main target executable.
+# The main server target executable.
+
 add_executable (cat 
 	
-	# Core.
+	# Server / core.
 	"../src/acMain.cpp"
 	"../src/acServer.cpp"
 	"../src/acLoop.cpp"
 	
+	# Server / windowing.
+	"../src/uiPad.cpp"
+	"../src/uiMouse.cpp"
+	"../src/uiWindow.cpp"
+	"../src/uiPadGUI.cpp"
+	"../src/uiPadGL.cpp"
+	"../src/uiView.cpp"
+
 	# Facilities.
 	"../src/afFile.cpp"
 	"../src/afFont.cpp"
 
 	# Client.
+	"../src/rcCore.cpp"
 	"../src/rcDCs.cpp"
 	
-	#GPs
-	"../src/gpScene.cpp"
+	#GEs
+	"../src/geCoord.cpp"
+	"../src/geRef.cpp"
 	
-
+	#GPs
+	"../src/gp.cpp"
+	"../src/gpScene.cpp"
+	"../src/gpEmpty.cpp"
+	"../src/gpFrame.cpp"
+	"../src/gpMaterial.cpp"
+	"../src/gpFilled.cpp"
+	"../src/gpStroked.cpp"
+	"../src/gpLine.cpp"
+	"../src/gpBox.cpp"
+	"../src/gpLabel.cpp"
+	
 
 	#"../src/uiPad.cpp"
 	#"../src/uiWindow.cpp"
@@ -72,7 +94,9 @@ target_sources(cat PRIVATE
 # Check and update it accordingly to the standard evolution.
 target_include_directories(cat PRIVATE "../lib/glad/include/")
 target_include_directories(cat PRIVATE "../lib/glad/include/glad/")
-
+target_sources(cat PRIVATE 
+	"../lib/glad/src/glad.c"
+)
 
 # The GLM lilbary (Open GL math) is used for all 3D calculations.
 target_include_directories(cat PRIVATE "../lib/glm/")

@@ -34,9 +34,10 @@ class ref: public GE
 	private:
 		
 		// Data containers
-		double _p0[3];		// UVW Displacement respect to XYZ.
-		double _s0[3];		// UVW Scaling respect to XYZ.
-		double _v0[3];		// UVW Rotation axis respect to XYZ.
+		point _p0;			// UVW Displacement respect to XYZ.
+		vector _s0;			// UVW Scaling respect to XYZ.
+		vector _a0;			// Euler's angles rotation.
+		vector _v0;			// UVW Rotation axis respect to XYZ.
 		double _vA;			// UVW Rotation angle around the v0 axis.	
 		double _trsf[9];	// Transformation matrix.
 		
@@ -50,7 +51,7 @@ class ref: public GE
 		ref();				//!< Default ctor.		
 		
 		//! Displacement + Euler angles XYZ ctor.		
-		ref(const point& p, const vector& a);
+		// ref(const point& p, const vector& a);
 		
 		//! Displacement + UVW base ctor.
 		ref(const point& p, const vector& u, const vector& v); 
