@@ -105,35 +105,45 @@ message(STATUS "{CAT}--> [Server] selected graphic API: ${CAT_SERVER_GAPI}")
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-# Diligent Engine - Pre-built binaries (build those you prefere in case, see how at 
-# https://github.com/DiligentGraphics/DiligentEngine)
-
-set(CAT_DILIGENT_INCLUDE "${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentCore/")
+# Diligent Engine - Pre-built binaries (build those you prefere in case, see 
+# how at https://github.com/DiligentGraphics/DiligentEngine)
+# ------------------------------------------------------------------------------
+set(CAT_DILIGENT_INCLUDE "${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentCore")
 if(${BUILD_MODE} MATCHES "Debug")
+	
+	# Set debug libraries folder. 
 	message(STATUS "{CAT}--> [Server] linking to DEBUG Diligent libraries")
+	set(CAT_DILIGENT_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-debug")
+	
+	# Set specific graphic library based on selected API.
 	if(CAT_SERVER_GAPI MATCHES "D3D12")
-		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-debug/GraphicsEngineD3D12_64d.lib")
-		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-debug/GraphicsEngineD3D12_64d.dll")
+		set(CAT_DILIGENT_LIB "GraphicsEngineD3D12_64d.lib")
+		set(CAT_DILIGENT_DLL "GraphicsEngineD3D12_64d.dll")
 	elseif(CAT_SERVER_GAPI MATCHES "OpenGL")
-		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-debug/GraphicsEngineOpenGL_64d.lib")
-		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-debug/GraphicsEngineOpenGL_64d.dll")
+		set(CAT_DILIGENT_LIB "GraphicsEngineOpenGL_64d.lib")
+		set(CAT_DILIGENT_DLL "GraphicsEngineOpenGL_64d.dll")
 	elseif(CAT_SERVER_GAPI MATCHES "Vulkan")
-		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-debug/GraphicsEngineVk_64d.lib")
-		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-debug/GraphicsEngineVk_64d.dll")
+		set(CAT_DILIGENT_LIB "GraphicsEngineVk_64d.lib")
+		set(CAT_DILIGENT_DLL "GraphicsEngineVk_64d.dll")
 	else()
 		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent library available for DEBUG linking")
 	endif()
 elseif(${BUILD_MODE} MATCHES "Release")
+	
+	# Set debug libraries folder.
 	message(STATUS "{CAT}--> [Server] linking to RELEASE Diligent libraries")
+	set(CAT_DILIGENT_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-release")
+	
+	# Set specific graphic library based on selected API.
 	if(CAT_SERVER_GAPI MATCHES "D3D12")
-		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-release/GraphicsEngineD3D12_64.lib")
-		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-release/GraphicsEngineD3D12_64.dll")
+		set(CAT_DILIGENT_LIB "GraphicsEngineD3D12_64.lib")
+		set(CAT_DILIGENT_DLL "GraphicsEngineD3D12_64.dll")
 	elseif(CAT_SERVER_GAPI MATCHES "OpenGL")
-		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-release/GraphicsEngineOpenGL_64.lib")
-		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-release/GraphicsEngineOpenGL_64.dll")
+		set(CAT_DILIGENT_LIB "GraphicsEngineOpenGL_64.lib")
+		set(CAT_DILIGENT_DLL "GraphicsEngineOpenGL_64.dll")
 	elseif(CAT_SERVER_GAPI MATCHES "Vulkan")
-		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-release/GraphicsEngineVk_64.lib")
-		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-release/GraphicsEngineVk_64.dll")
+		set(CAT_DILIGENT_LIB "GraphicsEngineVk_64.lib")
+		set(CAT_DILIGENT_DLL "GraphicsEngineVk_64.dll")
 	else()
 		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent library available for RELEASE linking")
 	endif()
@@ -144,15 +154,22 @@ endif()
 
 # SDL3 - Pre-built binaries (build those you prefere in case, see how at 
 # https://github.com/libsdl-org/SDL
-set(CAT_SDL3_INCLUDE "${PROJECT_SOURCE_DIR}/lib/SDL/include/")
+# ------------------------------------------------------------------------------
+
+# Include headers.
+set(CAT_SDL3_INCLUDE "${PROJECT_SOURCE_DIR}/lib/SDL/include")
+
+# Link libraries.
 if(${BUILD_MODE} MATCHES "Debug")
 	message(STATUS "{CAT}--> [Server] linking to DEBUG SDL3 library")
-	set(CAT_SDL3_LIB "${PROJECT_SOURCE_DIR}/lib/SDL/x64-debug/lib/SDL3.lib")
-	set(CAT_SDL3_DLL "${PROJECT_SOURCE_DIR}/lib/SDL/x64-debug/bin/SDL3.dll")
+	set(CAT_SDL3_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/SDL/x64-debug")  
+	set(CAT_SDL3_LIB "SDL3.lib")
+	set(CAT_SDL3_DLL "SDL3.dll")
 elseif(${BUILD_MODE} MATCHES "Release")
 	message(STATUS "{CAT}--> [Server] linking to RELEASE SDL3 library")
-		set(CAT_SDL3_LIB "${PROJECT_SOURCE_DIR}/lib/SDL/x64-release/SDL3.lib")
-		set(CAT_SDL3_DLL "${PROJECT_SOURCE_DIR}/lib/SDL/x64-release/SDL3.dll")
+	set(CAT_SDL3_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/SDL/x64-release")  
+	set(CAT_SDL3_LIB "SDL3.lib")
+	set(CAT_SDL3_DLL "SDL3.dll")
 else()
 	message(FATAL_ERROR "{CAT}--> ERROR: no suitable SDL3 DLLs available for the current building mode")
 endif()
@@ -167,7 +184,7 @@ endif()
 # ------------------------------------------------------------------------------
 message(STATUS "{CAT}--> -----------| Server |-----------")
 message(STATUS "{CAT}--> [Server] setting up core...")
-add_executable (catServer)
+add_executable (catServer WIN32)
 
 # Set proper c++ standard..
 if (CMAKE_VERSION VERSION_GREATER 3.12)
@@ -189,36 +206,34 @@ target_sources(catServer PRIVATE
 
 # SDL dependencies.
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Server] including SDL3...")
-target_include_directories(catServer PRIVATE CAT_SDL3_INCLUDE)
-target_link_libraries(catServer PRIVATE CAT_SDL3_LIB)
+#message(STATUS "{CAT}--> [Server] including SDL3...")
+#target_include_directories(catServer PRIVATE CAT_SDL3_INCLUDE)
+#target_link_libraries(catServer PRIVATE CAT_SDL3_LIB)
 
 
 
 # SDL_net dependencies.
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Server] including SDL_net (built within)...")
+#message(STATUS "{CAT}--> [Server] including SDL_net (built within)...")
 
 # The SDL_net library is built within the CAT application. Version
 # used is 3.x.x, so be sure that the submodule repository branch
 # is set to 'Main' (other branches are for older versions).
-target_include_directories(catServer PRIVATE 
-	"${PROJECT_SOURCE_DIR}/lib/SDL_net/include"
-)
+#target_include_directories(catServer PRIVATE 
+#	"${PROJECT_SOURCE_DIR}/lib/SDL_net/include"
+#)
 
 # SDL_net is built within the target, so add its own files..
-target_sources(catServer PRIVATE 
-	"${PROJECT_SOURCE_DIR}/lib/SDL_net/src/SDL_net.c"
-)
+#target_sources(catServer PRIVATE 
+#	"${PROJECT_SOURCE_DIR}/lib/SDL_net/src/SDL_net.c"
+#)
 
 # Diligent Core dependencies.
 # ------------------------------------------------------------------------------
 message(STATUS "{CAT}--> [Server] including Diligent Core...")
-message(STATUS "{CAT}--> [Server] ${CAT_DILIGENT_INCLUDE}")
-
 target_compile_options(catServer PRIVATE -DUNICODE)
-target_include_directories(catServer PRIVATE CAT_DILIGENT_INCLUDE)
-target_link_libraries(catServer PRIVATE CAT_DILIGENT_LIB)
+target_include_directories(catServer PRIVATE ${CAT_DILIGENT_INCLUDE})
+target_link_libraries(catServer PRIVATE "${CAT_DILIGENT_LIB_DIR}/${CAT_DILIGENT_LIB}")
 
 
 
@@ -252,6 +267,25 @@ target_link_libraries(catServer PRIVATE CAT_DILIGENT_LIB)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# BUILDING - Application client library target.
+# BUILDING - Post build commands
 # ----------------------------------------------------------------------------------------------------------------------
+
+# Copy Diligent DLLs in the binary output folder.
+add_custom_command(
+        TARGET catServer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CAT_DILIGENT_LIB_DIR}/${CAT_DILIGENT_DLL}
+                ${CMAKE_CURRENT_BINARY_DIR}/${CAT_DILIGENT_DLL}
+)
+
+
+# Copy SDL3 DLLs in the binary output folder.
+add_custom_command(
+        TARGET catServer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_DLL}
+                ${CMAKE_CURRENT_BINARY_DIR}/${CAT_SDL3_DLL}
+)
+
+
 
