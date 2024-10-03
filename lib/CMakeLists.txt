@@ -17,22 +17,22 @@
 # In the main "CMakeLists.txt" file CMake must be instructed to copy the built
 # DLL into the app executable dir. Otherwise, the library build path must be
 # added to the general path.
-message(STATUS "CAT: Configuring SDL build environment...")
+#message(STATUS "CAT: Configuring SDL build environment...")
 
 # SDL setup.
-set(SDL_TEST OFF)				# Avoid building the tests.
-set(SDL_AUDIO_DEFAULT OFF)		# Avoid the audio subsystem.
-set(SDL_JOYSTICK_DEFAULT OFF)	# Avoid the joystick subsystem.
-set(SDL_HAPTIC_DEFAULT OFF)		# Necessary when joystick set to off.
-set(SDL_SENSOR_DEFAULT OFF)		# Avoid sensors subsystem.
-set(SDL_CAMERA_DEFAULT OFF)		# Avoid camera subsystem.
-set(SDL_HIDAPI_DEFAULT OFF)		# Avoid HID device direct handling.
-set(SDL_POWER_DEFAULT OFF)		# Avoid power management subsystem.
+#set(SDL_TEST OFF)				# Avoid building the tests.
+#set(SDL_AUDIO_DEFAULT OFF)		# Avoid the audio subsystem.
+#set(SDL_JOYSTICK_DEFAULT OFF)	# Avoid the joystick subsystem.
+#set(SDL_HAPTIC_DEFAULT OFF)		# Necessary when joystick set to off.
+#set(SDL_SENSOR_DEFAULT OFF)		# Avoid sensors subsystem.
+#set(SDL_CAMERA_DEFAULT OFF)		# Avoid camera subsystem.
+#set(SDL_HIDAPI_DEFAULT OFF)		# Avoid HID device direct handling.
+#set(SDL_POWER_DEFAULT OFF)		# Avoid power management subsystem.
 
 # General SDL library object.
-add_subdirectory(SDL)
-add_library(SDL INTERFACE)
-target_link_libraries(SDL INTERFACE SDL3::SDL3)
+#add_subdirectory(SDL)
+#add_library(SDL INTERFACE)
+#target_link_libraries(SDL INTERFACE SDL3::SDL3)
 
 
 # ------------------------------------------------------------------------------
@@ -52,19 +52,19 @@ target_link_libraries(SDL INTERFACE SDL3::SDL3)
 # them outside GNU systems.
 # In the main "CMakeLists.txt" file CMake must be instructed to copy the correct
 # DLL binary into the app executable dir accordingly to the target system.
-message(STATUS "CAT: Configuring FreeType pre-built library...")
-add_library(freetype SHARED IMPORTED)
+#message(STATUS "CAT: Configuring FreeType pre-built library...")
+#add_library(freetype SHARED IMPORTED)
 
-configure_file(
-	"${CMAKE_SOURCE_DIR}/lib/freetype/release dll/win64/freetype.lib"
-	"${CMAKE_CURRENT_BINARY_DIR}/freetype.lib"
-	COPYONLY
-)
-configure_file(
-	"${CMAKE_SOURCE_DIR}/lib/freetype/release dll/win64/freetype.dll"
-	"${CMAKE_CURRENT_BINARY_DIR}/freetype.dll"
-	COPYONLY
-)
+#configure_file(
+#	"${CMAKE_SOURCE_DIR}/lib/freetype/release dll/win64/freetype.lib"
+#	"${CMAKE_CURRENT_BINARY_DIR}/freetype.lib"
+#	COPYONLY
+#)
+#configure_file(
+#	"${CMAKE_SOURCE_DIR}/lib/freetype/release dll/win64/freetype.dll"
+#	"${CMAKE_CURRENT_BINARY_DIR}/freetype.dll"
+#	COPYONLY
+#)
 
 # TODO set correct compiled library depending on system. 
 #set_target_properties(freetype PROPERTIES 

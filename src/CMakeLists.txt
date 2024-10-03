@@ -1,162 +1,257 @@
-﻿
-# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+﻿# ======================================================================================================================
+# == CAT project - SERVER executable and CLIENT library cmake file
+# ======================================================================================================================
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# SERVER - Overall settings.
+# ----------------------------------------------------------------------------------------------------------------------
+
+message(STATUS "{CAT}--> -------------| CAT |-------------")
+message(STATUS "{CAT}--> Building on: " ${CMAKE_SYSTEM})
+message(STATUS "{CAT}--> Building at: " ${PROJECT_SOURCE_DIR})
+
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# SYSTEM - Detect which system we are on.
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Windows
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	set(CAT_SYS_WIN 1)
+
+# Linux
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	set(CAT_SYS_LINUX 1)
+
+# Mac OS
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	set(CAT_SYS_MACOS 1)
+
+# Not supported
+else()
+	set(CAT_SYS_UNSUPPORTED 1)
+
 endif()
 
-# Add source to this project's executable.
-#add_executable (cat 
-#	"src/cat.cpp"      "include/cat.h" 
-#	"src/cmd.cpp"      "include/cmd.hpp"
-#	"src/caf.cpp"      "include/caf.hpp"
-#	"src/log.cpp"      "include/log.hpp"
-
-#	"src/data.cpp"     "include/data.hpp"
-#	"src/pixel.cpp"    "include/pixel.hpp"
-#	"src/cluster.cpp"  "include/cluster.hpp"
-#	"src/sensor.cpp"   "include/sensor.hpp"
-#	"src/coord.cpp"    "include/coord.hpp"
-#	"src/plane.cpp"    "include/plane.hpp"
-#	"src/layer.cpp"    "include/layer.hpp"
-#	"src/hit.cpp"      "include/hit.hpp"
-#)
 
 # ----------------------------------------------------------------------------------------------------------------------
-# BUILDING - Main application target executable.
+# GRAPHICS APIs - Select which underlying graphics APIs the system has, and which to use.
 # ----------------------------------------------------------------------------------------------------------------------
 
+# Now check what is really available in the system.
+message(STATUS "{CAT}--> ---------| Graphic API |---------")
+
+# Check for Vulkan
+find_package(Vulkan)
+if (VULKAN_FOUND)
+    message(STATUS "{CAT}--> Found Vulkan")
+#    #target_include_directories(catServer PRIVATE ${Vulkan_INCLUDE_DIRS})
+#    #target_link_libraries (catServer PRIVATE Vulkan::Vulkan)
+	set(CAT_AVAILABLE_VULKAN)
+endif ()
+
+# Check for OpenGL
+find_package(OpenGL)
+if (OPENGL_FOUND)
+    message(STATUS "{CAT}--> Found OpenGL")
+	#target_include_directories(catServer PRIVATE ${OpenGL_INCLUDE_DIRS})
+	#target_link_libraries (catServer PRIVATE OpenGL::OpenGL)
+	set(CAT_AVAILABLE_OPENGL)
+endif ()
+
+# Check for DirectX12
+if(CAT_SYS_WIN)
+    message(STATUS "{CAT}--> On Windows, DirectX 12 available")
+	#set(CAT_AVAILABLE_D3D12)
+endif ()
+
+
+# Choose which library to use.
+if (CAT_SYS_WIN)
+	
+	# On Windows, use DirectX 12 by default.
+	set(CAT_SERVER_GAPI "D3D12")
+
+elseif(CAT_SYS_LINUX)
+
+	# On Linux, prefer Vulkan if available, otherwise use "good old" OpenGL.
+	if(VULKAN_FOUND)
+		set(CAT_SERVER_GAPI "Vulkan")
+	elseif(OPENGL_FOUND)
+		set(CAT_SERVER_GAPI "OpenGL")
+	else()
+		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Graphics API available on Linux")
+	endif()
+
+elseif(CAT_SYS_MACOS)
+	
+	# On MAC, OpenGL is deprecated, so try Vulkan (through MeltedVK)
+	if(VULKAN_FOUND)
+		set(CAT_SERVER_GAPI "Vulkan")
+	else()
+		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Graphics API available on Mac OS")
+	endif()
+endif()
+
+# Show chosen one.
+message(STATUS "{CAT}--> [Server] selected graphic API: ${CAT_SERVER_GAPI}")
+
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# GRAPHICS Libraries - Set the paths for the pre-built libraries.
+# ----------------------------------------------------------------------------------------------------------------------
+
+
+# Diligent Engine - Pre-built binaries (build those you prefere in case, see how at 
+# https://github.com/DiligentGraphics/DiligentEngine)
+
+set(CAT_DILIGENT_INCLUDE "${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentCore/")
+if(${BUILD_MODE} MATCHES "Debug")
+	message(STATUS "{CAT}--> [Server] linking to DEBUG Diligent libraries")
+	if(CAT_SERVER_GAPI MATCHES "D3D12")
+		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-Debug/lib/GraphicsEngineD3D12_64d.lib")
+		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-Debug/bin/GraphicsEngineD3D12_64d.dll")
+	elseif(CAT_SERVER_GAPI MATCHES "OpenGL")
+		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-Debug/lib/GraphicsEngineOpenGL_64d.lib")
+		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-Debug/bin/GraphicsEngineOpenGL_64d.dll")
+	elseif(CAT_SERVER_GAPI MATCHES "Vulkan")
+		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-Debug/lib/GraphicsEngineVk_64d.lib")
+		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-Debug/bin/GraphicsEngineVk_64d.dll")
+	else()
+		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent library available for DEBUG linking")
+	endif()
+elseif(${BUILD_MODE} MATCHES "Release")
+	message(STATUS "{CAT}--> [Server] linking to RELEASE Diligent libraries")
+	if(CAT_SERVER_GAPI MATCHES "D3D12")
+		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64/lib/GraphicsEngineD3D12_64.lib")
+		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64/bin/GraphicsEngineD3D12_64.dll")
+	elseif(CAT_SERVER_GAPI MATCHES "OpenGL")
+		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64/lib/GraphicsEngineOpenGL_64.lib")
+		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64/bin/GraphicsEngineOpenGL_64.dll")
+	elseif(CAT_SERVER_GAPI MATCHES "Vulkan")
+		set(CAT_DILIGENT_LIB "${PROJECT_SOURCE_DIR}/lib/Diligent/x64/lib/GraphicsEngineVk_64.lib")
+		set(CAT_DILIGENT_DLL "${PROJECT_SOURCE_DIR}/lib/Diligent/x64/bin/GraphicsEngineVk_64.dll")
+	else()
+		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent library available for RELEASE linking")
+	endif()
+else()
+	message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent DLLs available for the current building mode")
+endif()
+
+
+# SDL3 - Pre-built binaries (build those you prefere in case, see how at 
+# https://github.com/libsdl-org/SDL
+set(CAT_SDL3_INCLUDE "${PROJECT_SOURCE_DIR}/lib/SDL/include/")
+if(${BUILD_MODE} MATCHES "Debug")
+	message(STATUS "{CAT}--> [Server] linking to DEBUG SDL3 library")
+	set(CAT_SDL3_LIB "${PROJECT_SOURCE_DIR}/lib/SDL/x64-Debug/lib/SDL3.lib")
+	set(CAT_SDL3_DLL "${PROJECT_SOURCE_DIR}/lib/SDL/x64-Debug/bin/SDL3.dll")
+elseif(${BUILD_MODE} MATCHES "Release")
+	message(STATUS "{CAT}--> [Server] linking to RELEASE SDL3 library")
+		set(CAT_SDL3_LIB "${PROJECT_SOURCE_DIR}/lib/SDL/x64/lib/SDL3.lib")
+		set(CAT_SDL3_DLL "${PROJECT_SOURCE_DIR}/lib/SDL/x64/bin/SDL3.dll")
+else()
+	message(FATAL_ERROR "{CAT}--> ERROR: no suitable SDL3 DLLs available for the current building mode")
+endif()
+
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# BUILDING - Application server executable target.
+# ----------------------------------------------------------------------------------------------------------------------
 
 # The main server target executable.
+# ------------------------------------------------------------------------------
+message(STATUS "{CAT}--> -----------| Server |-----------")
+message(STATUS "{CAT}--> [Server] setting up core...")
+add_executable (catServer)
 
-add_executable (cat 
-	
-	# Server / core.
-	"../src/acMain.cpp"
-	"../src/acServer.cpp"
-	"../src/acLoop.cpp"
-	
-	# Server / windowing.
-	"../src/uiPad.cpp"
-	"../src/uiMouse.cpp"
-	"../src/uiWindow.cpp"
-	"../src/uiPadGUI.cpp"
-	"../src/uiPadGL.cpp"
-	"../src/uiView.cpp"
+# Set proper c++ standard..
+if (CMAKE_VERSION VERSION_GREATER 3.12)
+	set_property(TARGET catServer PROPERTY CXX_STANDARD 23)
+endif()
 
-	# Facilities.
-	"../src/afFile.cpp"
-	"../src/afFont.cpp"
-
-	# Client.
-	"../src/rcCore.cpp"
-	"../src/rcDCs.cpp"
-	
-	#GEs
-	"../src/geCoord.cpp"
-	"../src/geRef.cpp"
-	
-	#GPs
-	"../src/gp.cpp"
-	"../src/gpScene.cpp"
-	"../src/gpEmpty.cpp"
-	"../src/gpFrame.cpp"
-	"../src/gpMaterial.cpp"
-	"../src/gpFilled.cpp"
-	"../src/gpStroked.cpp"
-	"../src/gpLine.cpp"
-	"../src/gpBox.cpp"
-	"../src/gpLabel.cpp"
-	
-
-	#"../src/uiPad.cpp"
-	#"../src/uiWindow.cpp"
-	#"../src/uiSplash.cpp"
+# Add its own and common includes.
+target_include_directories(catServer PRIVATE 
+	"${CMAKE_CURRENT_SOURCE_DIR}/common/"
+	"${CMAKE_CURRENT_SOURCE_DIR}/server/"
 )
 
-# Add its own sources to this project's executable.
-target_include_directories(cat PRIVATE "../include/")
+# Cat server own code.
+target_sources(catServer PRIVATE 
+	"${CMAKE_CURRENT_SOURCE_DIR}/server/main.cpp"
+)
 
-# The SDL library is used by the CAT application, but build independently.
-# Look at the ''CMakeLists.txt' for building details.
-target_include_directories(cat PRIVATE "../lib/SDL/include/SDL3/")
 
+
+# SDL dependencies.
+# ------------------------------------------------------------------------------
+message(STATUS "{CAT}--> [Server] including SDL3...")
+target_include_directories(catServer PRIVATE CAT_SDL3_INCLUDE)
+target_link_libraries(catServer PRIVATE CAT_SDL3_LIB)
+
+
+
+# SDL_net dependencies.
+# ------------------------------------------------------------------------------
+message(STATUS "{CAT}--> [Server] including SDL_net (built within)...")
 
 # The SDL_net library is built within the CAT application. Version
 # used is 3.x.x, so be sure that the submodule repository branch
 # is set to 'Main' (other branches are for older versions).
-target_include_directories(cat PRIVATE "../lib/SDL_net/include/")
-target_sources(cat PRIVATE 
-	"../lib/SDL_net/src/SDL_net.c"
+target_include_directories(catServer PRIVATE 
+	"${PROJECT_SOURCE_DIR}/lib/SDL_net/include"
 )
 
-# The GLAD OpenGL loader facility is included into the main server build.
-# Check and update it accordingly to the standard evolution.
-target_include_directories(cat PRIVATE "../lib/glad/include/")
-target_include_directories(cat PRIVATE "../lib/glad/include/glad/")
-target_sources(cat PRIVATE 
-	"../lib/glad/src/glad.c"
+# SDL_net is built within the target, so add its own files..
+target_sources(catServer PRIVATE 
+	"${PROJECT_SOURCE_DIR}/lib/SDL_net/src/SDL_net.c"
 )
 
-# The GLM lilbary (Open GL math) is used for all 3D calculations.
-target_include_directories(cat PRIVATE "../lib/glm/")
+# Diligent Core dependencies.
+# ------------------------------------------------------------------------------
+message(STATUS "{CAT}--> [Server] including Diligent Core...")
+message(STATUS "{CAT}--> [Server] ${CAT_DILIGENT_INCLUDE}")
 
-
-# The FreetYpe library is used to handle fonts. It is used
-# as pre-built binaries, so make sure to link accordingly
-# the environment you compile within.
-target_include_directories(cat PRIVATE "../lib/freetype/include/")
-
-# The ''dirent.h' file for cross-platform POSIX file management.
-target_include_directories(cat PRIVATE "../lib/dirent/")
+target_compile_options(catServer PRIVATE -DUNICODE)
+target_include_directories(catServer PRIVATE CAT_DILIGENT_INCLUDE)
+target_link_libraries(catServer PRIVATE CAT_DILIGENT_LIB)
 
 
 
-# CAT server final executable sources.
-#target_sources(cat PRIVATE 
-	#"../src/acMain.cpp"		"../include/acMain.h"
+
+# imGUI dependencies.
+# ------------------------------------------------------------------------------
+#message(STATUS "{CAT}--> [Server] including imGUI (built within)...")
+
+#target_include_directories(catServer PRIVATE 
+#	"../lib/imgui/"
 #)
 
-# Dear ImGUI is built within the CAT application.
-target_include_directories(cat PRIVATE "../lib/imgui/")
-target_sources(cat PRIVATE 
-	"../lib/imgui/imgui.cpp"							"../lib/imgui/imgui.h"
-														"../lib/imgui/imconfig.h"
-														"../lib/imgui/imgui_internal.h"	
-														"../lib/imgui/imstb_rectpack.h"
-														"../lib/imgui/imstb_textedit.h"
-														"../lib/imgui/imstb_truetype.h"
-	"../lib/imgui/imgui_demo.cpp"
-	"../lib/imgui/imgui_draw.cpp"
-	"../lib/imgui/imgui_tables.cpp"
-	"../lib/imgui/imgui_widgets.cpp"
-	"../lib/imgui/backends/imgui_impl_sdl3.cpp"         "../lib/imgui/backends/imgui_impl_sdl3.h"
-	"../lib/imgui/backends/imgui_impl_sdlrenderer3.cpp" "../lib/imgui/backends/imgui_impl_sdlrenderer3.h"
-)
+# Dear ImGUI is built within the CAT application, so add it to the target.
+#target_sources(catServer PRIVATE 
+#	"../lib/imgui/imgui.cpp"							"../lib/imgui/imgui.h"
+#														"../lib/imgui/imconfig.h"
+#														"../lib/imgui/imgui_internal.h"	
+#														"../lib/imgui/imstb_rectpack.h"
+#														"../lib/imgui/imstb_textedit.h"
+#														"../lib/imgui/imstb_truetype.h"
+#	"../lib/imgui/imgui_demo.cpp"
+#	"../lib/imgui/imgui_draw.cpp"
+#	"../lib/imgui/imgui_tables.cpp"
+#	"../lib/imgui/imgui_widgets.cpp"
+#	"../lib/imgui/backends/imgui_impl_sdl3.cpp"         "../lib/imgui/backends/imgui_impl_sdl3.h"
+#	"../lib/imgui/backends/imgui_impl_sdlrenderer3.cpp" "../lib/imgui/backends/imgui_impl_sdlrenderer3.h"
+#)
+
+
 
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# LINKING - Link the application to externally built libraries (see the '../lib/CMakeLists.txt' for details).
+# BUILDING - Application client library target.
 # ----------------------------------------------------------------------------------------------------------------------
 
-# Add link to externally built libraries.
-
-# Add link to externally built libraries.
-message(STATUS "CAT: defining SDL own-built library dependencies...")
-target_link_libraries(cat PRIVATE SDL)
-
-
-# FreeType library
-message(STATUS "CAT defining FreeType pre-compiled library dependencies...")
-# TODO: pre-compiled library selection based on system
-target_link_libraries(cat PRIVATE freetype)
-
-
-
-# CMake version check.
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET cat PROPERTY CXX_STANDARD 20)
-endif()
-
-# TODO: Add tests and install targets if needed.
