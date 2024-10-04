@@ -108,7 +108,11 @@ message(STATUS "{CAT}--> [Server] selected graphic API: ${CAT_SERVER_GAPI}")
 # Diligent Engine - Pre-built binaries (build those you prefere in case, see 
 # how at https://github.com/DiligentGraphics/DiligentEngine)
 # ------------------------------------------------------------------------------
-set(CAT_DILIGENT_INCLUDE "${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentCore")
+set(CAT_DILIGENT_INCLUDE 
+	"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentCore"
+	"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentSamples"
+	"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools"
+)
 if(${BUILD_MODE} MATCHES "Debug")
 	
 	# Set debug libraries folder. 
@@ -200,6 +204,18 @@ target_include_directories(catServer PRIVATE
 # Cat server own code.
 target_sources(catServer PRIVATE 
 	"${CMAKE_CURRENT_SOURCE_DIR}/server/main.cpp"
+	
+	#mingw32
+
+	#"${CMAKE_CURRENT_SOURCE_DIR}/server/SampleBase.cpp"
+	
+	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/Imgui/src/ImGuiUtils.cpp"
+	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui.cpp"
+	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui_draw.cpp"
+	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui_tables.cpp"
+	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui_widgets.cpp"
+
+
 )
 
 

@@ -25,6 +25,7 @@
  *  of the possibility of such damages.
  */
 
+
 #include <memory>
 #include <iomanip>
 #include <iostream>
@@ -225,88 +226,87 @@ public:
         return true;
     }
 
-    bool ProcessCommandLine(const char* CmdLine)
-    {
-        const char* mode = nullptr;
-
-        const char* Keys[] = { "--mode ", "--mode=", "-m " };
-        for (size_t i = 0; i < _countof(Keys); ++i)
-        {
-            const auto* Key = Keys[i];
-            if ((mode = strstr(CmdLine, Key)) != nullptr)
-            {
-                mode += strlen(Key);
-                break;
-            }
-        }
-
-        if (mode != nullptr)
-        {
-            while (*mode == ' ')
-                ++mode;
-
-            if (_stricmp(mode, "D3D11") == 0)
-            {
-#if D3D11_SUPPORTED
-                m_DeviceType = RENDER_DEVICE_TYPE_D3D11;
-#else
-                std::cerr << "Direct3D11 is not supported. Please select another device type";
-                return false;
-#endif
-            }
-            else if (_stricmp(mode, "D3D12") == 0)
-            {
-#if D3D12_SUPPORTED
-                m_DeviceType = RENDER_DEVICE_TYPE_D3D12;
-#else
-                std::cerr << "Direct3D12 is not supported. Please select another device type";
-                return false;
-#endif
-            }
-            else if (_stricmp(mode, "GL") == 0)
-            {
-#if GL_SUPPORTED
-                m_DeviceType = RENDER_DEVICE_TYPE_GL;
-#else
-                std::cerr << "OpenGL is not supported. Please select another device type";
-                return false;
-#endif
-            }
-            else if (_stricmp(mode, "VK") == 0)
-            {
-#if VULKAN_SUPPORTED
-                m_DeviceType = RENDER_DEVICE_TYPE_VULKAN;
-#else
-                std::cerr << "Vulkan is not supported. Please select another device type";
-                return false;
-#endif
-            }
-            else
-            {
-                std::cerr << mode << " is not a valid device type. Only the following types are supported: D3D11, D3D12, GL, VK";
-                return false;
-            }
-        }
-        else
-        {
-#if D3D12_SUPPORTED
-            m_DeviceType = RENDER_DEVICE_TYPE_D3D12;
-#elif VULKAN_SUPPORTED
-            m_DeviceType = RENDER_DEVICE_TYPE_VULKAN;
-#elif D3D11_SUPPORTED
-            m_DeviceType = RENDER_DEVICE_TYPE_D3D11;
-#elif GL_SUPPORTED
-            m_DeviceType = RENDER_DEVICE_TYPE_GL;
-#endif
-        }
-        return true;
-    }
+//    bool ProcessCommandLine(const char* CmdLine)
+//    {
+//        const char* mode = nullptr;
+//
+//        const char* Keys[] = { "--mode ", "--mode=", "-m " };
+//        for (size_t i = 0; i < _countof(Keys); ++i)
+//        {
+//            const auto* Key = Keys[i];
+//            if ((mode = strstr(CmdLine, Key)) != nullptr)
+//            {
+//                mode += strlen(Key);
+//                break;
+//            }
+//        }
+//
+//        if (mode != nullptr)
+//        {
+//            while (*mode == ' ')
+//                ++mode;
+//
+//            if (_stricmp(mode, "D3D11") == 0)
+//            {
+//#if D3D11_SUPPORTED
+//                m_DeviceType = RENDER_DEVICE_TYPE_D3D11;
+//#else
+//                std::cerr << "Direct3D11 is not supported. Please select another device type";
+//                return false;
+//#endif
+//            }
+//            else if (_stricmp(mode, "D3D12") == 0)
+//            {
+//#if D3D12_SUPPORTED
+//                m_DeviceType = RENDER_DEVICE_TYPE_D3D12;
+//#else
+//                std::cerr << "Direct3D12 is not supported. Please select another device type";
+//                return false;
+//#endif
+//            }
+//            else if (_stricmp(mode, "GL") == 0)
+//            {
+//#if GL_SUPPORTED
+//                m_DeviceType = RENDER_DEVICE_TYPE_GL;
+//#else
+//                std::cerr << "OpenGL is not supported. Please select another device type";
+//                return false;
+//#endif
+//            }
+//            else if (_stricmp(mode, "VK") == 0)
+//            {
+//#if VULKAN_SUPPORTED
+//                m_DeviceType = RENDER_DEVICE_TYPE_VULKAN;
+//#else
+//                std::cerr << "Vulkan is not supported. Please select another device type";
+//                return false;
+//#endif
+//            }
+//            else
+//            {
+//                std::cerr << mode << " is not a valid device type. Only the following types are supported: D3D11, D3D12, GL, VK";
+//                return false;
+//            }
+//        }
+//        else
+//        {
+//#if D3D12_SUPPORTED
+//            m_DeviceType = RENDER_DEVICE_TYPE_D3D12;
+//#elif VULKAN_SUPPORTED
+//            m_DeviceType = RENDER_DEVICE_TYPE_VULKAN;
+//#elif D3D11_SUPPORTED
+//            m_DeviceType = RENDER_DEVICE_TYPE_D3D11;
+//#elif GL_SUPPORTED
+//            m_DeviceType = RENDER_DEVICE_TYPE_GL;
+//#endif
+//        }
+//        return true;
+//    }
 
 
     void CreateResources()
     {
         // Pipeline state object encompasses configuration of all GPU stages
-
         GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
         // Pipeline state name is used by the engine to report issues.
@@ -319,14 +319,19 @@ public:
         // clang-format off
         // This tutorial will render to a single render target
         PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+        
         // Set render target format which is the format of the swap chain's color buffer
         PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = m_pSwapChain->GetDesc().ColorBufferFormat;
+        
         // Use the depth buffer format from the swap chain
         PSOCreateInfo.GraphicsPipeline.DSVFormat = m_pSwapChain->GetDesc().DepthBufferFormat;
+        
         // Primitive topology defines what kind of primitives will be rendered by this pipeline state
         PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+        
         // No back face culling for this tutorial
         PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+        
         // Disable depth testing
         PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = False;
         // clang-format on
@@ -335,8 +340,10 @@ public:
         // Tell the system that the shader source code is in HLSL.
         // For OpenGL, the engine will convert this into GLSL under the hood
         ShaderCI.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+        
         // OpenGL backend requires emulated combined HLSL texture samplers (g_Texture + g_Texture_sampler combination)
         ShaderCI.Desc.UseCombinedTextureSamplers = true;
+        
         // Create a vertex shader
         RefCntAutoPtr<IShader> pVS;
         {
@@ -409,57 +416,80 @@ private:
     RENDER_DEVICE_TYPE            m_DeviceType = RENDER_DEVICE_TYPE_D3D11;
 };
 
+
+
+
+
+// =====================================================================================================================
+// Start HERE - WinMain
+// =====================================================================================================================
+
+// This app
 std::unique_ptr<Tutorial00App> g_pTheApp;
 
 LRESULT CALLBACK MessageProc(HWND, UINT, WPARAM, LPARAM);
+
 // Main
+// --------------------------------------------------------------------------
 int WINAPI WinMain(_In_ HINSTANCE     hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPSTR         lpCmdLine,
     _In_ int           nShowCmd)
 {
-#if defined(_DEBUG) || defined(DEBUG)
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
+    #if defined(_DEBUG) || defined(DEBUG)
+        _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    #endif
 
-    g_pTheApp.reset(new Tutorial00App);
+    // Create the application class.
+    g_pTheApp.reset(new Tutorial00App);   // <--- !!!!!!!!!!!!!!!!
 
-    const auto* cmdLine = GetCommandLineA();
-    if (!g_pTheApp->ProcessCommandLine(cmdLine))
-        return -1;
+//    const auto* cmdLine = GetCommandLineA();
+//    if (!g_pTheApp->ProcessCommandLine(cmdLine))
+//        return -1;
 
     std::wstring Title(L"Tutorial00: Hello Win32");
-    switch (g_pTheApp->GetDeviceType())
-    {
-    case RENDER_DEVICE_TYPE_D3D11: Title.append(L" (D3D11)"); break;
-    case RENDER_DEVICE_TYPE_D3D12: Title.append(L" (D3D12)"); break;
-    case RENDER_DEVICE_TYPE_GL: Title.append(L" (GL)"); break;
-    case RENDER_DEVICE_TYPE_VULKAN: Title.append(L" (VK)"); break;
+    switch (g_pTheApp->GetDeviceType()) {
+        case RENDER_DEVICE_TYPE_D3D11:  Title.append(L" (D3D11)"); break;
+        case RENDER_DEVICE_TYPE_D3D12:  Title.append(L" (D3D12)"); break;
+        case RENDER_DEVICE_TYPE_GL:     Title.append(L" (GL)"); break;
+        case RENDER_DEVICE_TYPE_VULKAN: Title.append(L" (VK)"); break;
     }
+    
     // Register our window class
-    WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW, MessageProc,
-                       0L, 0L, hInstance, NULL, NULL, NULL, NULL, L"SampleApp", NULL };
+    WNDCLASSEX wcex = {
+        sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW, MessageProc,
+        0L, 0L, hInstance, NULL, NULL, NULL, NULL, L"SampleApp", NULL
+    };
     RegisterClassEx(&wcex);
 
     // Create a window
     LONG WindowWidth = 1280;
     LONG WindowHeight = 1024;
     RECT rc = { 0, 0, WindowWidth, WindowHeight };
+    
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-    HWND wnd = CreateWindow(L"SampleApp", Title.c_str(),
+    
+    HWND wnd = CreateWindow (
+        L"SampleApp", Title.c_str(),
         WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-        rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
-    if (!wnd)
-    {
+        rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL
+    );
+
+    if (!wnd) {
         MessageBox(NULL, L"Cannot create window", L"Error", MB_OK | MB_ICONERROR);
         return 0;
     }
+
     ShowWindow(wnd, nShowCmd);
     UpdateWindow(wnd);
 
-    if (!g_pTheApp->InitializeDiligentEngine(wnd))
-        return -1;
 
+
+
+    // Initialize the engine.
+    if (!g_pTheApp->InitializeDiligentEngine(wnd)) return -1;
+
+    // Create resources
     g_pTheApp->CreateResources();
 
     // Main message loop
@@ -483,7 +513,10 @@ int WINAPI WinMain(_In_ HINSTANCE     hInstance,
     return (int)msg.wParam;
 }
 
+// Basically handling windows messages ---> substituted by SDL3
+// Windows window management
 // Called every time the NativeNativeAppBase receives a message
+// -----------------------------------------------------------------------------------------------------------
 LRESULT CALLBACK MessageProc(HWND wnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -503,8 +536,7 @@ LRESULT CALLBACK MessageProc(HWND wnd, UINT message, WPARAM wParam, LPARAM lPara
         return 0;
 
     case WM_CHAR:
-        if (wParam == VK_ESCAPE)
-            PostQuitMessage(0);
+        if (wParam == VK_ESCAPE) PostQuitMessage(0);
         return 0;
 
     case WM_DESTROY:
@@ -524,3 +556,166 @@ LRESULT CALLBACK MessageProc(HWND wnd, UINT message, WPARAM wParam, LPARAM lPara
         return DefWindowProc(wnd, message, wParam, lParam);
     }
 }
+
+
+
+
+
+
+
+
+//// Where do we compile.
+////#define PLATFORM_WIN32 1
+//
+//#include "main.hpp"
+//
+//namespace Diligent
+//{
+//
+//    SampleBase* CreateSample()
+//    {
+//        return new Tutorial01_HelloTriangle();
+//    }
+//
+//    // For this tutorial, we will use simple vertex shader
+//    // that creates a procedural triangle
+//
+//    // Diligent Engine can use HLSL source on all supported platforms.
+//    // It will convert HLSL to GLSL in OpenGL mode, while Vulkan backend will compile it directly to SPIRV.
+//
+//    static const char* VSSource = R"(
+//struct PSInput 
+//{ 
+//    float4 Pos   : SV_POSITION; 
+//    float3 Color : COLOR; 
+//};
+//
+//void main(in  uint    VertId : SV_VertexID,
+//          out PSInput PSIn) 
+//{
+//    float4 Pos[3];
+//    Pos[0] = float4(-0.5, -0.5, 0.0, 1.0);
+//    Pos[1] = float4( 0.0, +0.5, 0.0, 1.0);
+//    Pos[2] = float4(+0.5, -0.5, 0.0, 1.0);
+//
+//    float3 Col[3];
+//    Col[0] = float3(1.0, 0.0, 0.0); // red
+//    Col[1] = float3(0.0, 1.0, 0.0); // green
+//    Col[2] = float3(0.0, 0.0, 1.0); // blue
+//
+//    PSIn.Pos   = Pos[VertId];
+//    PSIn.Color = Col[VertId];
+//}
+//)";
+//
+//    // Pixel shader simply outputs interpolated vertex color
+//    static const char* PSSource = R"(
+//struct PSInput 
+//{ 
+//    float4 Pos   : SV_POSITION; 
+//    float3 Color : COLOR; 
+//};
+//
+//struct PSOutput
+//{ 
+//    float4 Color : SV_TARGET; 
+//};
+//
+//void main(in  PSInput  PSIn,
+//          out PSOutput PSOut)
+//{
+//    PSOut.Color = float4(PSIn.Color.rgb, 1.0);
+//}
+//)";
+//
+//
+//    void Tutorial01_HelloTriangle::Initialize(const SampleInitInfo& InitInfo)
+//    {
+//        SampleBase::Initialize(InitInfo);
+//
+//        // Pipeline state object encompasses configuration of all GPU stages
+//
+//        GraphicsPipelineStateCreateInfo PSOCreateInfo;
+//
+//        // Pipeline state name is used by the engine to report issues.
+//        // It is always a good idea to give objects descriptive names.
+//        PSOCreateInfo.PSODesc.Name = "Simple triangle PSO";
+//
+//        // This is a graphics pipeline
+//        PSOCreateInfo.PSODesc.PipelineType = PIPELINE_TYPE_GRAPHICS;
+//
+//        // clang-format off
+//        // This tutorial will render to a single render target
+//        PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+//        // Set render target format which is the format of the swap chain's color buffer
+//        PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = m_pSwapChain->GetDesc().ColorBufferFormat;
+//        // Use the depth buffer format from the swap chain
+//        PSOCreateInfo.GraphicsPipeline.DSVFormat = m_pSwapChain->GetDesc().DepthBufferFormat;
+//        // Primitive topology defines what kind of primitives will be rendered by this pipeline state
+//        PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+//        // No back face culling for this tutorial
+//        PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+//        // Disable depth testing
+//        PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = False;
+//        // clang-format on
+//
+//        ShaderCreateInfo ShaderCI;
+//        // Tell the system that the shader source code is in HLSL.
+//        // For OpenGL, the engine will convert this into GLSL under the hood.
+//        ShaderCI.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+//        // OpenGL backend requires emulated combined HLSL texture samplers (g_Texture + g_Texture_sampler combination)
+//        ShaderCI.Desc.UseCombinedTextureSamplers = true;
+//        // Create a vertex shader
+//        RefCntAutoPtr<IShader> pVS;
+//        {
+//            ShaderCI.Desc.ShaderType = SHADER_TYPE_VERTEX;
+//            ShaderCI.EntryPoint = "main";
+//            ShaderCI.Desc.Name = "Triangle vertex shader";
+//            ShaderCI.Source = VSSource;
+//            m_pDevice->CreateShader(ShaderCI, &pVS);
+//        }
+//
+//        // Create a pixel shader
+//        RefCntAutoPtr<IShader> pPS;
+//        {
+//            ShaderCI.Desc.ShaderType = SHADER_TYPE_PIXEL;
+//            ShaderCI.EntryPoint = "main";
+//            ShaderCI.Desc.Name = "Triangle pixel shader";
+//            ShaderCI.Source = PSSource;
+//            m_pDevice->CreateShader(ShaderCI, &pPS);
+//        }
+//
+//        // Finally, create the pipeline state
+//        PSOCreateInfo.pVS = pVS;
+//        PSOCreateInfo.pPS = pPS;
+//        m_pDevice->CreateGraphicsPipelineState(PSOCreateInfo, &m_pPSO);
+//    }
+//
+//    // Render a frame
+//    void Tutorial01_HelloTriangle::Render()
+//    {
+//        // Clear the back buffer
+//        const float ClearColor[] = { 0.350f, 0.350f, 0.350f, 1.0f };
+//        // Let the engine perform required state transitions
+//        auto* pRTV = m_pSwapChain->GetCurrentBackBufferRTV();
+//        auto* pDSV = m_pSwapChain->GetDepthBufferDSV();
+//        m_pImmediateContext->ClearRenderTarget(pRTV, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+//        m_pImmediateContext->ClearDepthStencil(pDSV, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+//
+//        // Set the pipeline state in the immediate context
+//        m_pImmediateContext->SetPipelineState(m_pPSO);
+//
+//        // Typically we should now call CommitShaderResources(), however shaders in this example don't
+//        // use any resources.
+//
+//        DrawAttribs drawAttrs;
+//        drawAttrs.NumVertices = 3; // We will render 3 vertices
+//        m_pImmediateContext->Draw(drawAttrs);
+//    }
+//
+//    void Tutorial01_HelloTriangle::Update(double CurrTime, double ElapsedTime)
+//    {
+//        SampleBase::Update(CurrTime, ElapsedTime);
+//    }
+//
+//} // namespace Diligent
