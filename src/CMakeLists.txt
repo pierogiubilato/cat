@@ -222,9 +222,9 @@ target_sources(catServer PRIVATE
 
 # SDL dependencies.
 # ------------------------------------------------------------------------------
-#message(STATUS "{CAT}--> [Server] including SDL3...")
-#target_include_directories(catServer PRIVATE CAT_SDL3_INCLUDE)
-#target_link_libraries(catServer PRIVATE CAT_SDL3_LIB)
+message(STATUS "{CAT}--> [Server] including SDL3...")
+target_include_directories(catServer PRIVATE ${CAT_SDL3_INCLUDE})
+target_link_libraries(catServer PRIVATE "${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB}")
 
 
 
