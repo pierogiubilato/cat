@@ -12,7 +12,6 @@ message(STATUS "{CAT}--> Building on: " ${CMAKE_SYSTEM})
 message(STATUS "{CAT}--> Building at: " ${PROJECT_SOURCE_DIR})
 
 
-
 # ----------------------------------------------------------------------------------------------------------------------
 # SYSTEM - Detect which system we are on.
 # ----------------------------------------------------------------------------------------------------------------------
@@ -188,7 +187,10 @@ endif()
 # ------------------------------------------------------------------------------
 message(STATUS "{CAT}--> -----------| Server |-----------")
 message(STATUS "{CAT}--> [Server] setting up core...")
-add_executable (catServer WIN32)
+
+# Add the server executable.
+#add_executable (catServer WIN32)
+add_executable (catServer)
 
 # Set proper c++ standard..
 if (CMAKE_VERSION VERSION_GREATER 3.12)
@@ -203,7 +205,7 @@ target_include_directories(catServer PRIVATE
 
 # Cat server own code.
 target_sources(catServer PRIVATE 
-	"${CMAKE_CURRENT_SOURCE_DIR}/server/main.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/server/srvMain.cpp"
 	
 	#mingw32
 
@@ -218,13 +220,13 @@ target_sources(catServer PRIVATE
 
 )
 
-
-
 # SDL dependencies.
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Server] including SDL3...")
+message(STATUS "{CAT}--> [Server] including SDL3: " ${CAT_SDL3_INCLUDE})
 target_include_directories(catServer PRIVATE ${CAT_SDL3_INCLUDE})
+message(STATUS "{CAT}--> [Server] target link SDL3: " ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB})
 target_link_libraries(catServer PRIVATE "${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB}")
+#target_link_libraries(catServer PRIVATE SDL3:SDL3-shared)
 
 
 
@@ -239,17 +241,12 @@ target_link_libraries(catServer PRIVATE "${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB}")
 #	"${PROJECT_SOURCE_DIR}/lib/SDL_net/include"
 #)
 
-# SDL_net is built within the target, so add its own files..
-#target_sources(catServer PRIVATE 
-#	"${PROJECT_SOURCE_DIR}/lib/SDL_net/src/SDL_net.c"
-#)
-
 # Diligent Core dependencies.
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Server] including Diligent Core...")
-target_compile_options(catServer PRIVATE -DUNICODE)
-target_include_directories(catServer PRIVATE ${CAT_DILIGENT_INCLUDE})
-target_link_libraries(catServer PRIVATE "${CAT_DILIGENT_LIB_DIR}/${CAT_DILIGENT_LIB}")
+#message(STATUS "{CAT}--> [Server] including Diligent Core...")
+#target_compile_options(catServer PRIVATE -DUNICODE)
+#target_include_directories(catServer PRIVATE ${CAT_DILIGENT_INCLUDE})
+#target_link_libraries(catServer PRIVATE "${CAT_DILIGENT_LIB_DIR}/${CAT_DILIGENT_LIB}")
 
 
 
