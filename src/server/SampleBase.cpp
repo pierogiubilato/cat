@@ -25,9 +25,6 @@
  *  of the possibility of such damages.
  */
 
- // Where do we compile.
-#define PLATFORM_WIN32 1
-
 #include "Platforms/interface/PlatformDefinitions.h"
 #include "SampleBase.hpp"
 #include "Primitives/interface/Errors.hpp"

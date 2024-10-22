@@ -12,6 +12,7 @@
 # Minimum CMake version.
 cmake_minimum_required (VERSION 3.8)
 
+
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
@@ -24,12 +25,13 @@ endif()
 # Project Name. This call sets the ${PROJECT_SOURCE_DIR} the one of this file.
 project (
 	"cat"
+    VERSION 0.1
 	DESCRIPTION "CMake example for Direct3D 11 Game (Win32)"
 	LANGUAGES CXX
 )
 
 # C standard.
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

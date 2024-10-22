@@ -4,13 +4,24 @@
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# SERVER - Overall settings.
+# CMAKE - Overall settings.
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Cmake minimum.
+cmake_minimum_required(VERSION 3.28)
+
+# Retrieve contents from GitHub.
+include(FetchContent)
+
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# APPLICATION - Overall settings.
 # ----------------------------------------------------------------------------------------------------------------------
 
 message(STATUS "{CAT}--> -------------| CAT |-------------")
 message(STATUS "{CAT}--> Building on: " ${CMAKE_SYSTEM})
 message(STATUS "{CAT}--> Building at: " ${PROJECT_SOURCE_DIR})
-
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -156,39 +167,106 @@ else()
 endif()
 
 
+
+# ----------------------------------------------------------------------------------------------------------------------
+# WINDOWS and GUI Libraries - Retrieves the libraries from GitHub repositories
+# ----------------------------------------------------------------------------------------------------------------------
+message(STATUS "{CAT}--> ------| System Libraries |------")
+
+# SFM and ImGui are built WITHIN the application.
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+
+
+# SFML and ImGui versions.
+set(SFML_VERSION 2.5.1)
+set(IMGUI_VERSION 1.87)
+
+# Retrieve latest SFML to build it within the application.
+message(STATUS "{CAT}--> [Server] fetching SFML from https://github.com/SFML/SFML.git") 
+FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.6.x
+    GIT_SHALLOW ON
+    EXCLUDE_FROM_ALL
+    SYSTEM
+)
+FetchContent_MakeAvailable(SFML)
+
+# Retrieve latest SFML-ImGui to build it within the application.
+message(STATUS "{CAT}--> [Server] fetching ImGui from https://github.com/ocornut/imgui.git")
+FetchContent_Declare(
+  ImGui
+  GIT_REPOSITORY https://github.com/ocornut/imgui.git
+  GIT_TAG        v1.89.9
+  GIT_SHALLOW ON
+  EXCLUDE_FROM_ALL
+  SYSTEM
+)
+FetchContent_MakeAvailable(imgui)
+FetchContent_GetProperties(ImGui SOURCE_DIR IMGUI_DIR)
+
+# Retrieve latest SFML-ImGui to build it within the application.
+message(STATUS "{CAT}--> [Server] fetching ImGui from https://github.com/SFML/imgui-sfml")
+set(IMGUI_SFML_FIND_SFML OFF)
+FetchContent_Declare(ImGui-SFML
+    GIT_REPOSITORY https://github.com/SFML/imgui-sfml
+    GIT_TAG 2.6.x
+    GIT_SHALLOW ON
+    EXCLUDE_FROM_ALL
+    SYSTEM)
+FetchContent_MakeAvailable(ImGui-SFML)
+
+# SFML building options.
+option(SFML_BUILD_AUDIO "Build audio" OFF)
+option(SFML_BUILD_NETWORK "Build network" ON)
+
+#if(WIN32)
+#    add_custom_command(
+#        TARGET main
+#        COMMENT "Copy OpenAL DLL"
+#        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:main>
+#        VERBATIM)
+#endif()
+
+
+
 # SDL3 - Pre-built binaries (build those you prefere in case, see how at 
-# https://github.com/libsdl-org/SDL
+# https://github.com/libsdl-org/SDL)
 # ------------------------------------------------------------------------------
 
 # Include headers.
-set(CAT_SDL3_INCLUDE "${PROJECT_SOURCE_DIR}/lib/SDL/include")
+#set(CAT_SDL3_INCLUDE "${PROJECT_SOURCE_DIR}/lib/SDL/include")
 
 # Link libraries.
-if(${BUILD_MODE} MATCHES "Debug")
-	message(STATUS "{CAT}--> [Server] linking to DEBUG SDL3 library")
-	set(CAT_SDL3_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/SDL/x64-debug")  
-	set(CAT_SDL3_LIB "SDL3.lib")
-	set(CAT_SDL3_DLL "SDL3.dll")
-elseif(${BUILD_MODE} MATCHES "Release")
-	message(STATUS "{CAT}--> [Server] linking to RELEASE SDL3 library")
-	set(CAT_SDL3_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/SDL/x64-release")  
-	set(CAT_SDL3_LIB "SDL3.lib")
-	set(CAT_SDL3_DLL "SDL3.dll")
-else()
-	message(FATAL_ERROR "{CAT}--> ERROR: no suitable SDL3 DLLs available for the current building mode")
-endif()
+#if(${BUILD_MODE} MATCHES "Debug")
+#	message(STATUS "{CAT}--> [Server] linking to DEBUG SDL3 library")
+#	set(CAT_SDL3_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/SDL/x64-debug")  
+#	set(CAT_SDL3_LIB "SDL3.lib")
+#	set(CAT_SDL3_DLL "SDL3.dll")
+#elseif(${BUILD_MODE} MATCHES "Release")
+#	message(STATUS "{CAT}--> [Server] linking to RELEASE SDL3 library")
+#	set(CAT_SDL3_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/SDL/x64-release")  
+#	set(CAT_SDL3_LIB "SDL3.lib")
+#	set(CAT_SDL3_DLL "SDL3.dll")
+#else()
+#	message(FATAL_ERROR "{CAT}--> ERROR: no suitable SDL3 DLLs available for the current building mode")
+#endif()
 
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# BUILDING - Application server executable target.
+# BUILDING - CAT Server executable target.
 # ----------------------------------------------------------------------------------------------------------------------
 
 # The main server target executable.
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> -----------| Server |-----------")
+message(STATUS "{CAT}--> -------| Building Server |-------")
 message(STATUS "{CAT}--> [Server] setting up core...")
-add_executable (catServer WIN32)
+
+# Add the server executable.
+add_executable (catServer)
 
 # Set proper c++ standard..
 if (CMAKE_VERSION VERSION_GREATER 3.12)
@@ -203,7 +281,7 @@ target_include_directories(catServer PRIVATE
 
 # Cat server own code.
 target_sources(catServer PRIVATE 
-	"${CMAKE_CURRENT_SOURCE_DIR}/server/main.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/server/srvMain.cpp"
 	
 	#mingw32
 
@@ -218,14 +296,45 @@ target_sources(catServer PRIVATE
 
 )
 
+# OOF dependencies (quick consolle library, headers only)
+# ------------------------------------------------------------------------------
+message(STATUS "{CAT}--> [Server] including OOF: ${PROJECT_SOURCE_DIR}/lib/oof")
+target_include_directories(
+	catServer PRIVATE 
+	"${PROJECT_SOURCE_DIR}/lib/oof"
+)
+
+
+# SFML dependencies (statically linked library)
+# ------------------------------------------------------------------------------
+message(STATUS "{CAT}--> [Server] target link SFML: " ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB})
+target_link_libraries (
+    catServer PRIVATE 
+    sfml-graphics 
+)
+
+# ImGui dependencies (statically linked library)
+# ------------------------------------------------------------------------------
+message(STATUS "{CAT}--> [Server] target link ImGui: " ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB})
+target_link_libraries (
+    catServer PRIVATE 
+    ImGui-SFML::ImGui-SFML
+)
 
 
 # SDL dependencies.
 # ------------------------------------------------------------------------------
-#message(STATUS "{CAT}--> [Server] including SDL3...")
-#target_include_directories(catServer PRIVATE CAT_SDL3_INCLUDE)
-#target_link_libraries(catServer PRIVATE CAT_SDL3_LIB)
-
+#message(STATUS "{CAT}--> [Server] including SDL3: " ${CAT_SDL3_INCLUDE})
+#target_include_directories(
+#	catServer PRIVATE 
+#	${CAT_SDL3_INCLUDE}
+#)
+#message(STATUS "{CAT}--> [Server] target link SDL3: " ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB})
+#target_link_libraries(
+#	catServer PRIVATE 
+#	"${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB}"
+#)
+#target_link_libraries(catServer PRIVATE SDL3:SDL3-shared)
 
 
 # SDL_net dependencies.
@@ -239,17 +348,22 @@ target_sources(catServer PRIVATE
 #	"${PROJECT_SOURCE_DIR}/lib/SDL_net/include"
 #)
 
-# SDL_net is built within the target, so add its own files..
+# SDL_net is built within the CAT application, so add it to the target.
 #target_sources(catServer PRIVATE 
 #	"${PROJECT_SOURCE_DIR}/lib/SDL_net/src/SDL_net.c"
 #)
 
+
+
+
+
+
 # Diligent Core dependencies.
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Server] including Diligent Core...")
-target_compile_options(catServer PRIVATE -DUNICODE)
-target_include_directories(catServer PRIVATE ${CAT_DILIGENT_INCLUDE})
-target_link_libraries(catServer PRIVATE "${CAT_DILIGENT_LIB_DIR}/${CAT_DILIGENT_LIB}")
+#message(STATUS "{CAT}--> [Server] including Diligent Core...")
+#target_compile_options(catServer PRIVATE -DUNICODE)
+#target_include_directories(catServer PRIVATE ${CAT_DILIGENT_INCLUDE})
+#target_link_libraries(catServer PRIVATE "${CAT_DILIGENT_LIB_DIR}/${CAT_DILIGENT_LIB}")
 
 
 
