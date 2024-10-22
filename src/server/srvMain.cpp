@@ -158,11 +158,8 @@ int appSplash(appCtx& app)
     /*! Show splash credits.
     */
     
-    // Quick OOF definitions.
-    //#define CCO_LBLUE oof::fg_color({0, 0, 255})
-
-
-    // CAT.
+  
+    // Title.
     std::cout << "\n\n";
     std::cout << "+" << std::string(42, '-') << "+\n";
     std::cout << "|" << std::string(42, ' ') << "|\n";
@@ -261,11 +258,15 @@ int appEvent(appCtx& app)
     while (app.window.pollEvent(event)) {
 
         // First, pass the event to the GUI.
+        // ---------------------------------
         ImGui::SFML::ProcessEvent(app.window, event);
+
 
         // Parse the managed events.
         // -------------------------
         
+
+
         // Resize.
         
         // Quit.
@@ -315,8 +316,7 @@ int srvClose(appCtx& app)
         connected clients.
     */
 
-
-
+    
     // Everything fine.
     return 0;
 }
@@ -335,9 +335,6 @@ int appClose(appCtx& app)
     // Close ImGui.
     ImGui::SFML::Shutdown();
 
-
     // Everything fine.
     return 0;
 }
-
-

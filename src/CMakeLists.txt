@@ -19,7 +19,8 @@ include(FetchContent)
 # APPLICATION - Overall settings.
 # ----------------------------------------------------------------------------------------------------------------------
 
-message(STATUS "{CAT}--> -------------| CAT |-------------")
+message(STATUS "")
+message(STATUS "{CAT}--> -------------------| CAT |-------------------")
 message(STATUS "{CAT}--> Building on: " ${CMAKE_SYSTEM})
 message(STATUS "{CAT}--> Building at: " ${PROJECT_SOURCE_DIR})
 
@@ -52,7 +53,8 @@ endif()
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Now check what is really available in the system.
-message(STATUS "{CAT}--> ---------| Graphic API |---------")
+message(STATUS "")
+message(STATUS "{CAT}--> ---------------| Graphic API |---------------")
 
 # Check for Vulkan
 find_package(Vulkan)
@@ -171,7 +173,8 @@ endif()
 # ----------------------------------------------------------------------------------------------------------------------
 # WINDOWS and GUI Libraries - Retrieves the libraries from GitHub repositories
 # ----------------------------------------------------------------------------------------------------------------------
-message(STATUS "{CAT}--> ------| System Libraries |------")
+message(STATUS "")
+message(STATUS "{CAT}--> -------------| System Libraries |------------")
 
 # SFM and ImGui are built WITHIN the application.
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -183,7 +186,7 @@ set(SFML_VERSION 2.5.1)
 set(IMGUI_VERSION 1.87)
 
 # Retrieve latest SFML to build it within the application.
-message(STATUS "{CAT}--> [Server] fetching SFML from https://github.com/SFML/SFML.git") 
+message(STATUS "{CAT}--> [Server/Client] fetching SFML from https://github.com/SFML/SFML.git") 
 FetchContent_Declare(
     SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
@@ -221,6 +224,23 @@ FetchContent_MakeAvailable(ImGui-SFML)
 # SFML building options.
 option(SFML_BUILD_AUDIO "Build audio" OFF)
 option(SFML_BUILD_NETWORK "Build network" ON)
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# TARGETS - each target makefile is defined within the target folder
+# ----------------------------------------------------------------------------------------------------------------------
+
+add_subdirectory(server)
+add_subdirectory(client)
+
+
+
+
+
+
+
+
+
 
 #if(WIN32)
 #    add_custom_command(
@@ -262,26 +282,26 @@ option(SFML_BUILD_NETWORK "Build network" ON)
 
 # The main server target executable.
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> -------| Building Server |-------")
-message(STATUS "{CAT}--> [Server] setting up core...")
+#message(STATUS "{CAT}--> -------| Building Server |-------")
+#message(STATUS "{CAT}--> [Server] setting up core...")
 
 # Add the server executable.
-add_executable (catServer)
+#add_executable (catServer)
 
 # Set proper c++ standard..
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-	set_property(TARGET catServer PROPERTY CXX_STANDARD 23)
-endif()
+#if (CMAKE_VERSION VERSION_GREATER 3.12)
+#	set_property(TARGET catServer PROPERTY CXX_STANDARD 23)
+#endif()
 
 # Add its own and common includes.
-target_include_directories(catServer PRIVATE 
-	"${CMAKE_CURRENT_SOURCE_DIR}/common/"
-	"${CMAKE_CURRENT_SOURCE_DIR}/server/"
-)
+#target_include_directories(catServer PRIVATE 
+#	"${CMAKE_CURRENT_SOURCE_DIR}/common/"
+#	"${CMAKE_CURRENT_SOURCE_DIR}/server/"
+#)
 
 # Cat server own code.
-target_sources(catServer PRIVATE 
-	"${CMAKE_CURRENT_SOURCE_DIR}/server/srvMain.cpp"
+#target_sources(catServer PRIVATE 
+#	"${CMAKE_CURRENT_SOURCE_DIR}/server/srvMain.cpp"
 	
 	#mingw32
 
@@ -292,34 +312,32 @@ target_sources(catServer PRIVATE
 	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui_draw.cpp"
 	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui_tables.cpp"
 	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui_widgets.cpp"
-
-
-)
+#)
 
 # OOF dependencies (quick consolle library, headers only)
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Server] including OOF: ${PROJECT_SOURCE_DIR}/lib/oof")
-target_include_directories(
-	catServer PRIVATE 
-	"${PROJECT_SOURCE_DIR}/lib/oof"
-)
+#message(STATUS "{CAT}--> [Server] including OOF: ${PROJECT_SOURCE_DIR}/lib/oof")
+#target_include_directories(
+#	catServer PRIVATE 
+#	"${PROJECT_SOURCE_DIR}/lib/oof"
+#)
 
 
 # SFML dependencies (statically linked library)
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Server] target link SFML: " ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB})
-target_link_libraries (
-    catServer PRIVATE 
-    sfml-graphics 
-)
+#message(STATUS "{CAT}--> [Server] target link SFML: " ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB})
+#target_link_libraries (
+#    catServer PRIVATE 
+#    sfml-graphics 
+#)
 
 # ImGui dependencies (statically linked library)
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Server] target link ImGui: " ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB})
-target_link_libraries (
-    catServer PRIVATE 
-    ImGui-SFML::ImGui-SFML
-)
+#message(STATUS "{CAT}--> [Server] target link ImGui: " ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB})
+#target_link_libraries (
+#    catServer PRIVATE 
+#    ImGui-SFML::ImGui-SFML
+#)
 
 
 # SDL dependencies.
@@ -401,21 +419,21 @@ target_link_libraries (
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Copy Diligent DLLs in the binary output folder.
-add_custom_command(
-        TARGET catServer POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-                ${CAT_DILIGENT_LIB_DIR}/${CAT_DILIGENT_DLL}
-                ${CMAKE_CURRENT_BINARY_DIR}/${CAT_DILIGENT_DLL}
-)
+#add_custom_command(
+#        TARGET catServer POST_BUILD
+#        COMMAND ${CMAKE_COMMAND} -E copy
+#                ${CAT_DILIGENT_LIB_DIR}/${CAT_DILIGENT_DLL}
+#                ${CMAKE_CURRENT_BINARY_DIR}/${CAT_DILIGENT_DLL}
+#)
 
 
 # Copy SDL3 DLLs in the binary output folder.
-add_custom_command(
-        TARGET catServer POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-                ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_DLL}
-                ${CMAKE_CURRENT_BINARY_DIR}/${CAT_SDL3_DLL}
-)
+#add_custom_command(
+#        TARGET catServer POST_BUILD
+#        COMMAND ${CMAKE_COMMAND} -E copy
+#                ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_DLL}
+#                ${CMAKE_CURRENT_BINARY_DIR}/${CAT_SDL3_DLL}
+#)
 
 
 
