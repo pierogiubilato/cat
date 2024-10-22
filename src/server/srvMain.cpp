@@ -1,109 +1,352 @@
+// Console library. Being a header only only, compiles it ONLY HERE ('OOF_IMPL').
+#define OOF_IMPL
+#include<oof.h>
+
+// SFML system/windowing library.
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
+// GUI interface.
 #include "imgui-SFML.h"
 #include "imgui.h"
 
-int main() {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "ImGui + SFML = <3");
-    window.setFramerateLimit(60);
-    ImGui::SFML::Init(window);
+// STL.
+#include <cmath>
+#include <iostream>
+#include <string>
 
+// Application.
+#include "srvGlobal.hpp"
+
+//______________________________________________________________________________
+class appCtx {
+    /* This structure contains all the running parameters of the application
+       and it is passed through the various steps of the (many) running 
+       processes.
+       Note that the class start the windows management system (SFML library)
+       through the constructor itself, to ensure more c++ object management
+       with respect to a pointer-based one.
+    */
+public:
+
+    // Application running status.
+    enum class runState : int { ongoing, success, failure };
+        
+    // General.
+    std::string winTitle = "CAT";
+    int winWidth = 1280;
+    int winHeight = 720;
+
+    // SFML window.
+    sf::RenderWindow window;
+    sf::Clock deltaClock;
+
+    // SFML Network.
+
+    // ImGUI User Interface
+
+    // Diligent Core Graphics APIs.
+    
+    // Running status.
+    runState state;
+
+    // Ctor.
+    appCtx() : state(runState::ongoing),
+               window(sf::RenderWindow(sf::VideoMode(winWidth, winHeight), winTitle))
+               {}
+    
+    // Dtor.
+    ~appCtx() {}
+};
+
+
+//______________________________________________________________________________
+// Main proprietary functions.
+int appInit(appCtx&);
+int srvInit(appCtx&);
+int appSplash(appCtx&);
+int appLoop(appCtx&);
+int srvListen(appCtx&);
+int appEvent(appCtx&);
+int appDraw(appCtx&);
+int srvClose(appCtx&);
+int appClose(appCtx&);
+
+//______________________________________________________________________________
+int main() {
+    
+    /* CAT Server entry point. The main entry point simply executes initialization
+       then hands over control to the 'srvLoop' main application loop.
+    */
+
+    // Set up the application context data structure. Doing that, actually 
+    // initializes the system/windows management as well through the class
+    // ctor, which creates a SFML window.
+    appCtx app;
+
+    // Init App.
+    appInit(app);
+
+    // Init Server.
+    srvInit(app);
+
+    // Splash.
+    appSplash(app);
+    
+    // STart the main loop.
+    appLoop(app);
+    
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
 
-    sf::Clock deltaClock;
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(event);
+    // Stop the server.
+    srvClose(app);
 
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
+    // Close the interfaces.
+    appClose(app);
+    
+    
+    // Everything fine.
+    return 0;
+}
 
-        ImGui::SFML::Update(window, deltaClock.restart());
 
-        ImGui::Begin("Hello, world!");
-        ImGui::Button("Look at this pretty button");
-        ImGui::End();
+//______________________________________________________________________________
+int appInit (appCtx& app)
+{
+    /*! Initialize the application, including the windows management,
+        event management, graphics API libraries, network libraries.
+    */
 
-        ImGui::ShowDemoWindow();
+    // Windows and event management.
+    
 
-        window.clear();
-        window.draw(shape);
-        ImGui::SFML::Render(window);
-        window.display();
+    // Frame rate limit, to avoid system overload when not necessary.
+    app.window.setFramerateLimit(60);
+    
+    // Init the GUI interface system (ImGui).
+    ImGui::SFML::Init(app.window);
+
+    // Graphics APIs management.
+
+    // Everything fine.
+    return 0;
+}
+
+
+//______________________________________________________________________________
+int srvInit(appCtx& app)
+{
+    /*! Initialize the server, and start listening.
+    */
+
+
+
+    // Splash info.
+    std::cout << "[ CAT ] " << CCO_LWHITE << "Server started" << CCO_RESET << "\n";
+
+    // Everything fine.
+    return 0;
+}
+
+
+//______________________________________________________________________________
+int appSplash(appCtx& app)
+{
+    /*! Show splash credits.
+    */
+    
+    // Quick OOF definitions.
+    //#define CCO_LBLUE oof::fg_color({0, 0, 255})
+
+
+    // CAT.
+    std::cout << "\n\n";
+    std::cout << "+" << std::string(42, '-') << "+\n";
+    std::cout << "|" << std::string(42, ' ') << "|\n";
+    std::cout 
+        << "|    "
+        << CCO_LAVIO << CCO_BOLD << "C" << CCO_RESET << "++ "
+        << CCO_LAVIO << CCO_BOLD << "A" << CCO_RESET << "cquisiiton & "
+        << CCO_LAVIO << CCO_BOLD << "A" << CCO_RESET << "nalysis "
+        << CCO_LAVIO << CCO_BOLD << "T" << CCO_RESET << "oolset"
+        "    |\n";
+    
+    // Copyright.
+    std::cout << "|" << std::string(42, ' ') << "|\n";
+    std::cout << "|" 
+        << "        (C)" 
+        << CCO_LWHITE << " Padova University " 
+        << CCO_RESET << "2024        " << "|\n";
+
+    // Closure.    
+    std::cout << "|" << std::string(42, ' ') << "|\n";
+    std::cout << "+" << std::string(42, '-') << "+\n";
+    
+    // Libraries.
+    std::cout << "\nLibraries\n";
+    std::cout << "Console..................: "
+        << CCO_LWHITE << "Off           " << CCO_RESET << "("
+        << CCO_ULINE << CCO_CYAN << "https://github.com/s9w/oof"
+        << CCO_RESET << ")\n";
+    std::cout << "System and network.......: "
+        << CCO_LWHITE << "SFML 2.6.1    " << CCO_RESET << "("
+        << CCO_ULINE << CCO_CYAN << "https://github.com/SFML"
+        << CCO_RESET << ")\n";
+    std::cout << "Graphics User Interface..: "
+        << CCO_LWHITE << "Dear ImGui    " << CCO_RESET << "("
+        << CCO_ULINE << CCO_CYAN << "https://github.com/ocornut/imgui"
+        << CCO_RESET << ")\n";
+    std::cout << "3D APIs abstraction......: "
+        << CCO_LWHITE << "Diligent Core " << CCO_RESET << "("
+        << CCO_ULINE << CCO_CYAN << "https://github.com/DiligentGraphics/DiligentCore"
+        << CCO_RESET << ")\n";
+        
+    // Everything fine.
+    return 0;
+}
+
+
+//______________________________________________________________________________
+int srvListen(appCtx& app)
+{
+    /*! Collect latest connection request, and parse new I/O data streams from 
+        clients arrived since the last check.
+    */
+
+
+    // Everything fine.
+    return 0;
+}
+
+
+//______________________________________________________________________________
+int appLoop(appCtx& app)
+{
+    /*! This is the main application loop, which handles events from the user,
+        calls from/to the clients, and display the outputs.
+    */
+
+    
+    // Main loop.
+    while (app.state == appCtx::runState::ongoing) {
+        
+        // Retrieve events from the user/system.
+        appEvent(app);
+        
+        // Listen the server connections.
+        srvListen(app);
+
+        // Draw interface and scene(s).
+        appDraw(app);
+        
     }
 
+    // Everything fine.
+    return 0;
+}
+
+//______________________________________________________________________________
+int appEvent(appCtx& app)
+{
+    /*! Retrieves and parse events from the user and the system
+    */
+
+    // Retrieve events from the user/system.
+    sf::Event event;
+    
+    // Retrieve all the queued events from the user/system.
+    while (app.window.pollEvent(event)) {
+
+        // First, pass the event to the GUI.
+        ImGui::SFML::ProcessEvent(app.window, event);
+
+        // Parse the managed events.
+        // -------------------------
+        
+        // Resize.
+        
+        // Quit.
+        if (event.type == sf::Event::Closed) {
+            app.state = appCtx::runState::success;
+        }
+    }
+
+    // Everything fine.
+    return 0;
+}
+
+
+//______________________________________________________________________________
+int appDraw(appCtx& app)
+{
+    /*! Draw the scene(s) and other interface 3Dworld elements.
+    */
+
+    // Update the GUI.
+    ImGui::SFML::Update(app.window, app.deltaClock.restart());
+
+    // ImGui cycle.
+    ImGui::Begin("Hello, world!");
+    ImGui::Button("Look at this pretty button");
+    ImGui::End();
+    
+    // ImGui demo.
+    ImGui::ShowDemoWindow();
+
+    // Scene drawing.
+
+    app.window.clear();
+    //app.window.draw(shape);
+    ImGui::SFML::Render(app.window);
+    app.window.display();
+
+    // Everything fine.
+    return 0;
+}
+
+
+//______________________________________________________________________________
+int srvClose(appCtx& app)
+{
+    /*! Stop the server from listening, and clear all the sockets to/from the 
+        connected clients.
+    */
+
+
+
+    // Everything fine.
+    return 0;
+}
+
+
+//______________________________________________________________________________
+int appClose(appCtx& app)
+{
+    /*! Stop the application, close the windows/event managers, shut down the
+        graphics APIs.
+    */
+
+    // CLose main SFML window.
+    app.window.close();
+
+    // Close ImGui.
     ImGui::SFML::Shutdown();
 
+
+    // Everything fine.
     return 0;
 }
 
 
 
+//
+//
+//
 
-////#define SDL_MAIN_USE_CALLBACKS 1
-//
-//// Console library. Being a header only only, compiles it ONLY HERE ('OOF_IMPL').
-//#define OOF_IMPL
-//#include<oof.h>
-//
-//// SDL windows/events management.
-//#include <SDL3/SDL.h>
-//#include <SDL3/SDL_main.h>
-//
-//// SDL Network.
-//#include <SDL3_net/SDL_net.h>
-//
-//// STL.
-//#include <cmath>
-//#include <iostream>
-//
-//// Application.
-//#include "srvGlobal.hpp"
-//
-//
-///* This structure contains all the running parameters of the application
-//   and it is passed through the various steps of the running process
-//*/
-//class appContext {
-//    
-//    // The class is more a container for fundamental application properties.
-//    public:
-//
-//    
-//    // Diligent Engine Graphics API.
-//    
-//    // SDL System Interface.
-//    SDL_Window* sdlWindow;
-//    SDL_Renderer* sdlRenderer;
-//    SDL_AppResult sdlQuit = SDL_APP_CONTINUE;
-//
-//    // SDL Network.
-//
-//
-//    // ImGUI User Interface
-//
-//
-//    // Special members.
-//    appContext() : sdlWindow(NULL), sdlRenderer(NULL), sdlQuit(SDL_APP_CONTINUE) {}
-//    ~appContext() {}
-//};
-//
-//// Main proprietary functions.
-//int appInit(appContext*);
-//int srvInit(appContext*);
-//int appSplash(appContext*);
-//int srvListen(appContext*);
-//int evnListen(appContext*);
-//int appLoop(appContext*);
-//int srvClose(appContext*);
-//int appClose(appContext*);
+
 //
 //// SDL functions
 //SDL_AppResult sdlInit(appContext*);
@@ -165,157 +408,6 @@ int main() {
 //}
 //
 //
-////______________________________________________________________________________
-//int appInit (appContext* app)
-//{
-//    /*! Initialize the application, including the windows management,
-//        event management, graphics API libraries, network libraries.
-//    */
-//
-//    // Windows and event management.
-//    sdlInit(app);
-//
-//    // Graphics APIs management.
-//
-//    // Everything fine.
-//    return 0;
-//}
-//
-//
-////______________________________________________________________________________
-//int srvInit(appContext* app)
-//{
-//    /*! Initialize the server, and start listening.
-//    */
-//
-//    // Initialize the SDL_net library.
-//    if (SDLNet_Init()) {
-//        app->sdlQuit = SDL_APP_CONTINUE;
-//    } else {
-//        return sdlFail(app);
-//        app->sdlQuit = SDL_APP_FAILURE;
-//    };
-//
-//    // Splash info.
-//    std::cout << "[ CAT ] " << CCO_LWHITE << "Server started" << CCO_RESET << "\n";
-//
-//    // Everything fine.
-//    return SDL_APP_CONTINUE;
-//}
-//
-//
-////______________________________________________________________________________
-//int appSplash(appContext* app)
-//{
-//    /*! Show splash credits.
-//    */
-//    
-//    // Quick OOF definitions.
-//    //#define CCO_LBLUE oof::fg_color({0, 0, 255})
-//
-//
-//    // CAT.
-//    std::cout << "\n\n";
-//    std::cout << "+" << std::string(42, '-') << "+\n";
-//    std::cout << "|" << std::string(42, ' ') << "|\n";
-//    std::cout 
-//        << "|    "
-//        << CCO_LAVIO << CCO_BOLD << "C" << CCO_RESET << "++ "
-//        << CCO_LAVIO << CCO_BOLD << "A" << CCO_RESET << "cquisiiton & "
-//        << CCO_LAVIO << CCO_BOLD << "A" << CCO_RESET << "nalysis "
-//        << CCO_LAVIO << CCO_BOLD << "T" << CCO_RESET << "oolset"
-//        "    |\n";
-//    
-//    // Copyright.
-//    std::cout << "|" << std::string(42, ' ') << "|\n";
-//    std::cout << "|" 
-//        << "        (C)" 
-//        << CCO_LWHITE << " Padova University " 
-//        << CCO_RESET << "2024        " << "|\n";
-//
-//    // Closure.    
-//    std::cout << "|" << std::string(42, ' ') << "|\n";
-//    std::cout << "+" << std::string(42, '-') << "+\n";
-//    
-//    // Libraries.
-//    std::cout << "\nLibraries\n";
-//    std::cout << "Console..................: "
-//        << CCO_LWHITE << "Off           " << CCO_RESET << "("
-//        << CCO_ULINE << CCO_CYAN << "https://github.com/s9w/oof"
-//        << CCO_RESET << ")\n";
-//    std::cout << "Windows management.......: "
-//        << CCO_LWHITE << "SDL 3.0       " << CCO_RESET << "("
-//        << CCO_ULINE << CCO_CYAN << "https://github.com/libsdl-org/SDL"
-//        << CCO_RESET << ")\n";
-//    std::cout << "Network sockets..........: "
-//        << CCO_LWHITE << "SDL_Net 3.0   " << CCO_RESET << "("
-//        << CCO_ULINE << CCO_CYAN << "https://github.com/libsdl-org/SDL_net"
-//        << CCO_RESET << ")\n";
-//    std::cout << "Graphics User Interface..: "
-//        << CCO_LWHITE << "Dear ImGui    " << CCO_RESET << "("
-//        << CCO_ULINE << CCO_CYAN << "https://github.com/ocornut/imgui"
-//        << CCO_RESET << ")\n";
-//    std::cout << "3D APIs abstraction......: "
-//        << CCO_LWHITE << "Diligent Core " << CCO_RESET << "("
-//        << CCO_ULINE << CCO_CYAN << "https://github.com/DiligentGraphics/DiligentCore"
-//        << CCO_RESET << ")\n";
-//        
-//    // Everything fine.
-//    return 0;
-//}
-//
-//
-////______________________________________________________________________________
-//int srvListen(appContext* app)
-//{
-//    /*! Collect latest connection request, and parse new I/O data streams from 
-//        clients arrived since the last check.
-//    */
-//
-//
-//    // Everything fine.
-//    return 0;
-//}
-//
-//
-////______________________________________________________________________________
-//int appLoop(appContext* app)
-//{
-//    /*! This is the main application loop, which handles events from the user,
-//        calls from/to the clients, and display the outputs.
-//    */
-//
-//
-//    // Everything fine.
-//    return 0;
-//}
-//
-//
-////______________________________________________________________________________
-//int srvClose(appContext* app)
-//{
-//    /*! Stop the server from listening, and clear all the sockets to/from the 
-//        connected clients.
-//    */
-//
-//
-//
-//    // Everything fine.
-//    return 0;
-//}
-//
-//
-////______________________________________________________________________________
-//int appClose(appContext* app)
-//{
-//    /*! Stop the application, close the windows/event managers, shut down the
-//        graphics APIs.
-//    */
-//
-//
-//    // Everything fine.
-//    return 0;
-//}
 //
 //
 //
