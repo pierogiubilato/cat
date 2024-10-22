@@ -14,14 +14,14 @@
 
 
 // Application units
-#include "../include/cmd.hpp"
+#include "cmd.hpp"
 
 // Standard library.
 #include <iostream>
 //#include <sstream>
 
 // Use standard namespace:
-using namespace std;
+//using namespace std;
 
 
 // #############################################################################
@@ -65,7 +65,7 @@ cmd::~cmd()
 void cmd::addArg(const std::string& name, const std::string& description, 
                  const bool& required)
 {
-	/**/
+	/* Add an argument to the recognized argument list. */
     _args[name] = { false, description, "", required};
 }
 
@@ -131,35 +131,37 @@ void cmd::printHelp() const
 
 
 //______________________________________________________________________________
-void cmd::parse(int argc, char* argv[])
+int cmd::parse(int argc, char* argv[])
 {
     /* Perform command line arguments parsing */
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
 
-        if (arg.substr(0, 2) == "--") {  // Long option
+        // Long option.
+        if (arg.substr(0, 2) == "--") {
             size_t equalPos = arg.find('=');
             std::string option = arg.substr(2, equalPos - 2);
             std::string value;
 
             if (equalPos != std::string::npos) {
                 value = arg.substr(equalPos + 1);
-            }
-            else if (_options[option].requiresValue && i + 1 < argc) {
+            } else if (_options[option].requiresValue && i + 1 < argc) {
                 value = argv[++i];
             }
 
             if (_options.find(option) != _options.end()) {
                 _options[option].present = true;
                 _options[option].value = value;
-            }
-            else {
+            
+            // Unknown option.
+            } else {
                 std::cerr << "Unknown option: " << option << std::endl;
                 printHelp();
-                exit(EXIT_FAILURE);
+                return -1;
             }
-        }
-        else {  // Argument
+        
+        // Argument.
+        } else {
             bool matched = false;
             for (auto& argPair : _args) {
                 if (!argPair.second.present) {
@@ -169,10 +171,12 @@ void cmd::parse(int argc, char* argv[])
                     break;
                 }
             }
+            
+            // Invalid argument.
             if (!matched) {
                 std::cerr << "Unexpected argument: " << arg << std::endl;
                 printHelp();
-                exit(EXIT_FAILURE);
+                return -1;
             }
         }
     }
@@ -182,7 +186,7 @@ void cmd::parse(int argc, char* argv[])
         if (argPair.second.required && !argPair.second.present) {
             std::cerr << "Missing required argument: " << argPair.first << std::endl;
             printHelp();
-            exit(EXIT_FAILURE);
+            return -1;
         }
     }
 
@@ -191,9 +195,12 @@ void cmd::parse(int argc, char* argv[])
         if (optPair.second.required && !optPair.second.present) {
             std::cerr << "Missing required option: " << optPair.first << std::endl;
             printHelp();
-            exit(EXIT_FAILURE);
+            return -1;
         }
     }
+
+    // Everything fine!
+    return 0;
 }
 
 // #############################################################################

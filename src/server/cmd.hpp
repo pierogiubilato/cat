@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.1"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"25 Jul 2024"
+// [cat]			"23 Oct 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -24,18 +24,10 @@
 #include <vector>
 #include <map>
 
-// Extra libraries
 
 
 
-
-//______________________________________________________________________________
-//! Logger utility with verbosity control.
-/*!	The log overloads the standard << operator to provide some very basic
-
-*/
-
-//______________________________________________________________________________
+//_____________________________________________________________________________
 
 
 // #############################################################################
@@ -62,7 +54,7 @@ class cmd
 		std::string getOptionValue(const std::string&, const std::string&) const; //!< Returns an option value.
 		std::string getArgumentValue(const std::string&) const; //!< Returns specific argument value.
 		void printHelp() const;							//!< Show short help.
-		void parse(int argc, char* argv[]);				//!< Parse the command line.
+		int parse(int argc, char* argv[]);				//!< Parse the command line.
 
 	protected:
 

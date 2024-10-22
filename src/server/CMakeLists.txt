@@ -28,7 +28,8 @@ target_include_directories(catServer PRIVATE
 
 # Cat server own code.
 target_sources(catServer PRIVATE 
-	"${CMAKE_CURRENT_SOURCE_DIR}/srvMain.cpp"
+	"srvMain.cpp"
+	"cmd.cpp"
 	
 	#mingw32
 
@@ -56,7 +57,8 @@ target_include_directories(
 message(STATUS "{CAT}--> [Server] target link SFML: " ${CAT_SDL3_LIB_DIR}/${CAT_SDL3_LIB})
 target_link_libraries (
     catServer PRIVATE 
-    sfml-graphics 
+    sfml-graphics
+	sfml-network
 )
 
 # ImGui dependencies (statically linked library)
