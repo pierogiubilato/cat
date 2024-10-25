@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"log.hpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"0.1"
+// [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"01 Aug 2024"
+// [cat]			"25 Aug 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -16,8 +16,8 @@
 #pragma once
 
 // Overloading check
-#ifndef log_HPP
-#define log_HPP
+#ifndef console_HPP
+#define console_HPP
 
 // Standard library
 #include <string>
@@ -26,14 +26,17 @@
 #include <ostream>
 #include <sstream>
 
+// Console library.
+//#include<oof.h>
+
 // Application units.
-#include "../include/caf.hpp"    // Console IO formatting.
+//#include "../include/caf.hpp"    // Console IO formatting.
 
 
 
 
 //______________________________________________________________________________
-//! Logger utility with verbosity control.
+//! Log utility with verbosity control.
 /*!	The log overloads the standard << operator to provide some very basic
 
 */
@@ -46,57 +49,56 @@ namespace cat {
 
 
 //______________________________________________________________________________
-class log
+class console
 {
 
 	public:
 
 		// Message severity threshold.
-		enum severity {
-			V_CRITICAL = 0,
-			V_ERROR = 1,
-			V_WARNING = 2,
-			V_FLOW = 3,
-			V_MESSAGE = 4,
-			V_INFO = 5,
-			V_DEBUG = 6,
-			V_ALL = 99
+		enum class verb : int {
+			critical = 0,
+			error = 1,
+			warning = 2,
+			section = 3,
+			message = 4,
+			info = 5,
+			debug = 6,
+			all = 99
 		};
 		
 		// Log base width.
-		enum widht {
-			L_SMALL = 80,
-			L_DEFAULT = 120,
-			L_WIDE = 160,
+		enum class width : int {
+			small = 80,
+			normal = 120,
+			wide = 160,
 		};
 
 		// Special members.
-		log(const severity& = V_INFO, const widht& = L_DEFAULT);	//!< Verbosity ctor.
-		~log();					//!< Dtor.
+		console(const severity& = severity::message, const width& = width::normal);	//!< Verbosity ctor.
+		~console();					//!< Dtor.
 
 		// Friend stream operators.
 		//friend std::ostream& operator<<(std::ostream&, const log&);
 		//friend std::ostream& operator<<(const std::string&, const level&);
 
 		// Methods - support.
-		void verb(const severity&);		
-		severity verb() const;					
-		bool isShow(const severity&) const;
-		void print(const std::ostream&, const severity&) const;
-
+		void verbSet(const verb&);		
+		verb verbGet() const;					
+		bool seen(const verb&) const;
+		void print(const std::ostream&, const verb&) const;
 
 		// Methods - logging.
-		void critical(const std::string&, const severity & = V_CRITICAL);
-		void warning(const std::string&, const severity & = V_WARNING);
-		void error(const std::string&, const severity & = V_ERROR);
-		void section(const std::string&, const severity& = V_FLOW);
-		void message(const std::string&, const severity& = V_MESSAGE);
-		void info(const std::string&, const severity & = V_INFO);
-		void debug(const std::string&, const severity & = V_DEBUG);
-		
+		void critical(const std::string&, const verb& = verb::critical);
+		//void error(const std::string&, const verb& = verb::error);
+		//void warning(const std::string&, const verb& = verb::warning);
+		//void section(const std::string&, const verb& = verb::section);
+		//void message(const std::string&, const verb& = verb::message);
+		//void info(const std::string&, const verb& = verb::info);
+		//void debug(const std::string&, const verb& = verb::debug);
+		//void all(const std::string&, const verb& = verb::all);
 
 		// Add/print methods.
-		void print(const std::stringstream&, const severity& = V_INFO) const;
+		void print(const std::stringstream&, const verb& = verb::info) const;
 		//std::ostream& add(const level&, std::ostream&) const;			
 
 		//std::string print(const level&, const std::string&) const;   	
@@ -111,32 +113,29 @@ class log
 	private:
 
 		// Message indent level.
-		enum indent {
-			I_MAIN = 0,
-			I_SECTION = 3,
-			I_L2 = 6,
-			I_L3 = 9,
-			I_L4 = 12,
-			I_l5 = 15
+		enum class indent : int {
+			main = 0,
+			section = 3,
+			l2 = 6,
+			l3 = 9,
+			l4 = 12,
+			l5 = 15
 		};
 
-		// Format class.
-		cat::caf _caf;
-		
 		// Current verbosity level.
-		severity _verb;
+		verb _verb;
 
 		// Current log width.
-		widht _widht;
+		width _width;
 
 		// Current indent level.
 		indent _indent;
 
 		// The local temporary log storage deque.
-		std::deque<std::stringstream> _log;
-		std::deque<int> _lvl;
+		//std::deque<std::stringstream> _log;
+		//std::deque<int> _lvl;
 
-		// Formatting suppor routines.
+		// Formatting support routines.
 		std::string atab(const int& = 0) const;
 
 

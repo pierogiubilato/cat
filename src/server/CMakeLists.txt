@@ -23,13 +23,13 @@ endif()
 # Add its own and common includes.
 target_include_directories(catServer PRIVATE 
 	"${CMAKE_CURRENT_SOURCE_DIR}"
-	cmake_path(GET ${CMAKE_CURRENT_SOURCE_DIR} PARENT_DIR) "/common/"
+	"../common"
 )
 
 # Cat server own code.
 target_sources(catServer PRIVATE 
-	"srvMain.cpp"
-	"cmd.cpp"
+	"main.cpp"
+	"../common/cmd.cpp"
 	
 	#mingw32
 

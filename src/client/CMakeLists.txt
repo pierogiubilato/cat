@@ -33,13 +33,15 @@ endif()
 # Add its own and common includes.
 target_include_directories(catClient PRIVATE 
 	"${CMAKE_CURRENT_SOURCE_DIR}"
-	cmake_path(GET ${CMAKE_CURRENT_SOURCE_DIR} PARENT_DIR) "/common"
+	"../common"
 )
 
 # Cat client own code.
 target_sources(catClient PRIVATE 
-	"${CMAKE_CURRENT_SOURCE_DIR}/catClient.cpp"
+	"catClient.cpp"
+	"../common/cmd.cpp"
 )
+
 
 # OOF dependencies (quick consolle library, headers only)
 # ------------------------------------------------------------------------------
@@ -55,6 +57,7 @@ target_include_directories(
 message(STATUS "{CAT}--> [Client] target link SFML network: ${SFML}")
 target_link_libraries (
     catClient PRIVATE 
+	sfml-graphics
     sfml-network 
 )
 

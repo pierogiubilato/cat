@@ -1,26 +1,27 @@
 ﻿//------------------------------------------------------------------------------
-// CAT - C++ Analysis Template - Logger stream utility					      --
+// CAT - C++ Analysis Template - Console utility					          --
 // (C) Piero Giubilato 2011-2024, INFN PD									  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-// [File name]		"log.cpp"
+// [File name]		"console.cpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"0.1"
+// [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]	        "31 Jul 2024"
+// [Date]	        "25 Oct 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
 
+// Console library. Being a header only only, compiles it ONLY HERE ('OOF_IMPL').
+#define OOF_IMPL
+#include<oof.h>
+
 // Application units
-#include "../include/log.hpp"
+#include "console.hpp"
 
 // Standard library.
 #include <sstream>
-
-// Use standard namespace:
-using namespace std;
 
 
 // #############################################################################
@@ -31,17 +32,17 @@ namespace cat {
 // *****************************************************************************
 
 //______________________________________________________________________________
-log::log(const log::severity& v, const log::widht& w) : _caf()
+log::log(const log::severity& v, const log::width& w) 
 {
-    /*! Vebosity ctor. Start th elog with given 'v' verbosity.
+    /*! Verbosity ctor. Start the log with given 'v' verbosity and 'w' width.
      */
 
     // Appearance.
     _verb = v;
     _widht = w;
-    _indent = I_MAIN;
+    _indent = l;
 
-    //Data.
+    // Data.
     _log.clear();
     _lvl.clear();
 }
@@ -114,7 +115,7 @@ bool log::isShow(const log::severity& sv) const
 
 
 //______________________________________________________________________________
-/*! Set consolle indent.
+/*! Set console indent.
 */
 std::string log::atab(const int& tab) const
 {
@@ -145,7 +146,7 @@ void log::critical(const string& st, const severity& sv)
     // Add a message to the log.
     _log.push_back(stringstream(""));
     _log.back() << atab(_indent);
-    _log.back() << _caf.fcol(_caf.BMAGENTA) << st << _caf.rst();
+    _log.back() << CAT_CO_LPURPLE << st << CAT_CO_RESET;
     _log.back() << "\n";
 
     // Print in case.
