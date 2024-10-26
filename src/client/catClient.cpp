@@ -36,7 +36,7 @@ int cmd(cat::context&, int argc, char* argv[]);
 //______________________________________________________________________________
 int main(int argc, char* argv[])
 {
-   
+
     std::cout << "CAT client\n";
 
     // Application context.
@@ -44,19 +44,28 @@ int main(int argc, char* argv[])
 
     // Various debug.
     std::cout << cat::cl::warning() << "test console" << cat::cl::reset() << "\n";
-    
-    // Get verbosity.
-    std::cout << "Verbosity set to: " 
-        << cat::cl::message() 
-        << ctx.cmd.getOptionValue("v", "message") 
-        << cat::cl::reset() << "\n";
-        
-    
+
     // Parse command line.
     cmd(ctx, argc, argv);
     sf::IpAddress srvAddress(ctx.cmd.getOptionValue("address", "localhost"));
     unsigned short srvPort(std::stoi(ctx.cmd.getOptionValue("port", "2000")));
-    
+
+    // Get verbosity.
+    std::cout << "Verbosity flag set to: "
+        << cat::cl::message()
+        << ctx.cmd.getOptionValue("v", "message")
+        << cat::cl::reset() << "\n";
+
+    // Set verbosity.
+    ctx.cl.verb(ctx.cmd.getOptionValue("v", "message"));
+
+    // Get verbosity.
+    std::cout << "Verbosity level in class se to: "
+        << cat::cl::message()
+        << ctx.cl.verb()
+        << cat::cl::reset() << "\n";
+
+    // Connecting to the server.    
     std::cout << "Trying to connect to the host address " << srvAddress << "\n";
     std::cout << "Trying to connect to the server on port " << srvPort << "\n";
         

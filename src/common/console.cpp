@@ -17,15 +17,38 @@
 #define OOF_IMPL
 //#include<oof.h>
 
-// Application units
+// Application units. Compiles the console ONLY HERE ('CAT_CONSOLE_IMPL').
+//#define CAT_CONSOLE_IMPL
 #include "console.hpp"
 
+
+// Build ONLY in the translation unit where CAT_CONSOLE_IMPL is defined.
+//#ifdef CAT_CONSOLE_IMPL
+
+// Overload operators for cat::cl::verbosity enum class.
+std::ostream& operator<<(std::ostream& os, const cat::cl::verbosity& v) {
+	std::string str;
+	switch (v) {
+	case cat::cl::verbosity::critical:	str = "critical"; break;
+	case cat::cl::verbosity::error:		str = "error"; break;
+	case cat::cl::verbosity::warning:	str = "warning"; break;
+	case cat::cl::verbosity::message:	str = "message"; break;
+	case cat::cl::verbosity::info:		str = "info"; break;
+	case cat::cl::verbosity::debug:		str = "debug"; break;
+	case cat::cl::verbosity::all:		str = "all"; break;
+	default: str = "unknown";
+	}
+	return os << str;
+}
+//#endif
+
+
 // Standard library.
-#include <sstream>
+//#include <sstream>
 
 
 // #############################################################################
-namespace cat {
+//namespace cat {
 
 // *****************************************************************************
 // **                            Special members                              **
@@ -290,7 +313,7 @@ std::ostream& operator<<(std::ostream& o, const log::level& l)
 //*/
 //
 // #############################################################################
-} // Closing namespace 'cat'
+//} // Closing namespace 'cat'
 
   
 //______________________________________________________________________________

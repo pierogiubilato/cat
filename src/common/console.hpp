@@ -97,7 +97,15 @@ namespace cat {
 	// #########################################################################
 	} // Enf of "cl" namespace.
 
+// #############################################################################
+} // Enf of "cat" namespace.
 
+
+// Declare overloaded ostream operator << for 'cat::cl::verbosity' enum class.
+std::ostream& operator<<(std::ostream& os, const cat::cl::verbosity& v);
+
+// #############################################################################
+namespace cat {
 
 //______________________________________________________________________________
 class console
@@ -126,11 +134,39 @@ class console
 
 		//! Set the verbosity level.
 		///
-		/// \brief Set the verbosity level.
+		/// \brief Set the verbosity level, from a 'cat::cl::verbosity::' enum.
 		///	\param v the verbosity level.
 		///	\return nothing.
 		bool verb(const cl::verbosity& v) { _verbosity = v; }
-				
+		
+
+		//! Set the verbosity level.
+		///
+		/// \brief Set the verbosity level, interpreting a string. If the string
+		///		does not match any predefined token, set the verbosity to the default
+		///		'cat::cl::verbosity::message' level.
+		///	\param str is the string defining the verbosity level. It can be one
+		///		of the recognized tokens: {"critical", "error", "warning", "message", 
+		///		"info", "debug", "all"}.
+		///	\return nothing.
+		void verb(const std::string& str) {
+			if (str == "critical")		_verbosity = cl::verbosity::critical;
+			else if (str== "error")		_verbosity = cl::verbosity::error;
+			else if (str== "warning")	_verbosity = cl::verbosity::warning;
+			else if (str == "message")	_verbosity = cl::verbosity::message;
+			else if (str == "info")		_verbosity = cl::verbosity::info;
+			else if (str == "default")	_verbosity = cl::verbosity::debug;
+			else if (str == "all")		_verbosity = cl::verbosity::all;
+			else _verbosity = cl::verbosity::message;
+		}
+
+		//! Get the verbosity level.
+		///
+		/// \brief Returns the verbosity level.
+		///	\param none.
+		///	\return the current verbosity level.
+		cl::verbosity verb() const { return _verbosity; }
+
 		//! Verify wether a verbosity level is met or not.
 		///
 		/// \brief Check whether the provided verbosity level is currently met
@@ -153,7 +189,7 @@ class console
 	private:
 
 		// Current verbosity level.
-		cat::cl::verbosity _verbosity;
+		cl::verbosity _verbosity;
 
 };
 
