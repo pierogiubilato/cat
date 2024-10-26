@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"23 Oct 2024"
+// [cat]			"26 Oct 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -31,9 +31,10 @@
 #include <string>
 
 // Application.
-#include "global.hpp"
+#include "console.hpp"
+//#include "global.hpp"
+
 #include "context.hpp"
-#include "log.hpp"
 #include "cmd.hpp"
 #include "socket.hpp"
 
@@ -154,8 +155,8 @@ int srvInit(cat::context& ctx)
     if (ctx.server.listen(port) != sf::Socket::Done) {
         
         // Report error.
-        std::cout << CAT_CO_ERROR << "Error"
-            << CAT_CO_RESET << ": failed to start the server\n";
+        std::cout << cat::cl::error() << "Error"
+            << cat::cl::reset() << ": failed to start the server\n";
         return -1;
     }
      
@@ -164,9 +165,9 @@ int srvInit(cat::context& ctx)
 
     // Connection info.
     std::cout << "Server started. " 
-        << CAT_CO_INFO << "Listening on port : "
-        << CAT_CO_IMPORTANT << ctx.server.getLocalPort()
-        << CAT_CO_RESET << "\n";
+        << cat::cl::info() << "Listening on port : "
+        << cat::cl::message() << ctx.server.getLocalPort()
+        << cat::cl::reset() << "\n";
     
     // Everything fine.
     return 0;
@@ -186,18 +187,18 @@ int appSplash(cat::context& ctx)
     std::cout << "|" << std::string(42, ' ') << "|\n";
     std::cout 
         << "|    "
-        << CAT_CO_LAVIO << CAT_CO_BOLD << "C" << CAT_CO_RESET << "++ "
-        << CAT_CO_LAVIO << CAT_CO_BOLD << "A" << CAT_CO_RESET << "cquisiiton & "
-        << CAT_CO_LAVIO << CAT_CO_BOLD << "A" << CAT_CO_RESET << "nalysis "
-        << CAT_CO_LAVIO << CAT_CO_BOLD << "T" << CAT_CO_RESET << "oolset"
+        << cat::cl::lavio() << cat::cl::bold() << "C" << cat::cl::reset() << "++ "
+        << cat::cl::lavio() << cat::cl::bold() << "A" << cat::cl::reset() << "cquisiiton & "
+        << cat::cl::lavio() << cat::cl::bold() << "A" << cat::cl::reset() << "nalysis "
+        << cat::cl::lavio() << cat::cl::bold() << "T" << cat::cl::reset() << "oolset"
         "    |\n";
     
     // Copyright.
     std::cout << "|" << std::string(42, ' ') << "|\n";
     std::cout << "|" 
         << "        (C)" 
-        << CAT_CO_LWHITE << " Padova University "
-        << CAT_CO_RESET << "2024        " << "|\n";
+        << cat::cl::lwhite() << " Padova University "
+        << cat::cl::reset() << "2024        " << "|\n";
 
     // Closure.    
     std::cout << "|" << std::string(42, ' ') << "|\n";
@@ -206,21 +207,21 @@ int appSplash(cat::context& ctx)
     // Libraries.
     std::cout << "\nLibraries\n";
     std::cout << "Console..................: "
-        << CAT_CO_LWHITE << "Off           " << CAT_CO_RESET << "("
-        << CAT_CO_ULINE << CAT_CO_LAVIO << "https://github.com/s9w/oof"
-        << CAT_CO_RESET << ")\n";
+        << cat::cl::lwhite() << "Off           " << cat::cl::reset() << "("
+        << cat::cl::link() << "https://github.com/s9w/oof"
+        << cat::cl::reset() << ")\n";
     std::cout << "System and network.......: "
-        << CAT_CO_LWHITE << "SFML 2.6.1    " << CAT_CO_RESET << "("
-        << CAT_CO_ULINE << CAT_CO_LAVIO << "https://github.com/SFML"
-        << CAT_CO_RESET << ")\n";
+        << cat::cl::lwhite() << "SFML 2.6.1    " << cat::cl::reset() << "("
+        << cat::cl::link() << "https://github.com/SFML"
+        << cat::cl::reset() << ")\n";
     std::cout << "Graphics User Interface..: "
-        << CAT_CO_LWHITE << "Dear ImGui    " << CAT_CO_RESET << "("
-        << CAT_CO_ULINE << CAT_CO_LAVIO << "https://github.com/ocornut/imgui"
-        << CAT_CO_RESET << ")\n";
+        << cat::cl::lwhite() << "Dear ImGui    " << cat::cl::reset() << "("
+        << cat::cl::link() << "https://github.com/ocornut/imgui"
+        << cat::cl::reset() << ")\n";
     std::cout << "3D APIs abstraction......: "
-        << CAT_CO_LWHITE << "Diligent Core " << CAT_CO_RESET << "("
-        << CAT_CO_ULINE << CAT_CO_LAVIO << "https://github.com/DiligentGraphics/DiligentCore"
-        << CAT_CO_RESET << ")\n";
+        << cat::cl::lwhite() << "Diligent Core " << cat::cl::reset() << "("
+        << cat::cl::link() << "https://github.com/DiligentGraphics/DiligentCore"
+        << cat::cl::reset() << ")\n";
         
     // Spacing
     std::cout << std::endl;

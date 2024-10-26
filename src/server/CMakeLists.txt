@@ -9,7 +9,7 @@
 # The main server target executable.
 # ------------------------------------------------------------------------------
 message(STATUS "")
-message(STATUS "{CAT}--> -------------| Building Server |-------------")
+message(STATUS "{CAT}--> -------------| Setting Server |--------------")
 message(STATUS "{CAT}--> [Server] setting up core...")
 
 # Add the server executable.
@@ -30,17 +30,8 @@ target_include_directories(catServer PRIVATE
 target_sources(catServer PRIVATE 
 	"main.cpp"
 	"../common/cmd.cpp"
+	"../common/console.cpp"
 	
-	#mingw32
-
-	#"${CMAKE_CURRENT_SOURCE_DIR}/server/SampleBase.cpp"
-	
-	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/Imgui/src/ImGuiUtils.cpp"
-	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui.cpp"
-	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui_draw.cpp"
-	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui_tables.cpp"
-	#"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools/ThirdParty/Imgui/imgui_widgets.cpp"
-
 
 )
 

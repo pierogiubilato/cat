@@ -1,9 +1,4 @@
 
-// Console library. Being a header only only, compiles it ONLY HERE ('OOF_IMPL').
-#define OOF_IMPL
-#include "oof.h"
-
-
 // SFML system/windowing library.
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -19,6 +14,7 @@
 // Application.
 #include "socket.hpp"
 #include "cmd.hpp"
+#include "console.hpp"
 
 
 //______________________________________________________________________________
@@ -29,6 +25,7 @@ namespace cat {
             unsigned short port;
             sf::IpAddress address;
             cat::cmd cmd;
+            cat::console cl;
     };
 }
 
@@ -45,6 +42,16 @@ int main(int argc, char* argv[])
     // Application context.
     cat::context ctx;
 
+    // Various debug.
+    std::cout << cat::cl::warning() << "test console" << cat::cl::reset() << "\n";
+    
+    // Get verbosity.
+    std::cout << "Verbosity set to: " 
+        << cat::cl::message() 
+        << ctx.cmd.getOptionValue("v", "message") 
+        << cat::cl::reset() << "\n";
+        
+    
     // Parse command line.
     cmd(ctx, argc, argv);
     sf::IpAddress srvAddress(ctx.cmd.getOptionValue("address", "localhost"));
@@ -91,7 +98,7 @@ int cmd(cat::context& ctx, int argc, char* argv[])
     // Set the options.
     ctx.cmd.addOpt("address", "set the server address [localhost]", false, true);
     ctx.cmd.addOpt("port", "set the server port [2000]", false, true);
-    ctx.cmd.addOpt("v", "verbosity level", false, false);
+    ctx.cmd.addOpt("v", "verbosity level [critical, error, warning, message, info, debug, all]", false, true);
 
     // Parse the command line. Return 0 if everything ok, -1 for unknown/wrong
     // options or arguments.

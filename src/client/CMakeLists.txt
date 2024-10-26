@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION 3.28)
 # The main server target executable.
 # ------------------------------------------------------------------------------
 message(STATUS "")
-message(STATUS "{CAT}--> -------------| Building Client |-------------")
+message(STATUS "{CAT}--> -------------| Setting Client |--------------")
 message(STATUS "{CAT}--> [CLient] setting up core...")
 
 # Add the server executable.
@@ -40,6 +40,7 @@ target_include_directories(catClient PRIVATE
 target_sources(catClient PRIVATE 
 	"catClient.cpp"
 	"../common/cmd.cpp"
+	"../common/console.cpp"
 )
 
 
