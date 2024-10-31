@@ -1,5 +1,5 @@
 ﻿# ======================================================================================================================
-# == CAT project - CLIENT library and example
+# == CAT project - CLIENT library
 # ======================================================================================================================
 
 
@@ -23,7 +23,7 @@ message(STATUS "{CAT}--> -------------| Setting Client |--------------")
 message(STATUS "{CAT}--> [CLient] setting up core...")
 
 # Add the server executable.
-add_executable (catClient)
+add_library (catClient)
 
 # Set proper c++ standard..
 if (CMAKE_VERSION VERSION_GREATER 3.12)
@@ -33,12 +33,12 @@ endif()
 # Add its own and common includes.
 target_include_directories(catClient PRIVATE 
 	"${CMAKE_CURRENT_SOURCE_DIR}"
-	"../common"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../common"
 )
 
 # Cat client own code.
 target_sources(catClient PRIVATE 
-	"catClient.cpp"
+	"client.cpp"
 	"../common/cmd.cpp"
 	"../common/console.cpp"
 )
@@ -63,3 +63,28 @@ target_link_libraries (
 )
 
 
+
+# ----------------------------------------------------------------------------------------------------------------------
+# PREPARING - CAT Client headers.
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Move the relevant headers to the include folder
+# ------------------------------------------------------------------------------
+
+#message(STATUS "{CAT}--> [CLient] library written to ${CMAKE_CURRENT_BINARY_DIR}")
+#
+#add_custom_command (
+#	TARGET catClient POST_BUILD
+#	COMMAND ${CMAKE_COMMAND} -E copy 
+#    
+#	# Headers.
+#	"${CMAKE_CURRENT_SOURCE_DIR}/client.hpp"
+#	"${CMAKE_CURRENT_SOURCE_DIR}/../common/console.hpp"
+#	"${CMAKE_CURRENT_SOURCE_DIR}/../common/cmd.hpp"
+#	
+#	# Library.
+#	"${CMAKE_CURRENT_BINARY_DIR}/catClient.lib"
+#	
+#	# Target dir.
+#	"${CAT_INCLUDE_DIR}/cat/"
+#)

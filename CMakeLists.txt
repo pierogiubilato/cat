@@ -26,7 +26,7 @@ endif()
 project (
 	"cat"
     VERSION 0.1
-	DESCRIPTION "CMake example for Direct3D 11 Game (Win32)"
+	DESCRIPTION "C++ Acquisition and Analysis Toolset"
 	LANGUAGES CXX
 )
 
@@ -39,15 +39,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 SET(BUILD_MODE Debug)
 
 
-# Set the necessary libraries paths.
-# ------------------------------------------------------------------------------------------
-
-
-
-
-
 # As we link dinamically, makes the lib dll already in the source output directory.
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+
+# Set project folders.
+# ------------------------------------------------------------------------------------------
+set(CAT_EXAMPLES_DIR "${PROJECT_SOURCE_DIR}/examples")
+set(CAT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
+set(CAT_LIB_DIR "${PROJECT_SOURCE_DIR}/lib")
+set(CAT_RESOURCES_DIR "${PROJECT_SOURCE_DIR}/resources")
+set(CAT_SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 
 
 # The actual proprietary project code. Look at the "../src/CMakeLists.txt" file for details.
@@ -55,7 +57,6 @@ SET(BUILD_MODE Debug)
 add_subdirectory(src)
 
 
-# All the libraries the project depends on. Look at the "../lib/CMakeLists.txt" file for details.
+# Th examples which uses the client library
 # -----------------------------------------------------------------------------------------------
-#add_subdirectory(lib)
-
+add_subdirectory(examples)

@@ -13,8 +13,6 @@
 //______________________________________________________________________________
 
 
-#pragma once
-
 // Overloading check
 #ifndef console_HPP
 #define console_HPP

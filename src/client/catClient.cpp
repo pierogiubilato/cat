@@ -1,4 +1,9 @@
 
+// Console library. Being a header only only, compiles it ONLY HERE ('OOF_IMPL').
+#define OOF_IMPL
+#include "oof.h"
+
+
 // SFML system/windowing library.
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -14,7 +19,6 @@
 // Application.
 #include "socket.hpp"
 #include "cmd.hpp"
-#include "console.hpp"
 
 
 //______________________________________________________________________________
@@ -25,7 +29,6 @@ namespace cat {
             unsigned short port;
             sf::IpAddress address;
             cat::cmd cmd;
-            cat::console cl;
     };
 }
 
@@ -36,36 +39,17 @@ int cmd(cat::context&, int argc, char* argv[]);
 //______________________________________________________________________________
 int main(int argc, char* argv[])
 {
-
+   
     std::cout << "CAT client\n";
 
     // Application context.
     cat::context ctx;
 
-    // Various debug.
-    std::cout << cat::cl::warning() << "test console" << cat::cl::reset() << "\n";
-
     // Parse command line.
     cmd(ctx, argc, argv);
     sf::IpAddress srvAddress(ctx.cmd.getOptionValue("address", "localhost"));
     unsigned short srvPort(std::stoi(ctx.cmd.getOptionValue("port", "2000")));
-
-    // Get verbosity.
-    std::cout << "Verbosity flag set to: "
-        << cat::cl::message()
-        << ctx.cmd.getOptionValue("v", "message")
-        << cat::cl::reset() << "\n";
-
-    // Set verbosity.
-    ctx.cl.verb(ctx.cmd.getOptionValue("v", "message"));
-
-    // Get verbosity.
-    std::cout << "Verbosity level in class se to: "
-        << cat::cl::message()
-        << ctx.cl.verb()
-        << cat::cl::reset() << "\n";
-
-    // Connecting to the server.    
+    
     std::cout << "Trying to connect to the host address " << srvAddress << "\n";
     std::cout << "Trying to connect to the server on port " << srvPort << "\n";
         
@@ -107,7 +91,7 @@ int cmd(cat::context& ctx, int argc, char* argv[])
     // Set the options.
     ctx.cmd.addOpt("address", "set the server address [localhost]", false, true);
     ctx.cmd.addOpt("port", "set the server port [2000]", false, true);
-    ctx.cmd.addOpt("v", "verbosity level [critical, error, warning, message, info, debug, all]", false, true);
+    ctx.cmd.addOpt("v", "verbosity level", false, false);
 
     // Parse the command line. Return 0 if everything ok, -1 for unknown/wrong
     // options or arguments.
