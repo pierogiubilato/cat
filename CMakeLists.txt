@@ -27,6 +27,7 @@ project (
 	"cat"
     VERSION 0.1
 	DESCRIPTION "C++ Acquisition and Analysis Toolset"
+	HOMEPAGE_URL "https://github.com/pierogiubilato/cat"
 	LANGUAGES CXX
 )
 

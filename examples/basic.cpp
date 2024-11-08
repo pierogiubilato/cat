@@ -4,9 +4,9 @@
 
 
 // CAT headers.
-#include "../src/client/client.hpp"
-#include "../src/common/console.hpp"
-#include "../src/common/cmd.hpp"
+#include <client.hpp>
+#include "console.hpp"
+//#include "../src/common/cmd.hpp"
 
 
 ////______________________________________________________________________________

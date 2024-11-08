@@ -19,11 +19,11 @@ cmake_minimum_required(VERSION 3.28)
 # The main server target executable.
 # ------------------------------------------------------------------------------
 message(STATUS "")
-message(STATUS "{CAT}--> -------------| Setting Client |--------------")
-message(STATUS "{CAT}--> [CLient] setting up core...")
+message(STATUS "{CAT}--> -----------------| Client |-------------------")
+message(STATUS "{CAT}--> setting up core...")
 
 # Add the server executable.
-add_library (catClient)
+add_library (catClient STATIC)
 
 # Set proper c++ standard..
 if (CMAKE_VERSION VERSION_GREATER 3.12)
@@ -46,7 +46,7 @@ target_sources(catClient PRIVATE
 
 # OOF dependencies (quick consolle library, headers only)
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Client] including OOF: ${PROJECT_SOURCE_DIR}/lib/oof")
+message(STATUS "{CAT}--> including OOF: ${PROJECT_SOURCE_DIR}/lib/oof")
 target_include_directories(
 	catClient PRIVATE 
 	"${PROJECT_SOURCE_DIR}/lib/oof"
@@ -55,12 +55,14 @@ target_include_directories(
 
 # SFML dependencies (statically linked library, network only)
 # ------------------------------------------------------------------------------
-message(STATUS "{CAT}--> [Client] target link SFML network: ${SFML}")
+message(STATUS "{CAT}--> target link SFML network: ${SFML}")
 target_link_libraries (
     catClient PRIVATE 
-	sfml-graphics
     sfml-network 
 )
+
+
+
 
 
 

@@ -1,5 +1,5 @@
 ﻿# ======================================================================================================================
-# == CAT project - Examples cmake file
+# == CAT project - EXAMPLES executables
 # ======================================================================================================================
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -19,8 +19,8 @@ cmake_minimum_required(VERSION 3.28)
 # The main server target executable.
 # ------------------------------------------------------------------------------
 message(STATUS "")
-message(STATUS "{CAT}--> ------------| Setting Examples |-------------")
-message(STATUS "{CAT}--> [Examples] setting up core...")
+message(STATUS "{CAT}--> ----------------| Examples |-----------------")
+message(STATUS "{CAT}--> setting up core...")
 
 # Add the server executable.
 add_executable (basic)
@@ -31,7 +31,8 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 # Add its own and common includes.
-target_include_directories(basic PRIVATE 
+target_include_directories(
+	basic PRIVATE 
 #	"${CMAKE_CURRENT_SOURCE_DIR}"
 #	"../include"
 )
@@ -41,11 +42,13 @@ target_sources(basic PRIVATE
 	"basic.cpp"
 )
 
+
+
 # CAT client dependencies.
 # ------------------------------------------------------------------------------
 
 # Add include files.
-message(STATUS "{CAT}--> [Examples] including CAT client: ${PROJECT_SOURCE_DIR}/include/cat")
+message(STATUS "{CAT}--> including CAT client: ${PROJECT_SOURCE_DIR}/include/cat")
 target_include_directories(
 	basic PRIVATE 
 	"${CMAKE_CURRENT_SOURCE_DIR}"
@@ -53,11 +56,10 @@ target_include_directories(
 )
 
 
-
 # Link to the library
-message(STATUS "{CAT}--> [Examples] linking to CAT client library: ${CMAKE_CURRENT_SOURCE_DIR}/../include/cat/")
+message(STATUS "{CAT}--> linking to CAT client library: ${CMAKE_CURRENT_SOURCE_DIR}/../include/cat/")
 target_link_libraries(
-	basic 
+	basic PRIVATE
 	catClient
 	#"${CMAKE_CURRENT_SOURCE_DIR}/../include/cat/client.lib"
 )

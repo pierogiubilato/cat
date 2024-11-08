@@ -28,14 +28,15 @@
  
 // Application.
 #include "client.hpp"
-#include "console.hpp"
-#include "socket.hpp"
+//#include "console.hpp"
+//#include "socket.hpp"
 
 
 
 
 //______________________________________________________________________________
-cat::client::client() //: _command(new cmd)
+cat::client::client() : _srvPort(2000), 
+						_srvAddress("localhost")//: _command(new cmd)
 {
 	// Create PImpl classes.
 	//_command = new cat::cmd;

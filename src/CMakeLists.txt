@@ -32,18 +32,22 @@ message(STATUS "{CAT}--> Building at: " ${PROJECT_SOURCE_DIR})
 # Windows
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	set(CAT_SYS_WIN 1)
+	message(STATUS "{CAT}--> System is: Windows")
 
 # Linux
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(CAT_SYS_LINUX 1)
+	message(STATUS "{CAT}--> System is: Linux")
 
 # Mac OS
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(CAT_SYS_MACOS 1)
+	message(STATUS "{CAT}--> System is: Mac OS")
 
 # Not supported
 else()
 	set(CAT_SYS_UNSUPPORTED 1)
+	message(FATAL_ERROR "{CAT}--> System is: UNSOPPORTED")
 
 endif()
 
@@ -53,63 +57,63 @@ endif()
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Now check what is really available in the system.
-message(STATUS "")
-message(STATUS "{CAT}--> ---------------| Graphic API |---------------")
+#message(STATUS "")
+#message(STATUS "{CAT}--> ---------------| Graphic API |---------------")
 
 # Check for Vulkan
-find_package(Vulkan)
-if (VULKAN_FOUND)
-    message(STATUS "{CAT}--> Found Vulkan")
+#find_package(Vulkan)
+#if (VULKAN_FOUND)
+#    message(STATUS "{CAT}--> Found Vulkan")
 #    #target_include_directories(catServer PRIVATE ${Vulkan_INCLUDE_DIRS})
 #    #target_link_libraries (catServer PRIVATE Vulkan::Vulkan)
-	set(CAT_AVAILABLE_VULKAN)
-endif ()
+#	set(CAT_AVAILABLE_VULKAN)
+#endif ()
 
 # Check for OpenGL
-find_package(OpenGL)
-if (OPENGL_FOUND)
-    message(STATUS "{CAT}--> Found OpenGL")
-	#target_include_directories(catServer PRIVATE ${OpenGL_INCLUDE_DIRS})
-	#target_link_libraries (catServer PRIVATE OpenGL::OpenGL)
-	set(CAT_AVAILABLE_OPENGL)
-endif ()
+#find_package(OpenGL)
+#if (OPENGL_FOUND)
+#   message(STATUS "{CAT}--> Found OpenGL")
+#	#target_include_directories(catServer PRIVATE ${OpenGL_INCLUDE_DIRS})
+#	#target_link_libraries (catServer PRIVATE OpenGL::OpenGL)
+#	set(CAT_AVAILABLE_OPENGL)
+#endif ()
 
 # Check for DirectX12
-if(CAT_SYS_WIN)
-    message(STATUS "{CAT}--> On Windows, DirectX 12 available")
-	#set(CAT_AVAILABLE_D3D12)
-endif ()
+#if(CAT_SYS_WIN)
+#    message(STATUS "{CAT}--> On Windows, DirectX 12 available")
+#	#set(CAT_AVAILABLE_D3D12)
+#endif ()
 
 
 # Choose which library to use.
-if (CAT_SYS_WIN)
-	
-	# On Windows, use DirectX 12 by default.
-	set(CAT_SERVER_GAPI "D3D12")
+#if (CAT_SYS_WIN)
+#	
+#	# On Windows, use DirectX 12 by default.
+#	set(CAT_SERVER_GAPI "D3D12")
 
-elseif(CAT_SYS_LINUX)
-
-	# On Linux, prefer Vulkan if available, otherwise use "good old" OpenGL.
-	if(VULKAN_FOUND)
-		set(CAT_SERVER_GAPI "Vulkan")
-	elseif(OPENGL_FOUND)
-		set(CAT_SERVER_GAPI "OpenGL")
-	else()
-		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Graphics API available on Linux")
-	endif()
-
-elseif(CAT_SYS_MACOS)
-	
-	# On MAC, OpenGL is deprecated, so try Vulkan (through MeltedVK)
-	if(VULKAN_FOUND)
-		set(CAT_SERVER_GAPI "Vulkan")
-	else()
-		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Graphics API available on Mac OS")
-	endif()
-endif()
+#elseif(CAT_SYS_LINUX)
+#
+#	# On Linux, prefer Vulkan if available, otherwise use "good old" OpenGL.
+#	if(VULKAN_FOUND)
+#		set(CAT_SERVER_GAPI "Vulkan")
+#	elseif(OPENGL_FOUND)
+#		set(CAT_SERVER_GAPI "OpenGL")
+#	else()
+#		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Graphics API available on Linux")
+#	endif()
+#
+#elseif(CAT_SYS_MACOS)
+#	
+#	# On MAC, OpenGL is deprecated, so try Vulkan (through MeltedVK)
+#	if(VULKAN_FOUND)
+#		set(CAT_SERVER_GAPI "Vulkan")
+#	else()
+#		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Graphics API available on Mac OS")
+#	endif()
+#endif()
 
 # Show chosen one.
-message(STATUS "{CAT}--> [Server] selected graphic API: ${CAT_SERVER_GAPI}")
+#message(STATUS "{CAT}--> [Server] selected graphic API: ${CAT_SERVER_GAPI}")
 
 
 
@@ -121,62 +125,62 @@ message(STATUS "{CAT}--> [Server] selected graphic API: ${CAT_SERVER_GAPI}")
 # Diligent Engine - Pre-built binaries (build those you prefere in case, see 
 # how at https://github.com/DiligentGraphics/DiligentEngine)
 # ------------------------------------------------------------------------------
-set(CAT_DILIGENT_INCLUDE 
-	"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentCore"
-	"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentSamples"
-	"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools"
-)
-if(${BUILD_MODE} MATCHES "Debug")
-	
-	# Set debug libraries folder. 
-	message(STATUS "{CAT}--> [Server] linking to DEBUG Diligent libraries")
-	set(CAT_DILIGENT_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-debug")
-	
-	# Set specific graphic library based on selected API.
-	if(CAT_SERVER_GAPI MATCHES "D3D12")
-		set(CAT_DILIGENT_LIB "GraphicsEngineD3D12_64d.lib")
-		set(CAT_DILIGENT_DLL "GraphicsEngineD3D12_64d.dll")
-	elseif(CAT_SERVER_GAPI MATCHES "OpenGL")
-		set(CAT_DILIGENT_LIB "GraphicsEngineOpenGL_64d.lib")
-		set(CAT_DILIGENT_DLL "GraphicsEngineOpenGL_64d.dll")
-	elseif(CAT_SERVER_GAPI MATCHES "Vulkan")
-		set(CAT_DILIGENT_LIB "GraphicsEngineVk_64d.lib")
-		set(CAT_DILIGENT_DLL "GraphicsEngineVk_64d.dll")
-	else()
-		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent library available for DEBUG linking")
-	endif()
-elseif(${BUILD_MODE} MATCHES "Release")
-	
-	# Set debug libraries folder.
-	message(STATUS "{CAT}--> [Server] linking to RELEASE Diligent libraries")
-	set(CAT_DILIGENT_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-release")
-	
-	# Set specific graphic library based on selected API.
-	if(CAT_SERVER_GAPI MATCHES "D3D12")
-		set(CAT_DILIGENT_LIB "GraphicsEngineD3D12_64.lib")
-		set(CAT_DILIGENT_DLL "GraphicsEngineD3D12_64.dll")
-	elseif(CAT_SERVER_GAPI MATCHES "OpenGL")
-		set(CAT_DILIGENT_LIB "GraphicsEngineOpenGL_64.lib")
-		set(CAT_DILIGENT_DLL "GraphicsEngineOpenGL_64.dll")
-	elseif(CAT_SERVER_GAPI MATCHES "Vulkan")
-		set(CAT_DILIGENT_LIB "GraphicsEngineVk_64.lib")
-		set(CAT_DILIGENT_DLL "GraphicsEngineVk_64.dll")
-	else()
-		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent library available for RELEASE linking")
-	endif()
-else()
-	message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent DLLs available for the current building mode")
-endif()
+#set(CAT_DILIGENT_INCLUDE 
+#	"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentCore"
+#	"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentSamples"
+#	"${PROJECT_SOURCE_DIR}/lib/Diligent/include/DiligentTools"
+#)
+#if(${BUILD_MODE} MATCHES "Debug")
+#	
+#	# Set debug libraries folder. 
+#	message(STATUS "{CAT}--> [Server] linking to DEBUG Diligent libraries")
+#	set(CAT_DILIGENT_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-debug")
+#	
+#	# Set specific graphic library based on selected API.
+#	if(CAT_SERVER_GAPI MATCHES "D3D12")
+#		set(CAT_DILIGENT_LIB "GraphicsEngineD3D12_64d.lib")
+#		set(CAT_DILIGENT_DLL "GraphicsEngineD3D12_64d.dll")
+#	elseif(CAT_SERVER_GAPI MATCHES "OpenGL")
+#		set(CAT_DILIGENT_LIB "GraphicsEngineOpenGL_64d.lib")
+#		set(CAT_DILIGENT_DLL "GraphicsEngineOpenGL_64d.dll")
+#	elseif(CAT_SERVER_GAPI MATCHES "Vulkan")
+#		set(CAT_DILIGENT_LIB "GraphicsEngineVk_64d.lib")
+#		set(CAT_DILIGENT_DLL "GraphicsEngineVk_64d.dll")
+#	else()
+#		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent library available for DEBUG linking")
+#	endif()
+#elseif(${BUILD_MODE} MATCHES "Release")
+#	
+#	# Set debug libraries folder.
+#	message(STATUS "{CAT}--> [Server] linking to RELEASE Diligent libraries")
+#	set(CAT_DILIGENT_LIB_DIR "${PROJECT_SOURCE_DIR}/lib/Diligent/x64-release")
+#	
+#	# Set specific graphic library based on selected API.
+#	if(CAT_SERVER_GAPI MATCHES "D3D12")
+#		set(CAT_DILIGENT_LIB "GraphicsEngineD3D12_64.lib")
+#		set(CAT_DILIGENT_DLL "GraphicsEngineD3D12_64.dll")
+#	elseif(CAT_SERVER_GAPI MATCHES "OpenGL")
+#		set(CAT_DILIGENT_LIB "GraphicsEngineOpenGL_64.lib")
+#		set(CAT_DILIGENT_DLL "GraphicsEngineOpenGL_64.dll")
+#	elseif(CAT_SERVER_GAPI MATCHES "Vulkan")
+#		set(CAT_DILIGENT_LIB "GraphicsEngineVk_64.lib")
+#		set(CAT_DILIGENT_DLL "GraphicsEngineVk_64.dll")
+#	else()
+#		message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent library available for RELEASE linking")
+#	endif()
+#else()
+#	message(FATAL_ERROR "{CAT}--> ERROR: no suitable Diligent DLLs available for the current building mode")
+#endif()
 
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# WINDOWS and GUI Libraries - Retrieves the libraries from GitHub repositories
+# WINDOWS and GUI common libraries - Retrieves the libraries from GitHub repositories
 # ----------------------------------------------------------------------------------------------------------------------
 message(STATUS "")
 message(STATUS "{CAT}--> -------------| System Libraries |------------")
 
-# SFM and ImGui are built WITHIN the application.
+# SFML and ImGui are built WITHIN the application.
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
@@ -186,7 +190,7 @@ set(SFML_VERSION 2.5.1)
 set(IMGUI_VERSION 1.87)
 
 # Retrieve latest SFML to build it within the application.
-message(STATUS "{CAT}--> [Server/Client] fetching SFML from https://github.com/SFML/SFML.git") 
+message(STATUS "{CAT}--> fetching SFML from https://github.com/SFML/SFML.git") 
 FetchContent_Declare(
     SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
@@ -197,30 +201,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-# Retrieve latest SFML-ImGui to build it within the application.
-message(STATUS "{CAT}--> [Server] fetching ImGui from https://github.com/ocornut/imgui.git")
-FetchContent_Declare(
-  ImGui
-  GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG        v1.89.9
-  GIT_SHALLOW ON
-  EXCLUDE_FROM_ALL
-  SYSTEM
-)
-FetchContent_MakeAvailable(imgui)
-FetchContent_GetProperties(ImGui SOURCE_DIR IMGUI_DIR)
-
-# Retrieve latest SFML-ImGui to build it within the application.
-message(STATUS "{CAT}--> [Server] fetching ImGui from https://github.com/SFML/imgui-sfml")
-set(IMGUI_SFML_FIND_SFML OFF)
-FetchContent_Declare(ImGui-SFML
-    GIT_REPOSITORY https://github.com/SFML/imgui-sfml
-    GIT_TAG 2.6.x
-    GIT_SHALLOW ON
-    EXCLUDE_FROM_ALL
-    SYSTEM)
-FetchContent_MakeAvailable(ImGui-SFML)
-
 # SFML building options.
 option(SFML_BUILD_AUDIO "Build audio" OFF)
 option(SFML_BUILD_NETWORK "Build network" ON)
@@ -230,14 +210,11 @@ option(SFML_BUILD_NETWORK "Build network" ON)
 # TARGETS - each target makefile is defined within the target folder
 # ----------------------------------------------------------------------------------------------------------------------
 
-add_subdirectory(server)
+# Client static library.
 add_subdirectory(client)
 
-
-
-
-
-
+# Server application.
+add_subdirectory(server)
 
 
 

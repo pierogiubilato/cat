@@ -1,14 +1,14 @@
 ﻿//------------------------------------------------------------------------------
-// CAT - C++ Analysis Template - Logging utility                              --
+// CAT - C++ Analysis Template - Console output utility                       --
 // (C) Piero Giubilato 2011-2024, INFN PD									  --
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-// [File name]		"log.hpp"
+// [File name]		"console.hpp"
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"29 Oct 2024"
+// [cat]			"08 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -25,7 +25,7 @@
 #include <sstream>
 
 // Console library.
-#include<oof.h>
+#include <oof.h>
 
 
 // Console output shortcut (use OOF library syntax)

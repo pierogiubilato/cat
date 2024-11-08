@@ -24,6 +24,7 @@
 
 // Application.
 #include "cmd.hpp"
+//#include "console.hpp"
 
 // #############################################################################
 namespace cat {
