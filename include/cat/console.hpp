@@ -92,6 +92,10 @@ namespace cat {
 			all = 99
 		};
 
+		// GLOBAL verbosity level.
+		//inline verbosity verbosityLevel = verbosity::message;
+
+
 	// #########################################################################
 	} // Enf of "cl" namespace.
 
@@ -119,7 +123,7 @@ class console
 		///	\param v sets the output verbosity. It uses the 'verbosity' class
 		///		enum to choose among several possible levels.
 		///	\return nothing
-		console(const cl::verbosity& v = cl::verbosity::message) : _verbosity(v) {};
+		console(const cl::verbosity& v = cl::verbosity::message) {};
 		
 		//! Destructor. No particular duties.
 		~console() {};
@@ -131,23 +135,22 @@ class console
 		//void print(const std::ostream&, const verb&) const;
 
 		//! Set the verbosity level.
-		///
-		/// \brief Set the verbosity level, from a 'cat::cl::verbosity::' enum.
-		///	\param v the verbosity level.
-		///	\return nothing.
-		bool verb(const cl::verbosity& v) { _verbosity = v; }
+		//!
+		//! \brief Set the verbosity level, from a 'cat::cl::verbosity::' enum.
+		//!	\param v the verbosity level.
+		//!	\return nothing.
+		static void verb(const cl::verbosity& v) { _verbosity = v; }
 		
-
 		//! Set the verbosity level.
-		///
-		/// \brief Set the verbosity level, interpreting a string. If the string
-		///		does not match any predefined token, set the verbosity to the default
-		///		'cat::cl::verbosity::message' level.
-		///	\param str is the string defining the verbosity level. It can be one
-		///		of the recognized tokens: {"critical", "error", "warning", "message", 
-		///		"info", "debug", "all"}.
-		///	\return nothing.
-		void verb(const std::string& str) {
+		//!
+		//! \brief Set the verbosity level, interpreting a string. If the string
+		//!		does not match any predefined token, set the verbosity to the default
+		//!		'cat::cl::verbosity::message' level.
+		//!	\param str is the string defining the verbosity level. It can be one
+		//!		of the recognized tokens: {"critical", "error", "warning", "message", 
+		//!		"info", "debug", "all"}.
+		//!	\return nothing.
+		static void verb(const std::string& str) {
 			if (str == "critical")		_verbosity = cl::verbosity::critical;
 			else if (str== "error")		_verbosity = cl::verbosity::error;
 			else if (str== "warning")	_verbosity = cl::verbosity::warning;
@@ -163,7 +166,7 @@ class console
 		/// \brief Returns the verbosity level.
 		///	\param none.
 		///	\return the current verbosity level.
-		cl::verbosity verb() const { return _verbosity; }
+		static cl::verbosity verb() { return _verbosity; }
 
 		//! Verify wether a verbosity level is met or not.
 		///
@@ -172,7 +175,7 @@ class console
 		///	\param v the verbosity level to check.
 		///	\return true if the verbosity level guarantees visibility, false 
 		///		otherwise.
-		bool show(const cl::verbosity& v) const { return (v <= _verbosity); }
+		static bool show(const cl::verbosity& v) { return (v <= _verbosity); }
 
 		// Basic ostream operator overload. In this base version, do nothing.
 		friend std::ostream& operator<<(std::ostream& os, const cat::console& c)
@@ -180,15 +183,16 @@ class console
 			return (os);
 		}
 
+		// Current verbosity level.
+		inline static cl::verbosity _verbosity;
+
 	protected:
 
-		// No protected at the moment
+		// No protected at the moment.
 
 	private:
-
-		// Current verbosity level.
-		cl::verbosity _verbosity;
-
+				
+		// No private at the moment.
 };
 
 
@@ -408,9 +412,21 @@ class error : console {
 
 //______________________________________________________________________________
 class warning : console {
-	public:	friend std::ostream& operator<<(std::ostream& os, const cat::cl::warning& c) {
-		return (os << cl::yellow());
+	
+	public:	
+	
+	warning() : _str("") {}
+	warning(const std::string& str) : _str(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::warning& c) {
+		if (cl::verbosity::warning <= console::_verbosity) {
+			os << cl::yellow();
+			if (c._str.size()) os << c._str << cl::reset();
+		}
+		return os;
 	}
+
+	std::string _str;
 };
 
 //______________________________________________________________________________

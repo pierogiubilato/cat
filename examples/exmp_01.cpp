@@ -1,7 +1,22 @@
+//------------------------------------------------------------------------------
+// CAT - C++ Analysis Template - Example 01 - Basic console output            --
+// (C) Piero Giubilato 2011-2024, INFN PD									  --
+//------------------------------------------------------------------------------
+
+//______________________________________________________________________________
+// [File name]		"exmp_01.cpp"
+// [Author]			"Piero Giubilato"
+// [Version]		"1.0"
+// [Modified by]	"Piero Giubilato"
+// [cat]			"08 Nov 2024"
+// [Language]		"C++"
+//______________________________________________________________________________
+
+
+
 
 // STL.
 #include <iostream>
-
 
 // CAT headers.
 #include <client.hpp>
@@ -9,11 +24,12 @@
 #include "cmd.hpp"
 
 
-////______________________________________________________________________________
+//______________________________________________________________________________
 int main(int argc, char* argv[])
 {
-    // Startup.
-    std::cout << "CAT example #1: BASIC\n";
+    // Startup. Show an headline.
+    std::cout << cat::cl::message() << "CAT example #1" 
+            << cat::cl::reset() << "\n";
 
     // Initialize the CAT framework by creating a new cat::client object. Passing
     // the command line arguments (optional) allows the library to look for the
@@ -31,15 +47,35 @@ int main(int argc, char* argv[])
     // With the CAT library are included some very simple console formatting,
     // mostly to help debug, based on the oof library (https://github.com/s9w/oof).
     
-    // The verbosity filter may be set with:
+    // Set the console verbosity at the "message" level (the default one).
+    cat::console::verb(cat::cl::verbosity::message);
+
+    // Show current verbosity level.
+    std::cout << "Current console verbosity set to: " << cat::console::_verbosity << "\n";
+        
     
+    // Try printing something with higher priority level.
+    if (cat::console::show(cat::cl::verbosity::warning)) {
+        std::cout << cat::cl::warning() << "This is a warning" << cat::cl::reset() << "\n";
+    }
+
+    // A quicker way to print the warning message. This will achieve the same
+    // result of previous lines, at the expense of less flexibility (e.g., the
+    // format will automatically reverse to standard).
+    std::cout << cat::cl::warning("This is a warning, quick version") << "\n";
     
+    // Try printing something with lower priority level (it will not).
+    if (cat::console::show(cat::cl::verbosity::info)) {
+        std::cout << cat::cl::info() << "This is a general info" << cat::cl::reset() << "\n";
+    }
+        
     // Once instantiated, the library must connect to the server. If the 'connect'
     // call returns 'cat::'
     if (cat.connect() != cat::client::status::connected) {
 
         // Here we had an error. We can try again to connect. Until the connection
-        // is properly defined, the CAT library will only partially work.
+        // is properly defined, the CAT library will provide local functionalities
+        // only.
         std::cout << cat::cl::error() << "CAT example #1 exit with connection error" 
                   << cat::cl::reset() << "\n";
         return -1;

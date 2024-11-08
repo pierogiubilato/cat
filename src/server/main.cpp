@@ -8,9 +8,14 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"26 Oct 2024"
+// [cat]			"09 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
+
+// STL.
+#include <cmath>
+#include <iostream>
+#include <string>
 
 // SFML system/windowing library.
 #include <SFML/Graphics/CircleShape.hpp>
@@ -21,19 +26,13 @@
 // SFML Network.
 #include <SFML/Network.hpp>
 
-// GUI interface.
+// ImGui interface.
 #include "imgui-SFML.h"
 #include "imgui.h"
-
-// STL.
-#include <cmath>
-#include <iostream>
-#include <string>
 
 // Application.
 #include "console.hpp"
 //#include "global.hpp"
-
 #include "context.hpp"
 #include "cmd.hpp"
 #include "socket.hpp"
@@ -146,7 +145,7 @@ int srvInit(cat::context& ctx)
 
 
     // Check whether a specific port was asked for (defaults to 0 if not).
-    int port = std::stoi(ctx.cmd.getOptionValue("port", "0"));
+    int port = std::stoi(ctx.cmd.getOptionValue("port", "2000"));
 
     // If no specific port requested, use the first available one.
     if (port == 0) port = sf::Socket::AnyPort;

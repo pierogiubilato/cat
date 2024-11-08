@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.1"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"28 Oct 2024"
+// [cat]			"08 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -24,7 +24,7 @@
 
 // Application.
 #include "cmd.hpp"
-//#include "console.hpp"
+#include "console.hpp"
 
 // #############################################################################
 namespace cat {
@@ -102,15 +102,15 @@ namespace cat {
         //! Defines the command line parameters and options.
         //! \brief Pre-defines all the command line parameters and options, 
         //!     including default values.
-        //! \return nothing.
+        //! \return 0 on success, error code otherwise.
         int cmdSet();
 
-        //! Parse the command line
-        //! \brief Parse the command line filling all pre-defined parameters 
-        //!     and options found.
-        //! \return nothing.
+        //! Parse the command line parameters and options.
+        //! \brief Parse the command line looking for options and arguments defined 
+        //!     in the cmdSet() function, assigning default values to missing
+        //!     parameters.
+        //! \return 0 on success, error code otherwise.
         int cmdParse(int argc, char* argv[]);
-
 
     };
 

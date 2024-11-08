@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.1"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"28 Oct 2024"
+// [cat]			"08 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -87,6 +87,24 @@ int cat::client::cmdSet()
 
 
 //______________________________________________________________________________
+int cat::client::cmdParse(int argc, char* argv[])
+{
+	// Parse the command line.
+	if (_command.parse(argc, argv) != 0) return -1;
+
+	// Retrieve server values.
+	_srvPort = std::stoi(_command.getOptionValue("port", "2000"));
+	_srvAddress = _command.getOptionValue("address", "localhost");
+
+	// Retrieve verbosity.
+	cat::console::verb(_command.getOptionValue("v", "message"));
+
+	// Everything fine.
+	return 0;
+}
+
+
+//______________________________________________________________________________
 cat::client::status cat::client::connect()
 {
 	// Connects with the default parameters.
@@ -97,13 +115,13 @@ cat::client::status cat::client::connect()
 	if (status != sf::Socket::Done) {
 		
 		// Console output.
-		//if (_console.show(cat::cl::verbosity::error)) {
-		//	std::cout << cat::cl::error() << "Failed to connect to server at: "
-		//		<< cat::cl::message() << _srvAddress.toString() 
-		//		<< cat::cl::reset() << " on port "
-		//		<< cat::cl::message() << _srvPort << cat::cl::reset()
-		//		<< std::endl;
-		//}
+		if (console::show(cat::cl::verbosity::error)) {
+			std::cout << cat::cl::error() << "Failed to connect to server at: "
+				<< cat::cl::message() << _srvAddress.c_str() 
+				<< cat::cl::reset() << " on port "
+				<< cat::cl::message() << _srvPort << cat::cl::reset()
+				<< std::endl;
+		}
 		
 		// Return error.
 		return cat::client::status::error;

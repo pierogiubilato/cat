@@ -49,7 +49,7 @@ target_sources(catClient PRIVATE
 message(STATUS "{CAT}--> including OOF: ${PROJECT_SOURCE_DIR}/lib/oof")
 target_include_directories(
 	catClient PRIVATE 
-	"${PROJECT_SOURCE_DIR}/lib/oof"
+	"${PROJECT_SOURCE_DIR}/include/oof"
 )
 
 

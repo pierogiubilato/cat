@@ -188,7 +188,7 @@ FetchContent_MakeAvailable(ImGui-SFML)
 message(STATUS "{CAT}--> including OOF: ${PROJECT_SOURCE_DIR}/lib/oof")
 target_include_directories(
 	catServer PRIVATE 
-	"${PROJECT_SOURCE_DIR}/lib/oof"
+	"${PROJECT_SOURCE_DIR}/include/oof"
 )
 
 # SFML dependencies (statically linked library)
