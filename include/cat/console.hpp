@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"console.hpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.0"
+// [Version]		"0.8"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"08 Nov 2024"
+// [cat]			"09 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -185,6 +185,8 @@ class console
 
 		// Current verbosity level.
 		inline static cl::verbosity _verbosity;
+		
+		std::string _str;
 
 	protected:
 
@@ -201,35 +203,65 @@ class console
 // #############################################################################
 namespace cl {
 
-/// Here it is a set of specialized console classes, which purpose is to help 
-/// in an uniform manner across the application formatting the output. They are
+
+//______________________________________________________________________________
+class cf 
+{
+	public:
+		
+		// Ctors.
+		cf() : _str("") {}
+		cf(const std::string& str) : _str(str) {}
+		
+		// Basic ostream operator overload. When called by the derived class,
+		// 
+		friend std::ostream& operator<<(std::ostream& os, const cat::cl::cf& c) {
+			if (c._str.size()) os << c._str << oof::reset_formatting();
+			return os;
+		}
+
+	private:
+		std::string _str;
+};
+
+
+
+/// Here it is a set of specialized console format, which purpose is to help 
+/// formatting the output in an uniform manner across the application. They are
 /// all wrapped within the "cat::cl" namespace, so the user will easily have 
 /// them automatically sorted when using any modern intellisense system.
+
 
 // Appearance
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-class reset : console
-{
-	// Basic ostream operator overload. 
-	public:
+class reset : cf { public:
+	reset() : cf() {}
+	reset(const std::string& str) : cf(str) {}
+	
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::reset& c) {
-		return (os << oof::reset_formatting());
+		return (os << oof::reset_formatting() << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class bold : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::bold& c) {
-		return (os << oof::bold(true));
+class bold : cf { public: 
+	bold() : cf() {}
+	bold(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::bold& c) {
+		return (os << oof::bold(true) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class uline : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::uline& c) {
-		return (os << oof::underline(true));
+class uline : cf { public: 
+	uline() : cf() {}
+	uline(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::uline& c) {
+		return (os << oof::underline(true) << (cf&)c);
 	}
 };
 
@@ -238,157 +270,223 @@ class uline : console {
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-class black : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::black& c) {
-		return (os << oof::fg_color({ 0, 0, 0 }));
+class black : cf { public:
+	black() : cf() {}
+	black(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::black& c) {
+		return (os << oof::fg_color({ 0, 0, 0 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lblack : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lblack& c) {
-		return (os << oof::fg_color({ 64, 64, 64 }));
+class lblack : cf { public: 
+	lblack() : cf() {}
+	lblack(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lblack& c) {
+		return (os << oof::fg_color({ 64, 64, 64 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class red : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::red& c) {
-		return (os << oof::fg_color({ 128, 0, 0 }));
+class red : cf { public: 
+	red() : cf() {}
+	red(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::red& c) {
+		return (os << oof::fg_color({ 128, 0, 0 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lred : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lred& c) {
-		return (os << oof::fg_color({ 255, 0, 64 }));
+class lred : cf { public: 
+	lred() : cf() {}
+	lred(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lred& c) {
+		return (os << oof::fg_color({ 255, 0, 64 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class green : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::green& c) {
-		return (os << oof::fg_color({ 0, 128, 0 }));
+class green : cf { public: 
+	green() : cf() {}
+	green(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::green& c) {
+		return (os << oof::fg_color({ 0, 128, 0 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lgreen : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lgreen& c) {
-		return (os << oof::fg_color({ 0, 255, 0 }));
+class lgreen : cf { public: 
+	lgreen() : cf() {}
+	lgreen(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lgreen& c) {
+		return (os << oof::fg_color({ 0, 255, 0 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class blue : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::blue& c) {
-		return (os << oof::fg_color({ 0, 0, 128 }));
+class blue : cf { public: 
+	blue() : cf() {}
+	blue(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::blue& c) {
+		return (os << oof::fg_color({ 0, 0, 128 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lblue : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lblue& c) {
-		return (os << oof::fg_color({ 0, 0, 255 }));
+class lblue : cf { public: 
+	lblue() : cf() {}
+	lblue(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lblue& c) {
+		return (os << oof::fg_color({ 0, 0, 255 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class yellow : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::yellow& c) {
-		return (os << oof::fg_color({ 128, 128, 0 }));
+class yellow : cf {	public: 
+	yellow() : cf() {}
+	yellow(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::yellow& c) {
+		return (os << oof::fg_color({ 128, 128, 0 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lyellow : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lyellow& c) {
-		return (os << oof::fg_color({ 255, 255, 0 }));
+class lyellow : cf { public: 
+	lyellow() : cf() {}
+	lyellow(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lyellow& c) {
+		return (os << oof::fg_color({ 255, 255, 0 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class cyan : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::cyan& c) {
-		return (os << oof::fg_color({ 0, 128, 128 }));
+class cyan : cf { public: 
+	cyan() : cf() {}
+	cyan(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::cyan& c) {
+		return (os << oof::fg_color({ 0, 128, 128 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lcyan : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lcyan& c) {
-		return (os << oof::fg_color({ 0, 255, 255 }));
+class lcyan : cf { public: 
+	lcyan() : cf() {}
+	lcyan(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lcyan& c) {
+		return (os << oof::fg_color({ 0, 255, 255 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class purple : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::purple& c) {
-		return (os << oof::fg_color({ 128, 0, 128 }));
+class purple : cf {	public: 
+	purple() : cf() {}
+	purple(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::purple& c) {
+		return (os << oof::fg_color({ 128, 0, 128 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lpurple : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lpurple& c) {
-		return (os << oof::fg_color({ 255, 0, 255 }));
+class lpurple : cf { public: 
+	lpurple() : cf() {}
+	lpurple(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lpurple& c) {
+		return (os << oof::fg_color({ 255, 0, 255 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class avio : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::avio& c) {
-		return (os << oof::fg_color({ 0, 64, 128 }));
+class avio : cf { public: 
+	avio() : cf() {}
+	avio(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::avio& c) {
+		return (os << oof::fg_color({ 0, 64, 128 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lavio : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lavio& c) {
-		return (os << oof::fg_color({ 0, 128, 255 }));
+class lavio : cf { public: 
+	lavio() : cf() {}
+	lavio(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lavio& c) {
+		return (os << oof::fg_color({ 0, 128, 255 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class fucsia : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::fucsia& c) {
-		return (os << oof::fg_color({ 0, 64, 128 }));
+class fucsia : cf {	public: 
+	fucsia() : cf() {}
+	fucsia(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::fucsia& c) {
+		return (os << oof::fg_color({ 0, 64, 128 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lfucsia : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lfucsia& c) {
-		return (os << oof::fg_color({ 128, 0, 64 }));
+class lfucsia : cf { public: 
+	lfucsia() : cf() {}
+	lfucsia(const std::string& str) : cf(str) {}
+	
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lfucsia& c) {
+		return (os << oof::fg_color({ 128, 0, 64 }) << (cf&)c);
 	}
 };
 
 
 //______________________________________________________________________________
-class grass : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::grass& c) {
-		return (os << oof::fg_color({ 255, 0, 128 }));
+class grass : cf { public: 
+	grass() : cf() {}
+	grass(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::grass& c) {
+		return (os << oof::fg_color({ 255, 0, 128 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lgrass : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lgrass& c) {
-		return (os << oof::fg_color({ 128, 0, 64 }));
+class lgrass : cf { public: 
+	lgrass() : cf() {}
+	lgrass(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lgrass& c) {
+		return (os << oof::fg_color({ 128, 0, 64 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class white : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::white& c) {
-		return (os << oof::fg_color({ 255, 0, 128 }));
+class white : cf { public: 
+	white() : cf() {}
+	white(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::white& c) {
+		return (os << oof::fg_color({ 255, 0, 128 }) << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class lwhite : console {
-	public: friend std::ostream& operator<<(std::ostream& os, const cat::cl::lwhite& c) {
-		return (os << oof::fg_color({ 255, 255, 255 }));
+class lwhite : cf {	public: 
+	lwhite() : cf() {}
+	lwhite(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lwhite& c) {
+		return (os << oof::fg_color({ 255, 255, 255 }) << (cf&)c);
 	}
 };
 
@@ -397,63 +495,73 @@ class lwhite : console {
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
-class critical : console {
-	public:	friend std::ostream& operator<<(std::ostream& os, const cat::cl::critical& c) {
-		return (os << cl::lpurple() << cl::bold());
+class critical : cf { public:	
+	critical() : cf() {}
+	critical(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::critical& c) {
+		return (os << cl::lpurple() << cl::bold() << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class error : console {
-	public:	friend std::ostream& operator<<(std::ostream& os, const cat::cl::error& c) {
-		return (os << cl::lred());
+class error : cf { public:	
+	error() : cf() {}
+	error(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::error& c) {
+		return (os << cl::lred() << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class warning : console {
-	
-	public:	
-	
-	warning() : _str("") {}
-	warning(const std::string& str) : _str(str) {}
+class warning : cf { public:	
+	warning() : cf() {}
+	warning(const std::string& str) : cf(str) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::warning& c) {
-		if (cl::verbosity::warning <= console::_verbosity) {
-			os << cl::yellow();
-			if (c._str.size()) os << c._str << cl::reset();
-		}
-		return os;
-	}
-
-	std::string _str;
-};
-
-//______________________________________________________________________________
-class message : console {
-	public:	friend std::ostream& operator<<(std::ostream& os, const cat::cl::message& c) {
-		return (os << cl::lwhite() << cl::uline());
+		return (os << cl::lyellow() << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class info : console {
-	public:	friend std::ostream& operator<<(std::ostream& os, const cat::cl::info& c) {
-		return (os << cl::white());
+class message : cf { public:	
+	message() : cf() {}
+	message(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::message& c) {
+		return (os << cl::lwhite() << cl::uline() << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class debug : console {
-	public:	friend std::ostream& operator<<(std::ostream& os, const cat::cl::debug& c) {
-		return (os << cl::white());
+class info : cf { public:	
+	info() : cf() {}
+	info(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::info& c) {
+		return (os << cl::white() << (cf&)c);
 	}
 };
 
 //______________________________________________________________________________
-class link : console {
-	public:	friend std::ostream& operator<<(std::ostream& os, const cat::cl::link& c) {
-		return (os << cl::lavio() << cl::uline());
+class debug : cf { public:	
+	debug() : cf() {}
+	debug(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::debug& c) {
+		return (os << cl::white() << (cf&)c);
+	}
+};
+
+//______________________________________________________________________________
+class link : cf { public:	
+		
+	link() : cf() {}
+	link(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::link& c) {
+		return (os << cl::lavio() << cl::uline() << (cf&)c);
 	}
 };
 
