@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"exmp_01.cpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.0"
+// [Version]		"0.2"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"08 Nov 2024"
+// [cat]			"09 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -19,7 +19,7 @@
 #include <iostream>
 
 // CAT headers.
-#include <client.hpp>
+#include "client.hpp"
 #include "console.hpp"
 #include "cmd.hpp"
 
@@ -28,8 +28,7 @@
 int main(int argc, char* argv[])
 {
     // Startup. Show an headline.
-    std::cout << cat::cl::message() << "CAT example #1" 
-            << cat::cl::reset() << "\n";
+    std::cout << cat::cl::message("CAT example #1") << std::endl;
 
     // Initialize the CAT framework by creating a new cat::client object. Passing
     // the command line arguments (optional) allows the library to look for the
@@ -46,16 +45,28 @@ int main(int argc, char* argv[])
     
     // With the CAT library are included some very simple console formatting,
     // mostly to help debug, based on the oof library (https://github.com/s9w/oof).
+    // The namespace 'cat::cl' encloses all the STATIC functions and classes 
+    // used for console output formatting.
     
     // Set the console verbosity at the "message" level (the default one).
-    cat::console::verb(cat::cl::verbosity::message);
+    cat::cl::verb::set(cat::cl::verb::message);
 
-    // Show current verbosity level.
-    std::cout << "Current console verbosity set to: " << cat::console::_verbosity << "\n";
+    // Show current verbosity level (it makes a temporary instantiation to pass
+    // the object to the output stream).
+    std::cout << "Current console verbosity set to: " << cat::cl::verb() << "\n";
+       
+    // Alternatively, you can call the get method.
+    std::cout << "Current console verbosity set to: " << cat::cl::verb::get() << "\n";
+
+    // Print a general message.
+    std::cout << cat::cl::message("This is a message") << "\n";
+
+    // Print something standard.
+    std::cout << "A standard output line of text." << "\n";
         
-    
-    // Try printing something with higher priority level.
-    if (cat::console::show(cat::cl::verbosity::warning)) {
+    // Try printing something with higher priority level. This is the explicit way,
+    // which gives more flexibility in implementing more complex output structures.
+    if (cat::cl::verb::show(cat::cl::verb::warning)) {
         std::cout << cat::cl::warning() << "This is a warning" << cat::cl::reset() << "\n";
     }
 
@@ -65,10 +76,15 @@ int main(int argc, char* argv[])
     std::cout << cat::cl::warning("This is a warning, quick version") << "\n";
     
     // Try printing something with lower priority level (it will not).
-    if (cat::console::show(cat::cl::verbosity::info)) {
-        std::cout << cat::cl::info() << "This is a general info" << cat::cl::reset() << "\n";
-    }
-        
+    std::cout << cat::cl::info("This is a general info") << "\n";
+
+    // You can print numbers in both ways as well:
+    std::cout << "This is a number in bold: " << cat::cl::bold() << 3010 
+              << cat::cl::reset() << "\n";
+    std::cout << "This is a number in bold: " << cat::cl::warning(3010) << "\n";
+
+
+
     // Once instantiated, the library must connect to the server. If the 'connect'
     // call returns 'cat::'
     if (cat.connect() != cat::client::status::connected) {

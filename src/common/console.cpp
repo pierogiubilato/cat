@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [Date]	        "26 Oct 2024"
+// [Date]	        "10 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -25,21 +25,25 @@
 // Build ONLY in the translation unit where CAT_CONSOLE_IMPL is defined.
 //#ifdef CAT_CONSOLE_IMPL
 
+// Initialize static members.
+cat::cl::verb::level cat::cl::verb::_current = cat::cl::verb::message;
+
+
 // Overload operators for cat::cl::verbosity enum class.
-std::ostream& operator<<(std::ostream& os, const cat::cl::verbosity& v) {
-	std::string str;
-	switch (v) {
-	case cat::cl::verbosity::critical:	str = "critical"; break;
-	case cat::cl::verbosity::error:		str = "error"; break;
-	case cat::cl::verbosity::warning:	str = "warning"; break;
-	case cat::cl::verbosity::message:	str = "message"; break;
-	case cat::cl::verbosity::info:		str = "info"; break;
-	case cat::cl::verbosity::debug:		str = "debug"; break;
-	case cat::cl::verbosity::all:		str = "all"; break;
-	default: str = "unknown";
-	}
-	return os << str;
-}
+//std::ostream& operator<<(std::ostream& os, const cat::cl::verbosity& v) {
+//	std::string str;
+//	switch (v) {
+//	case cat::cl::verbosity::critical:	str = "critical"; break;
+//	case cat::cl::verbosity::error:		str = "error"; break;
+//	case cat::cl::verbosity::warning:	str = "warning"; break;
+//	case cat::cl::verbosity::message:	str = "message"; break;
+//	case cat::cl::verbosity::info:		str = "info"; break;
+//	case cat::cl::verbosity::debug:		str = "debug"; break;
+//	case cat::cl::verbosity::all:		str = "all"; break;
+//	default: str = "unknown";
+//	}
+//	return os << str;
+//}
 //#endif
 
 

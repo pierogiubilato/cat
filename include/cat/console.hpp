@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.8"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"09 Nov 2024"
+// [cat]			"11 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -79,18 +79,18 @@ namespace cat {
 	// #########################################################################
 	namespace cl {
 		
-		// Verbosity
-		//----------------------------------------------------------------------
-		enum class verbosity : int {
-			critical = 0,
-			error = 1,
-			warning = 2,
-			section = 3,
-			message = 4,
-			info = 5,
-			debug = 6,
-			all = 99
-		};
+		//// Verbosity
+		////----------------------------------------------------------------------
+		//enum class verbosity : int {
+		//	critical = 0,
+		//	error = 1,
+		//	warning = 2,
+		//	section = 3,
+		//	message = 4,
+		//	info = 5,
+		//	debug = 6,
+		//	all = 99
+		//};
 
 		// GLOBAL verbosity level.
 		//inline verbosity verbosityLevel = verbosity::message;
@@ -104,12 +104,14 @@ namespace cat {
 
 
 // Declare overloaded ostream operator << for 'cat::cl::verbosity' enum class.
-std::ostream& operator<<(std::ostream& os, const cat::cl::verbosity& v);
+//std::ostream& operator<<(std::ostream& os, const cat::cl::verbosity& v);
 
 // #############################################################################
 namespace cat {
 
+
 //______________________________________________________________________________
+/*
 class console
 {
 
@@ -197,31 +199,130 @@ class console
 		// No private at the moment.
 };
 
-
+*/
 
 
 // #############################################################################
 namespace cl {
 
-
 //______________________________________________________________________________
+//! \brief The 'cat::cl::verb' class manages the console verbosity level.
+//!		it is a fully static class.
+class verb
+{
+	public:
+
+		//! Public verbosity values.
+		enum level : uint8_t {
+			critical = 0,
+			error = 1,
+			warning = 2,
+			section = 3,
+			message = 4,
+			info = 5,
+			debug = 6,
+			all = 99
+		};
+
+		//! Returns whether a verbosity level has to be shown.
+		//! \brief Compares the given verbosity level with the current one, and
+		//!		determines whether it is to be shown or not.
+		//! \argument 'lvl' the verbosity level to compare.
+		//! \return true if it is to be shown, false otherwise.
+		static bool show(const level& lvl) {
+			return (lvl <= _current);
+		}
+
+		//! Set the console verbosity level.
+		//! \brief Set the console verbosity level.
+		//! \argument 'lvl' the verbosity level to set.
+		//! \return nothing.
+		static void set(const level& lvl) {
+			_current = lvl;
+		}
+
+		//! Set the console verbosity level.
+		//! \brief Set the console verbosity level.
+		//! \argument a std::string 'str' the verbosity level to set.
+		//! \return nothing.
+		static void set(const std::string& str) {
+			if (str == "critical")		_current = critical;
+			else if (str == "error")	_current = error;
+			else if (str == "warning")	_current = warning;
+			else if (str == "message")	_current = message;
+			else if (str == "info")		_current = info;
+			else if (str == "default")	_current = debug;
+			else if (str == "all")		_current = all;
+			else _current = message;
+		}
+
+		//! Get the console verbosity level.
+		//! \brief Get the console verbosity level.
+		//! \return a 'cat::cl::verb::level' enum element indicating the current verbosity level.
+		static cat::cl::verb::level get() {
+			return _current;
+		}
+
+		//! Ostream operator overload.
+		//! \brief Overloads the output stream operator to give a string naming of 
+		//!		the current verbosity level.
+		//! \return a 'std::ostream&' ostream object.
+		friend std::ostream& operator<<(std::ostream& os, const cat::cl::verb& v) {
+			std::string str;
+			switch (v._current) {
+				case cat::cl::verb::critical:	str = "critical"; break;
+				case cat::cl::verb::error:		str = "error"; break;
+				case cat::cl::verb::warning:	str = "warning"; break;
+				case cat::cl::verb::message:	str = "message"; break;
+				case cat::cl::verb::info:		str = "info"; break;
+				case cat::cl::verb::debug:		str = "debug"; break;
+				case cat::cl::verb::all:		str = "all"; break;
+				default: str = "unknown";
+			}
+			return (os << str);
+		}
+	
+		//private:
+		//! Current verbosity level.
+		static level _current;
+};
+
+
+
+//!_____________________________________________________________________________
+//! \brief The 'cat::cl::cf' class is the base formatting class for the console 
+//!		output. It serves as base class for all the specialized format classes. 
+//!		Its basic purpose is to encapsulate a simple operator << overload that
+//! 	changes the behaviour of the formatting accordingly to the presence of
+//! 	a std::string on creation, to allow a flexible usage of the formatting
+//! 	codes.
+//! \str is a std::string which, if provided at instantiation, makes the class
+//! 	appending a format reset after adding the string to the current output
+//! 	stream, simplifying the calls of derived formatting classes.
 class cf 
 {
 	public:
 		
-		// Ctors.
-		cf() : _str("") {}
-		cf(const std::string& str) : _str(str) {}
+		//! Default ctor. Sets the class as empty (nothing to print).
+		cf() : _set(false) {}
+
+		//! Template constructor for including numbers.
+		template<typename T> cf(const T& arg) : _set(true), _arg("") {
+			_arg << arg;
+		}
 		
-		// Basic ostream operator overload. When called by the derived class,
-		// 
+		//! Template constructor specialization for handling strings.
+		template <> cf(const std::string& str) : _set(true), _arg(str) {}
+		
+		//! Basic ostream operator overload. When called by the derived class,
 		friend std::ostream& operator<<(std::ostream& os, const cat::cl::cf& c) {
-			if (c._str.size()) os << c._str << oof::reset_formatting();
+			if (c._set) os << c._arg.str() << oof::reset_formatting(); 
 			return os;
 		}
 
 	private:
-		std::string _str;
+		std::stringstream _arg;
+		bool _set;
 };
 
 
@@ -476,7 +577,7 @@ class white : cf { public:
 	white(const std::string& str) : cf(str) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::white& c) {
-		return (os << oof::fg_color({ 255, 0, 128 }) << (cf&)c);
+		return (os << oof::fg_color({ 128, 128, 128 }) << (cf&)c);
 	}
 };
 
@@ -491,7 +592,25 @@ class lwhite : cf {	public:
 };
 
 
-// Standard styles
+
+// Standard styles (WITHOUT verbosity check)
+//------------------------------------------------------------------------------
+
+//______________________________________________________________________________
+class link : cf {
+public:
+
+	link() : cf() {}
+	link(const std::string& str) : cf(str) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::link& c) {
+		return (os << cl::lavio() << cl::uline() << (cf&)c);
+	}
+};
+
+
+
+// Standard styles (WITH verbosity check)
 //------------------------------------------------------------------------------
 
 //______________________________________________________________________________
@@ -499,8 +618,10 @@ class critical : cf { public:
 	critical() : cf() {}
 	critical(const std::string& str) : cf(str) {}
 
+	//if (verb)
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::critical& c) {
-		return (os << cl::lpurple() << cl::bold() << (cf&)c);
+		if (verb::show(verb::critical)) return (os << cl::lpurple() << (cf&)c);
+		else return os;
 	}
 };
 
@@ -510,27 +631,31 @@ class error : cf { public:
 	error(const std::string& str) : cf(str) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::error& c) {
-		return (os << cl::lred() << (cf&)c);
+		if (verb::show(verb::error)) return (os << cl::lred() << (cf&)c);
+		else return os;
 	}
 };
 
 //______________________________________________________________________________
 class warning : cf { public:	
 	warning() : cf() {}
-	warning(const std::string& str) : cf(str) {}
+	//warning(const std::string& str) : cf(str) {}
+	template <typename T> warning(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::warning& c) {
-		return (os << cl::lyellow() << (cf&)c);
+		if (verb::show(verb::warning)) return (os << cl::lyellow() << (cf&)c);
+		else return os;
 	}
 };
 
 //______________________________________________________________________________
 class message : cf { public:	
 	message() : cf() {}
-	message(const std::string& str) : cf(str) {}
+	template <typename T> message(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::message& c) {
-		return (os << cl::lwhite() << cl::uline() << (cf&)c);
+		if (verb::show(verb::message)) return (os << cl::lwhite() << cl::uline() << (cf&)c);
+		else return os;
 	}
 };
 
@@ -540,7 +665,8 @@ class info : cf { public:
 	info(const std::string& str) : cf(str) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::info& c) {
-		return (os << cl::white() << (cf&)c);
+		if (verb::show(verb::info)) return (os << cl::lwhite() << (cf&)c);
+		else return os;
 	}
 };
 
@@ -550,18 +676,8 @@ class debug : cf { public:
 	debug(const std::string& str) : cf(str) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::debug& c) {
-		return (os << cl::white() << (cf&)c);
-	}
-};
-
-//______________________________________________________________________________
-class link : cf { public:	
-		
-	link() : cf() {}
-	link(const std::string& str) : cf(str) {}
-
-	friend std::ostream& operator<<(std::ostream& os, const cat::cl::link& c) {
-		return (os << cl::lavio() << cl::uline() << (cf&)c);
+		if (verb::show(verb::debug)) return (os << cl::white() << (cf&)c);
+		else return os;
 	}
 };
 

@@ -28,7 +28,7 @@
  
 // Application.
 #include "client.hpp"
-//#include "console.hpp"
+#include "console.hpp"		// Header only. Include ONLY here to hav its method linked.
 //#include "socket.hpp"
 
 
@@ -97,7 +97,7 @@ int cat::client::cmdParse(int argc, char* argv[])
 	_srvAddress = _command.getOptionValue("address", "localhost");
 
 	// Retrieve verbosity.
-	cat::console::verb(_command.getOptionValue("v", "message"));
+	cat::cl::verb::set(_command.getOptionValue("v", "message"));
 
 	// Everything fine.
 	return 0;
@@ -115,11 +115,10 @@ cat::client::status cat::client::connect()
 	if (status != sf::Socket::Done) {
 		
 		// Console output.
-		if (console::show(cat::cl::verbosity::error)) {
-			std::cout << cat::cl::error() << "Failed to connect to server at: "
-				<< cat::cl::message() << _srvAddress.c_str() 
-				<< cat::cl::reset() << " on port "
-				<< cat::cl::message() << _srvPort << cat::cl::reset()
+		if (cl::verb::show(cat::cl::verb::error)) {
+			std::cout << cat::cl::error("Failed to connect to server at: ")
+				<< cat::cl::message(_srvAddress.c_str()) << " on port "
+				<< cat::cl::message(_srvPort)
 				<< std::endl;
 		}
 		
