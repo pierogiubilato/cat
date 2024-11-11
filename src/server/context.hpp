@@ -8,10 +8,18 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"23 Oct 2024"
+// [cat]			"11 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
+
+// Overloading check
+#ifndef catContext_HPP
+#define catContext_HPP
+
+// STL.
+#include <vector>
+#include <string>
 
 // SFML system/windowing library.
 #include <SFML/Graphics/CircleShape.hpp>
@@ -26,10 +34,6 @@
 #include "imgui-SFML.h"
 #include "imgui.h"
 
-// STL.
-#include <vector>
-#include <string>
-
 // Application.
 #include "cmd.hpp"
 
@@ -37,54 +41,58 @@
 // #############################################################################
 namespace cat {
 
+    //! Forward declarations for objects whose pointers will be stored
+    //! in this context class..
+    class gui;
+
     
-    /*! This class contains all the running parameters of the application
-        and it is passed through the various steps of the (many) running
-        processes.
-        Note that the class start the windows management system (SFML library)
-        through the constructor itself, to ensure more c++ object management
-        with respect to a pointer-based one.
-    */
+    //! This class contains all the running parameters and instances of 
+    //! the various application elements, and it is shared through the 
+    //! various steps of the (many) running processes.
     class context {
         
-    public:
+        public:
 
-        // Application running status.
-        enum class runState : int { ongoing, success, failure };
+            // Application running status.
+            enum class runState : int { ongoing, success, failure };
+    
+            // General.
+            //std::string winTitle = "CAT";   //<! Main window title.
+            //int winWidth = 1280;            //<! Main window startup width.
+            //int winHeight = 720;            //<! Main window startup height.
 
-        // General.
-        std::string winTitle = "CAT";   //<! Main window title.
-        int winWidth = 1280;            //<! Main window startup width.
-        int winHeight = 720;            //<! Main window startup height.
+            // Command line.
+            cat::cmd cmd;                   //<! Command line structure.
 
-        // Command line.
-        cat::cmd cmd;                   //<! Command line structure.
+            // SFML window.
+            //sf::RenderWindow window;        //<! The main application window.
+            //sf::Clock clock;                //<! The main application clock.
 
-        // SFML window.
-        sf::RenderWindow window;        //<! The main application window.
-        sf::Clock clock;                //<! The main application clock.
+            // SFML network server.
+            sf::TcpListener server;         //<! Application server.
 
-        // SFML network server.
-        sf::TcpListener server;         //<! Application server.
-
-        // Clients.
-        //std::vector<sf::TcpSocket> client;  //<! Connected clients.
+            // Clients.
+            std::vector<sf::TcpSocket*> client;  //<! Connected clients.
         
-        // ImGUI User Interface
+            // Main GUI.
+            cat::gui* _gui;
 
-        // Diligent Core Graphics APIs.
+            // Diligent Core Graphics APIs.
 
-        // Running status.
-        runState state;                 //!< Application runnin gstatus.
+            // Running status.
+            runState state;                 //!< Application runnin gstatus.
 
-        //! Ctor.
-        context() : state(runState::ongoing) {}
+            //! Ctor.
+            context() : state(runState::ongoing) {}
 
-        //! Dtor.
-        ~context() {}
+            //! Dtor.
+            ~context() {}
     };
 
 
     
     // #############################################################################
 } // Close namespace "cat".
+
+// Overload check.
+#endif

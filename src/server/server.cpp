@@ -36,19 +36,27 @@
 #include "context.hpp"
 #include "cmd.hpp"
 #include "socket.hpp"
+#include "gui.hpp"
+
 
 //______________________________________________________________________________
 // Main proprietary functions.
 int appCmd(cat::context&, int argc, char* argv[]);
+
 int appInit(cat::context&);
 int srvInit(cat::context&);
+int guiInit(cat::context&);
+
 int appSplash(cat::context&);
 int appLoop(cat::context&);
 int srvListen(cat::context&);
-int appEvent(cat::context&);
-int appDraw(cat::context&);
+//int appEvent(cat::context&);
+//int appDraw(cat::context&);
+
+int guiClose(cat::context&);
 int srvClose(cat::context&);
 int appClose(cat::context&);
+
 
 //______________________________________________________________________________
 int main(int argc, char* argv[]) {
@@ -73,6 +81,11 @@ int main(int argc, char* argv[]) {
 
     // Init Server.
     if (srvInit(ctx) != 0) return -1;
+
+    // Init GUI.
+    if (guiInit(ctx) != 0) return -1;
+
+
     
     // Start the main loop.
     appLoop(ctx);
@@ -83,6 +96,9 @@ int main(int argc, char* argv[]) {
     // Stop the server.
     srvClose(ctx);
 
+    // Stop the GUI.
+    guiClose(ctx);
+        
     // Close the interfaces.
     appClose(ctx);
         
@@ -122,14 +138,12 @@ int appInit (cat::context& ctx)
     */
 
     // Starts the windows and event management.
-    ctx.window.create(sf::VideoMode(ctx.winWidth, ctx.winHeight), ctx.winTitle);
+    //ctx.window.create(sf::VideoMode(ctx.winWidth, ctx.winHeight), ctx.winTitle);
 
     // Frame rate limit, to avoid system overload when not necessary.
-    ctx.window.setFramerateLimit(60);
+    //ctx.window.setFramerateLimit(60);
     
-    // Init the GUI interface system (ImGui).
-    ImGui::SFML::Init(ctx.window);
-
+   
     // Graphics APIs management.
 
     // Everything fine.
@@ -172,6 +186,24 @@ int srvInit(cat::context& ctx)
     return 0;
 }
 
+//______________________________________________________________________________
+int guiInit(cat::context& ctx)
+{
+    /*! Initialize GUI interface
+    */
+
+    // Init the GUI interface system (ImGui).
+    //ImGui::SFML::Init(ctx.window);
+
+    // Init the server main GUI interface. This will start the SFML system and 
+    // create the main application window.
+    ctx._gui = cat::gui::getInstance();
+
+
+
+    // Everything fine.
+    return 0;
+}
 
 //______________________________________________________________________________
 int appSplash(cat::context& ctx)
@@ -244,31 +276,47 @@ int srvListen(cat::context& ctx)
        
     // Look for a new client trying to connect.
     std::cout << "Server listening...\n";
-    sf::TcpSocket client;
-    //client.setBlocking(false);
+    
+    // Create a new (non blocking) temporary socket to listen for.
+    sf::TcpSocket* socket = new sf::TcpSocket();
+    socket->setBlocking(false);
     sf::Packet pkt;
-    switch (ctx.server.accept(client)) {
+
+
+    // Check for any answer.
+    switch (ctx.server.accept(*socket)) {
         
         // Connection established. Save the client object in the client vector,
         // and ping it back for confirmation that the socket is now open.
         case sf::Socket::Done :
-            std::cout << "Client accepted: " << client.getRemoteAddress() << "\n";
+            if (cat::cl::verb::show(cat::cl::verb::message)) {
+                std::cout << cat::cl::white("Client accepted: ")
+                    << cat::cl::uline() << socket->getRemoteAddress() 
+                    << "\n";
+            }
 
+            // Store the socket.
+            ctx.client.push_back(socket);
+
+            // Test message.
             pkt << uint32_t(cat::tcp::open);
-            //ctx.client.push_back(client);
-            //ctx.client.back().send(pkt);
+            ctx.client.back()->send(pkt);
+            
             break;
         
         // No connection. Nothing to do, the socket object will expire at the
         // function exit.
         case sf::Socket::Error :
+            delete socket;
             break;
     
         // Unmanaged.
         default:
+            delete socket;
             break;
             
     }
+    
 
     // Everything fine.
     return 0;
@@ -287,13 +335,13 @@ int appLoop(cat::context& ctx)
     while (ctx.state == cat::context::runState::ongoing) {
         
         // Retrieve events from the user/system.
-        appEvent(ctx);
+        ctx._gui->event(ctx);
         
         // Listen the server connections.
         srvListen(ctx);
 
         // Draw interface and scene(s).
-        appDraw(ctx);
+        ctx._gui->draw(ctx);
         
     }
 
@@ -301,68 +349,68 @@ int appLoop(cat::context& ctx)
     return 0;
 }
 
+////______________________________________________________________________________
+//int appEvent(cat::context& ctx)
+//{
+//    /*! Retrieves and parse events from the user and the system
+//    */
+//
+//    // Retrieve events from the user/system.
+//    sf::Event event;
+//    
+//    // Retrieve all the queued events from the user/system.
+//    while (ctx.window.pollEvent(event)) {
+//
+//        // First, pass the event to the GUI.
+//        // ---------------------------------
+//        ImGui::SFML::ProcessEvent(ctx.window, event);
+//
+//
+//        // Parse the managed events.
+//        // -------------------------
+//        
+//
+//
+//        // Resize.
+//        
+//        // Quit.
+//        if (event.type == sf::Event::Closed) {
+//            ctx.state = cat::context::runState::success;
+//        }
+//    }
+//
+//    // Everything fine.
+//    return 0;
+//}
+
+
 //______________________________________________________________________________
-int appEvent(cat::context& ctx)
-{
-    /*! Retrieves and parse events from the user and the system
-    */
+//int appDraw(cat::context& ctx)
+//{
+    ///*! Draw the scene(s) and other interface 3Dworld elements.
+    //*/
 
-    // Retrieve events from the user/system.
-    sf::Event event;
-    
-    // Retrieve all the queued events from the user/system.
-    while (ctx.window.pollEvent(event)) {
+    //// Update the GUI.
+    //ImGui::SFML::Update(ctx.window, ctx.clock.restart());
 
-        // First, pass the event to the GUI.
-        // ---------------------------------
-        ImGui::SFML::ProcessEvent(ctx.window, event);
+    //// ImGui cycle.
+    //ImGui::Begin("Hello, world!");
+    //ImGui::Button("Look at this pretty button");
+    //ImGui::End();
+    //
+    //// ImGui demo.
+    //ImGui::ShowDemoWindow();
 
+    //// Scene drawing.
 
-        // Parse the managed events.
-        // -------------------------
-        
+    //ctx.window.clear();
+    ////app.window.draw(shape);
+    //ImGui::SFML::Render(ctx.window);
+    //ctx.window.display();
 
-
-        // Resize.
-        
-        // Quit.
-        if (event.type == sf::Event::Closed) {
-            ctx.state = cat::context::runState::success;
-        }
-    }
-
-    // Everything fine.
-    return 0;
-}
-
-
-//______________________________________________________________________________
-int appDraw(cat::context& ctx)
-{
-    /*! Draw the scene(s) and other interface 3Dworld elements.
-    */
-
-    // Update the GUI.
-    ImGui::SFML::Update(ctx.window, ctx.clock.restart());
-
-    // ImGui cycle.
-    ImGui::Begin("Hello, world!");
-    ImGui::Button("Look at this pretty button");
-    ImGui::End();
-    
-    // ImGui demo.
-    ImGui::ShowDemoWindow();
-
-    // Scene drawing.
-
-    ctx.window.clear();
-    //app.window.draw(shape);
-    ImGui::SFML::Render(ctx.window);
-    ctx.window.display();
-
-    // Everything fine.
-    return 0;
-}
+    //// Everything fine.
+    //return 0;
+//}
 
 
 //______________________________________________________________________________
@@ -391,12 +439,7 @@ int appClose(cat::context& ctx)
         graphics APIs.
     */
 
-    // CLose main SFML window.
-    ctx.window.close();
-
-    // Close ImGui.
-    ImGui::SFML::Shutdown();
-
+    
     // Everything fine.
     return 0;
 }
