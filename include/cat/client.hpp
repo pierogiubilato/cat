@@ -39,7 +39,7 @@ namespace cat {
     public:
 
         
-        // Connection status.
+        //! Connection status.
         enum class status : int {
             connected,
             closed,

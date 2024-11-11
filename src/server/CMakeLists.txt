@@ -28,11 +28,10 @@ target_include_directories(catServer PRIVATE
 
 # Cat server own code.
 target_sources(catServer PRIVATE 
-	"main.cpp"
+	"server.cpp"
 	"../common/cmd.cpp"
 	"../common/console.cpp"
 )
-
 
 
 # ----------------------------------------------------------------------------------------------------------------------

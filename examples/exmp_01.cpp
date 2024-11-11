@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"exmp_01.cpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"0.2"
+// [Version]		"0.5"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"09 Nov 2024"
+// [cat]			"11 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -16,6 +16,8 @@
 
 
 // STL.
+#include <vector>
+#include <string>
 #include <iostream>
 
 // CAT headers.
@@ -43,6 +45,14 @@ int main(int argc, char* argv[])
     cat::client cat(argc, argv);
     
     
+
+
+    // -------------------------------------------------------------------------
+    // --                    Console output formatting                        --
+    // -------------------------------------------------------------------------
+      
+
+
     // With the CAT library are included some very simple console formatting,
     // mostly to help debug, based on the oof library (https://github.com/s9w/oof).
     // The namespace 'cat::cl' encloses all the STATIC functions and classes 
@@ -85,6 +95,19 @@ int main(int argc, char* argv[])
 
 
 
+
+
+    // -------------------------------------------------------------------------
+    // --                    Connect to the server                            --
+    // -------------------------------------------------------------------------
+
+
+    // Cosmetic output.
+    std::cout << "\n\n\n" << cat::cl::lwhite(std::string(80, '=')) << "\n"
+        << "Connection to the server" << "\n"
+        << cat::cl::lwhite(std::string(80, '=')) << "\n";
+
+
     // Once instantiated, the library must connect to the server. If the 'connect'
     // call returns 'cat::'
     if (cat.connect() != cat::client::status::connected) {
@@ -98,7 +121,8 @@ int main(int argc, char* argv[])
     }
 
 
-
+    // Connection has been successfull.
+    //std::cout << cat::client::<< "\n";
     
     // Use the CAT library to look for possible arguments on the command line.
     // 
