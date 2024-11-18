@@ -24,6 +24,9 @@ endif()
 target_include_directories(catServer PRIVATE 
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	"../common"
+	"../common/co"
+	"../common/gp"
+	"../common/ui"
 )
 
 # Cat server own code.
@@ -36,12 +39,12 @@ target_sources(catServer PRIVATE
 		
 	# Server-Client shared components.
 	"../common/coAbc.cpp"
-	"../common/coSet.cpp"
-	"../common/coDrawable.cpp"
-	"../common/coStreamable.cpp"
+	"../common/co/coSet.cpp"
+	"../common/co/coDrawable.cpp"
+	"../common/co/coStreamable.cpp"
 	
-	"../common/uiAbc.cpp"
-	"../common/uiButton.cpp"
+	"../common/ui/uiAbc.cpp"
+	"../common/ui/uiButton.cpp"
 
 	# End-User Server and Client shared components.
 	"../common/cmd.cpp"

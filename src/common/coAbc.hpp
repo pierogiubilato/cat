@@ -169,11 +169,18 @@ namespace cat { namespace co {
 			//! Returns the number of childs.
 			size_t childCount() const;
 
+			// Return the self-ID.
+			ID myID() const;
+
+			// Return the self-pointer.
+			abc* myPtr();
+
+
 		protected:
 
 			state _status;			//!< Current status.
 			ID _parent;				//!< Parent (if any) within the same set.
-			ID _myself;				//!< ID within the set it is included in.
+			ID _ID;					//!< ID within the set it is included in.
 			std::vector<ID> _child;	//!< Child(s) (if any).
 
 	};

@@ -33,9 +33,9 @@
 
 //______________________________________________________________________________
 //! Ctor.
-cat::co::abc::abc() : _myself(0), 
-								_parent(0), 
-								_status(cat::co::abc::state::uninitialized)
+cat::co::abc::abc(): _ID(0), 
+					 _parent(0), 
+					_status(cat::co::abc::state::uninitialized)
 {
 
 
@@ -54,8 +54,6 @@ cat::co::abc::~abc()
 // *****************************************************************************
 
 //______________________________________________________________________________
-//! Dump the object to the standard stream.
-//! \brief dump to the console the object status and main properties.
 std::ostream& operator<<(std::ostream& os, const cat::co::abc& c)
 {
 	// Object status.
@@ -124,11 +122,7 @@ void cat::co::abc::parent(const cat::co::ID& pID)
 }
 
 //______________________________________________________________________________
-//! Adds a to the object.
-//! \brief adds the child identified by \c cID to the object.
-//! \argument cID is a \c cat::co::ID identifier for an object belonging to
-//!		the same set as the current one.
-//! \return 0 if everything fine, otherwise an error code.
+
 int cat::co::abc::childAdd(const cat::co::ID& cID)
 {
 	_child.push_back(cID);
@@ -138,12 +132,6 @@ int cat::co::abc::childAdd(const cat::co::ID& cID)
 
 //______________________________________________________________________________
 int cat::co::abc::childDel(const cat::co::ID& cID)
-//! Remove the child \c cID from the object.
-//! \brief Remove the \c cID child from the children list.
-//!	\argument cID is a cat::co::ID identifier of a cat:co object belonging to
-//!		the same set of the current object, and present on the children list. 
-//! \return 0 if the child is correctly removed the function return 0, an error
-//!		code otherwise.
 {
 	// Search the children.
 	auto pos = std::find(_child.begin(), _child.end(), cID);
@@ -160,11 +148,6 @@ int cat::co::abc::childDel(const cat::co::ID& cID)
 }
 
 //______________________________________________________________________________
-//! Returns the object child(s).
-//! \brief returns a vector containing all the object child(s) IDs. If the 
-//!		object ha no children,returns an empty vector.
-//! \return a vector of cat::co::ID containing all the children IDs. If there
-//!		are no children, returns an empty vector.
 std::vector<cat::co::ID> cat::co::abc::childGet() const
 {
 	// Return a copy of the private container.
@@ -172,11 +155,23 @@ std::vector<cat::co::ID> cat::co::abc::childGet() const
 }
 
 //______________________________________________________________________________
-//! Returns the object child(s) count.
-//! \brief returns how many children the object has
-//! \return a size_t stating how many children are present.
 size_t cat::co::abc::childCount() const
 {
 	//! Returns the number of childs.
 	return _child.size();
 }
+
+//______________________________________________________________________________
+cat::co::ID cat::co::abc::myID() const
+{
+	//! Returns the number of childs.
+	return _ID;
+}
+
+//______________________________________________________________________________
+cat::co::abc* cat::co::abc::myPtr()
+{
+	//! Returns the number of childs.
+	return this;
+}
+
