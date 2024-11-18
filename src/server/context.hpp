@@ -36,6 +36,7 @@
 
 // Application.
 #include "cmd.hpp"
+#include "window.hpp"
 
 
 // #############################################################################
@@ -43,7 +44,7 @@ namespace cat {
 
     //! Forward declarations for objects whose pointers will be stored
     //! in this context class..
-    class gui;
+    //class gui;
 
     
     //! This class contains all the running parameters and instances of 
@@ -53,34 +54,34 @@ namespace cat {
         
         public:
 
-            // Application running status.
-            enum class runState : int { ongoing, success, failure };
+            //! Application running status.
+            enum class runState : int {
+                ongoing, 
+                success, 
+                failure
+            };
     
-            // General.
-            //std::string winTitle = "CAT";   //<! Main window title.
-            //int winWidth = 1280;            //<! Main window startup width.
-            //int winHeight = 720;            //<! Main window startup height.
-
-            // Command line.
+            //! Command line.
             cat::cmd cmd;                   //<! Command line structure.
 
-            // SFML window.
-            //sf::RenderWindow window;        //<! The main application window.
-            //sf::Clock clock;                //<! The main application clock.
+            //! Main application window.
+            //sf::RenderWindow window;      //<! The main application window.
+            //sf::Clock clock;              //<! The main application clock.
+            cat::window _window;            //<! The main application window.
 
-            // SFML network server.
+            //! SFML network server.
             sf::TcpListener server;         //<! Application server.
 
-            // Clients.
+            //! Clients.
             std::vector<sf::TcpSocket*> client;  //<! Connected clients.
         
-            // Main GUI.
-            cat::gui* _gui;
+            //! Main GUI.
+            //cat::gui _gui;  // THIS should belong to the main window.
 
-            // Diligent Core Graphics APIs.
+            //! Diligent Core Graphics APIs.
 
-            // Running status.
-            runState state;                 //!< Application runnin gstatus.
+            //! Running status.
+            runState state;                 //!< Application running status.
 
             //! Ctor.
             context() : state(runState::ongoing) {}
@@ -88,8 +89,6 @@ namespace cat {
             //! Dtor.
             ~context() {}
     };
-
-
     
     // #############################################################################
 } // Close namespace "cat".

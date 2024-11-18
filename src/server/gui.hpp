@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.1"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"11 Nov 2024"
+// [cat]			"13 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -22,27 +22,29 @@
 #include <mutex>
 
 // SFML system/windowing library.
-#include <SFML/Graphics/CircleShape.hpp>
+//#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
 // GUI interface.
-#include "imgui-SFML.h"
-#include "imgui.h"
+//#include "imgui-SFML.h"
+//#include "imgui.h"
 
 // Application.
-#include "context.hpp"
+//#include "context.hpp"
 
 
 // #############################################################################
 namespace cat {
 
-    
+    // Forward declaration.
+    class context;
+
+
     //! This class contains all the server GUI elements. It is made singleton.
     class gui {
-        
-    
+            
     public:
         
         //! Get singleton instance (thread safe).
@@ -50,7 +52,7 @@ namespace cat {
         //!     function is thread-safe, i.e. it will check for any concurrent
         //!     call all return a single instantiation.
         //! \return a cat::gui& handle to the instantiated class.
-        static gui* getInstance();
+        //static gui* getInstance();
         //{
             //if (_instancePtr == nullptr) {
             //    
@@ -66,6 +68,7 @@ namespace cat {
             //// Return the class object.
             //return *_instancePtr;
         //}
+        gui();
 
         //! Dtor.
         ~gui();
@@ -94,28 +97,28 @@ namespace cat {
     private:
         
         //! Private constructor.
-        gui() {}
+        //gui() {}
 
         // Static pointer to the Singleton instance
-        static gui* _instancePtr;
+        gui* _instancePtr;
 
         // Mutex to ensure thread safety
-        static std::mutex _mtx;
+        std::mutex _mtx;
 
         //! Main GUI timing clock.
-        static sf::Clock _clock;
+        sf::Clock _clock;
 
         //! Main GUI window.
-        static sf::RenderWindow _window;        
+        sf::RenderWindow _window;        
 
         //! Main window title.
-        static std::string _winTitle;
+        std::string _winTitle;
         
         //! Main window startup width.
-        static int _winWidth;
+        int _winWidth;
         
         //! Main window startup height.
-        static int _winHeight;
+        int _winHeight;
             
     };
 

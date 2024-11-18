@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.5"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"11 Nov 2024"
+// [cat]			"18 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -18,7 +18,7 @@
 #include <string>
 
 // SFML system/windowing library.
-#include <SFML/Graphics/CircleShape.hpp>
+//#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
@@ -30,12 +30,20 @@
 #include "imgui-SFML.h"
 #include "imgui.h"
 
-// Application.
+// Application - shared with end User.
 #include "console.hpp"
-//#include "global.hpp"
-#include "context.hpp"
 #include "cmd.hpp"
+
+// Application - shared between Server and Client.
 #include "socket.hpp"
+//#include "coStreamable.hpp"
+//#include "coDrawable.hpp"
+#include "coSet.hpp"
+#include "uiButton.hpp"
+
+// Application - Server only.
+#include "context.hpp"
+#include "window.hpp"
 #include "gui.hpp"
 
 
@@ -50,69 +58,85 @@ int guiInit(cat::context&);
 int appSplash(cat::context&);
 int appLoop(cat::context&);
 int srvListen(cat::context&);
-//int appEvent(cat::context&);
-//int appDraw(cat::context&);
+////int appEvent(cat::context&);
+////int appDraw(cat::context&);
 
 int guiClose(cat::context&);
 int srvClose(cat::context&);
 int appClose(cat::context&);
 
 
+int doTest(cat::context&);
+
+
 //______________________________________________________________________________
 int main(int argc, char* argv[]) {
     
-    /* CAT Server entry point. The main entry point simply executes initialization
-       then hands over control to the 'srvLoop' main application loop.
-    */
-
+    //! CAT Server entry point. The main entry point simply executes initialization
+    //! then hands over control to the 'srvLoop' main application loop.
+std::cout << "[1]\n";
     // Set up the application context data structure. Doing that, actually 
     // initializes the system/windows management as well through the class
     // ctor, which creates a SFML window.
     cat::context ctx;
+std::cout << "[2]\n";
 
     // Parse the command line.
     if (appCmd(ctx, argc, argv) != 0) return -1;
+std::cout << "[3]\n";
 
     // Splash.
     appSplash(ctx);
+std::cout << "[4]\n";
 
     // Init App.
     if (appInit(ctx) != 0) return -1;;
-
-    // Init Server.
-    if (srvInit(ctx) != 0) return -1;
+std::cout << "[5]\n";
 
     // Init GUI.
     if (guiInit(ctx) != 0) return -1;
+std::cout << "[6]\n";
 
-
+    // Init Server.
+    if (srvInit(ctx) != 0) return -1;
+std::cout << "[7]\n";
     
+    // Do tests with objects.
+    if (doTest(ctx) != 0) return -1;
+std::cout << "[8]\n";
+
+
+
     // Start the main loop.
     appLoop(ctx);
-    
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+std::cout << "[9]\n";
+
+    //sf::CircleShape shape(100.f);
+    //shape.setFillColor(sf::Color::Green);
 
     // Stop the server.
     srvClose(ctx);
-
-    // Stop the GUI.
+std::cout << "[10]\n";
+    
+// Stop the GUI.
     guiClose(ctx);
-        
+std::cout << "[11]\n";
+
     // Close the interfaces.
     appClose(ctx);
-        
-    // Everything fine.
+std::cout << "[12]\n";
+    
+// Everything fine.
     return 0;
 }
 
 
+ 
 //______________________________________________________________________________
 int appCmd(cat::context& ctx, int argc, char* argv[])
 {
-    /*! Prepare and parse the command line.
-    */
-
+    //! Prepare and parse the command line.
+    
     // Set the arguments.
     //app.cmd.addArg("","",)
 
@@ -133,9 +157,9 @@ int appCmd(cat::context& ctx, int argc, char* argv[])
 //______________________________________________________________________________
 int appInit (cat::context& ctx)
 {
-    /*! Initialize the application, including the windows management,
-        event management, graphics API libraries, network libraries.
-    */
+    //! Initialize the application, including the windows management,
+    //! event management, graphics API libraries, network libraries.
+    
 
     // Starts the windows and event management.
     //ctx.window.create(sf::VideoMode(ctx.winWidth, ctx.winHeight), ctx.winTitle);
@@ -152,10 +176,31 @@ int appInit (cat::context& ctx)
 
 
 //______________________________________________________________________________
+int guiInit(cat::context& ctx)
+{
+    //! Initialize GUI interface
+
+
+    // Init the GUI interface system (ImGui).
+    //ImGui::SFML::Init(ctx.window);
+
+    // Init the server main GUI interface. This will start the SFML system and 
+    // create the main application window.
+
+    //ctx._gui = cat::gui::getInstance();
+
+
+
+    // Everything fine.
+    return 0;
+}
+
+
+//______________________________________________________________________________
 int srvInit(cat::context& ctx)
 {
-    /*! Initialize the server, and start listening.
-    */
+    //! Initialize the server, and start listening.
+    
 
 
     // Check whether a specific port was asked for (defaults to 0 if not).
@@ -186,31 +231,13 @@ int srvInit(cat::context& ctx)
     return 0;
 }
 
-//______________________________________________________________________________
-int guiInit(cat::context& ctx)
-{
-    /*! Initialize GUI interface
-    */
 
-    // Init the GUI interface system (ImGui).
-    //ImGui::SFML::Init(ctx.window);
-
-    // Init the server main GUI interface. This will start the SFML system and 
-    // create the main application window.
-    ctx._gui = cat::gui::getInstance();
-
-
-
-    // Everything fine.
-    return 0;
-}
 
 //______________________________________________________________________________
 int appSplash(cat::context& ctx)
 {
-    /*! Show splash credits.
-    */
-    
+    //! Show splash credits.
+        
   
     // Title.
     std::cout << "\n\n";
@@ -218,18 +245,17 @@ int appSplash(cat::context& ctx)
     std::cout << "|" << std::string(42, ' ') << "|\n";
     std::cout 
         << "|    "
-        << cat::cl::lavio() << cat::cl::bold() << "C" << cat::cl::reset() << "++ "
-        << cat::cl::lavio() << cat::cl::bold() << "A" << cat::cl::reset() << "cquisiiton & "
-        << cat::cl::lavio() << cat::cl::bold() << "A" << cat::cl::reset() << "nalysis "
-        << cat::cl::lavio() << cat::cl::bold() << "T" << cat::cl::reset() << "oolset"
+        << cat::cl::lavio("C") << "++ "
+        << cat::cl::lavio("A") << "cquisiiton & "
+        << cat::cl::lavio("A") << "nalysis "
+        << cat::cl::lavio("T") << "oolset"
         "    |\n";
     
     // Copyright.
     std::cout << "|" << std::string(42, ' ') << "|\n";
     std::cout << "|" 
         << "        (C)" 
-        << cat::cl::lwhite() << " Padova University "
-        << cat::cl::reset() << "2024        " << "|\n";
+        << cat::cl::lwhite(" Padova University ") << "2024        " << "|\n";
 
     // Closure.    
     std::cout << "|" << std::string(42, ' ') << "|\n";
@@ -237,22 +263,14 @@ int appSplash(cat::context& ctx)
     
     // Libraries.
     std::cout << "\nLibraries\n";
-    std::cout << "Console..................: "
-        << cat::cl::lwhite() << "Off           " << cat::cl::reset() << "("
-        << cat::cl::link() << "https://github.com/s9w/oof"
-        << cat::cl::reset() << ")\n";
-    std::cout << "System and network.......: "
-        << cat::cl::lwhite() << "SFML 2.6.1    " << cat::cl::reset() << "("
-        << cat::cl::link() << "https://github.com/SFML"
-        << cat::cl::reset() << ")\n";
-    std::cout << "Graphics User Interface..: "
-        << cat::cl::lwhite() << "Dear ImGui    " << cat::cl::reset() << "("
-        << cat::cl::link() << "https://github.com/ocornut/imgui"
-        << cat::cl::reset() << ")\n";
-    std::cout << "3D APIs abstraction......: "
-        << cat::cl::lwhite() << "Diligent Core " << cat::cl::reset() << "("
-        << cat::cl::link() << "https://github.com/DiligentGraphics/DiligentCore"
-        << cat::cl::reset() << ")\n";
+    std::cout << "Console..................: " << cat::cl::lwhite("Off           ") 
+        << "(" << cat::cl::link("https://github.com/s9w/oof") << ")\n";
+    std::cout << "System and network.......: "<< cat::cl::lwhite("SFML 2.6.1    ") 
+        << "(" << cat::cl::link("https://github.com/SFML") << ")\n";
+    std::cout << "Graphics User Interface..: " << cat::cl::lwhite("Dear ImGui    ") 
+        << "(" << cat::cl::link("https://github.com/ocornut/imgui") << ")\n";
+    std::cout << "3D APIs abstraction......: " << cat::cl::lwhite("Diligent Core ")
+        << "(" << cat::cl::link("https://github.com/DiligentGraphics/DiligentCore") << ")\n";
         
     // Spacing
     std::cout << std::endl;
@@ -265,9 +283,9 @@ int appSplash(cat::context& ctx)
 //______________________________________________________________________________
 int srvListen(cat::context& ctx)
 {
-    /*! Collect latest connection request, and parse new I/O data streams from 
-        clients arrived since the last check.
-    */
+    //! Collect latest connection request, and parse new I/O data streams from 
+    //! clients arrived since the last check.
+    
 
 
     // Listen to all connected clients.
@@ -275,11 +293,11 @@ int srvListen(cat::context& ctx)
     
        
     // Look for a new client trying to connect.
-    std::cout << "Server listening...\n";
+    // std::cout << "Server listening...\n";
     
     // Create a new (non blocking) temporary socket to listen for.
     sf::TcpSocket* socket = new sf::TcpSocket();
-    socket->setBlocking(false);
+    //socket->setBlocking(false);
     sf::Packet pkt;
 
 
@@ -326,34 +344,61 @@ int srvListen(cat::context& ctx)
 //______________________________________________________________________________
 int appLoop(cat::context& ctx)
 {
-    /*! This is the main application loop, which handles events from the user,
-        calls from/to the clients, and display the outputs.
-    */
-
+    //! This is the main application loop, which handles events from the user,
+    //! calls from/to the clients, and display the outputs.
     
+
+    /*
     // Main loop.
     while (ctx.state == cat::context::runState::ongoing) {
-        
-        // Retrieve events from the user/system.
-        ctx._gui->event(ctx);
         
         // Listen the server connections.
         srvListen(ctx);
 
-        // Draw interface and scene(s).
-        ctx._gui->draw(ctx);
+
+
+        // Retrieve events from the user/system.
+        //ctx._gui->event(ctx);
         
+        // Draw interface and scene(s).
+        //ctx._gui->draw(ctx);
+        
+
+
     }
+    */
 
     // Everything fine.
     return 0;
 }
 
+//______________________________________________________________________________
+int doTest(cat::context& ctx)
+{
+    //! This is the main application loop, which handles events from the user,
+    //! calls from/to the clients, and display the outputs.
+
+    
+    std::cout << cat::cl::message("Building a cat::co:abstract base object") << "\n";
+    cat::co::abc myCo;
+    std::cout << "Dumping my first object: " << myCo << "\n";
+
+    std::cout << cat::cl::message("Building a cat::co:set container") << "\n";
+    cat::co::set mySet;
+    std::cout << "Dumping my first object: " << mySet << "\n";
+
+
+    // Everything fine.
+    return 0;
+}
+
+
+
 ////______________________________________________________________________________
 //int appEvent(cat::context& ctx)
 //{
-//    /*! Retrieves and parse events from the user and the system
-//    */
+//    //! Retrieves and parse events from the user and the system
+//   
 //
 //    // Retrieve events from the user/system.
 //    sf::Event event;
@@ -388,7 +433,7 @@ int appLoop(cat::context& ctx)
 //int appDraw(cat::context& ctx)
 //{
     ///*! Draw the scene(s) and other interface 3Dworld elements.
-    //*/
+    
 
     //// Update the GUI.
     //ImGui::SFML::Update(ctx.window, ctx.clock.restart());
@@ -416,9 +461,9 @@ int appLoop(cat::context& ctx)
 //______________________________________________________________________________
 int srvClose(cat::context& ctx)
 {
-    /*! Stop the server from listening, and clear all the sockets to/from the 
-        connected clients.
-    */
+    //! Stop the server from listening, and clear all the sockets to/from the 
+    //! connected clients.
+   
 
     
     // Broadcast closure to all connected clients.
@@ -431,14 +476,26 @@ int srvClose(cat::context& ctx)
     return 0;
 }
 
+//______________________________________________________________________________
+int guiClose(cat::context& ctx)
+{
+    //! Stop the application, close the windows/event managers, shut down the
+    //! graphics APIs.
+   
+    // Close the GUI interface.
+    //delete ctx._gui;
+
+    // Everything fine.
+    return 0;
+}
+
 
 //______________________________________________________________________________
 int appClose(cat::context& ctx)
 {
-    /*! Stop the application, close the windows/event managers, shut down the
-        graphics APIs.
-    */
-
+    //! Stop the application, close the windows/event managers, shut down the
+    //! graphics APIs.
+   
     
     // Everything fine.
     return 0;

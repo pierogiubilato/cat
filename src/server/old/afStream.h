@@ -79,7 +79,7 @@ template<typename T> void inline write(std::stringstream& o, const T& v)
 template<> void inline write<std::string>(std::stringstream& o, const std::string& s)
 {
 	/* Write to stream, string type. */
-	size_t l = s.size();				// Writes the length of the string.
+	size_t l = s.size();			// Writes the length of the string.
 	o.write((char*)&l, sizeof(l));	// Writes the string characters.
 	o.write(s.c_str(), l);
 }

@@ -15,9 +15,9 @@ message(STATUS "{CAT}--> setting up core...")
 # Add the server executable.
 add_executable (catServer)
 
-# Set proper c++ standard..
+# Set proper c++ standard.
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-	set_property(TARGET catServer PROPERTY CXX_STANDARD 23)
+	set_property(TARGET catServer PROPERTY CXX_STANDARD 20)
 endif()
 
 # Add its own and common includes.
@@ -28,8 +28,22 @@ target_include_directories(catServer PRIVATE
 
 # Cat server own code.
 target_sources(catServer PRIVATE 
+	
+	# Server only components.
 	"server.cpp"
+	"window.cpp"
 	"gui.cpp"
+		
+	# Server-Client shared components.
+	"../common/coAbc.cpp"
+	"../common/coSet.cpp"
+	"../common/coDrawable.cpp"
+	"../common/coStreamable.cpp"
+	
+	"../common/uiAbc.cpp"
+	"../common/uiButton.cpp"
+
+	# End-User Server and Client shared components.
 	"../common/cmd.cpp"
 	"../common/console.cpp"
 )
