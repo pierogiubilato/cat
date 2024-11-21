@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"1.0"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"18 Nov 2024"
+// [cat]			"21 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -55,9 +55,7 @@ namespace cat { namespace co {
 			//!		direction: write to the stream when false, read from the
 			//!		stream when true.
 			//! \return 0 if everything fine, a code error otherwise.
-			virtual int stream(std::stringstream&, const bool& read = false) {
-				return 0;
-			}
+			virtual int stream(std::stringstream& ss, const bool& read = false);
 
 		protected:
 

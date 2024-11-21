@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.5"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"18 Nov 2024"
+// [cat]			"21 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -79,8 +79,9 @@ namespace cat { namespace co {
 			//! \brief the state of the object
 			enum class state : uint16_t {
 				uninitialized = 0,
-				modified = 1,
-				abandoned = 2
+				unchanged = 1,
+				modified = 2,
+				abandoned = 3
 			};
 
 			//! Returns the object unique type.
@@ -170,10 +171,13 @@ namespace cat { namespace co {
 			size_t childCount() const;
 
 			// Return the self-ID.
-			ID myID() const;
+			ID id() const;
 
 			// Return the self-pointer.
-			abc* myPtr();
+			abc* ptr();
+
+			// Return the self-pointer, constant version.
+			const abc* ptrConst() const;
 
 
 		protected:

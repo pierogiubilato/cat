@@ -38,7 +38,7 @@ target_sources(catServer PRIVATE
 	"gui.cpp"
 		
 	# Server-Client shared components.
-	"../common/coAbc.cpp"
+	"../common/co/coAbc.cpp"
 	"../common/co/coSet.cpp"
 	"../common/co/coDrawable.cpp"
 	"../common/co/coStreamable.cpp"

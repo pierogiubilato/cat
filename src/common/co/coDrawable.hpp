@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.2"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"18 Nov 2024"
+// [cat]			"21 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -47,12 +47,26 @@ namespace cat { namespace co {
 			//! Dtor.
 			~drawable();
 			
+			
+			// -----------------------------------------------------------------
+			// From cat::co::streamable
+			// -----------------------------------------------------------------
+			
+			//! Stream the object data.
+			//! \brief Stream the object data to (write) / from (read) a stream.
+			//! \argument 'read' is a boolean (default false) setting the stream
+			//!		direction: write to the stream when false, read from the
+			//!		stream when true.
+			//! \return 0 if everything fine, a code error otherwise.
+			virtual int stream(std::stringstream& ss, const bool& read = false);
+
+
+
+
 			//! Draw the object on the current viewport.
 			//! \brief draw the object in the current viewport with the current
 			//!		display settings.
-			virtual void draw() const {
-			
-			}
+			virtual void draw() const {}
 
 			
 		protected:

@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"console.hpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"0.8"
+// [Version]		"0.9"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"11 Nov 2024"
+// [cat]			"21 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -21,6 +21,7 @@
 #include <string>
 #include <deque>
 #include <iostream>
+#include <iomanip>
 #include <ostream>
 #include <sstream>
 
@@ -29,10 +30,7 @@
 
 
 // #############################################################################
-namespace cat {
-
-// #########################################################################
-namespace cl {
+namespace cat { namespace cl {
 		
 
 //______________________________________________________________________________
@@ -128,30 +126,56 @@ class verb
 //! \str is a std::string which, if provided at instantiation, makes the class
 //! 	appending a format reset after adding the string to the current output
 //! 	stream, simplifying the calls of derived formatting classes.
-class cf 
+class cf
 {
-	public:
-		
-		//! Default ctor. Sets the class as empty (nothing to print).
-		cf() : _set(false) {}
+public:
 
-		//! Template constructor for including numbers.
-		template<typename T> cf(const T& arg) : _set(true), _arg("") {
-			_arg << arg;
-		}
-		
-		//! Template constructor specialization for handling strings.
-		template <> cf(const std::string& str) : _set(true), _arg(str) {}
-		
-		//! Basic ostream operator overload. When called by the derived class,
-		friend std::ostream& operator<<(std::ostream& os, const cat::cl::cf& c) {
-			if (c._set) os << c._arg.str() << oof::reset_formatting(); 
+	//! Default ctor. Sets the class mode to 0 (nothing to print).
+	cf() : _sstr(""), _tag("") {}
+
+	//! Template constructor for numbers. Applies the derived class
+	//! formatting to the console ouput, and print the number passed
+	//! as constructor argument. Reset the console style afterward.
+	template<typename T> cf(const T& arg) : _tag("") { _sstr << arg; }
+
+	//! Template constructor specialization for handling strings.
+	//! Applies the derived class formatting to the console ouput, 
+	//! and print the string passed as constructor argument. Reset 
+	//! the console style afterward.
+	template <> cf(const std::string& str) : _sstr(str), _tag("") {}
+
+	//! Constructor specialization for aligned messages.
+	//! Applies the derived class formatting to the console ouput, 
+	//! explicitly print the type of message, and then the '_str'
+	//! string in default console format.
+	cf(const std::string& str, const std::string& tag) : _sstr(str), _tag(tag) {}
+
+
+	//! Basic ostream operator overload. When called by the derived class,
+	//! it will make automatic formatting depending whether the '_str'
+	//! string is present, and the status of the '_set' flag.
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::cf& c) {
+
+		// Explicit mode.
+		if (c._tag.size()) {
+			os << std::setw(16) << std::left << c._tag;
+			os << oof::reset_formatting();
+			os << c._sstr.str() << "\n";
+			return os;
+
+		// Message mode.
+		} else if (c._sstr.str().size()) {
+			return (os << c._sstr.str() << oof::reset_formatting());
+
+			// Format only mode.
+		} else {
 			return os;
 		}
+	}
 
-	private:
-		std::stringstream _arg;
-		bool _set;
+private:
+	std::string _tag;
+	std::stringstream _sstr;
 };
 
 
@@ -379,14 +403,13 @@ class lfucsia : cf { public:
 	}
 };
 
-
 //______________________________________________________________________________
 class grass : cf { public: 
 	grass() : cf() {}
 	grass(const std::string& str) : cf(str) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::grass& c) {
-		return (os << oof::fg_color({ 255, 0, 128 }) << (cf&)c);
+		return (os << oof::fg_color({ 64, 128, 0 }) << (cf&)c);
 	}
 };
 
@@ -396,7 +419,7 @@ class lgrass : cf { public:
 	lgrass(const std::string& str) : cf(str) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lgrass& c) {
-		return (os << oof::fg_color({ 128, 0, 64 }) << (cf&)c);
+		return (os << oof::fg_color({ 128, 255, 0 }) << (cf&)c);
 	}
 };
 
@@ -515,11 +538,7 @@ class debug : cf { public:
 
 
 // #############################################################################
-}  // Close namespace "cl"
-
-
-// #############################################################################
-}  // Close namespace "cat"
+}}  // Close namespaces
 
 
 // Overloading check

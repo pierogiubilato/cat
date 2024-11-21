@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"coAbstract.cpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"0.2"
+// [Version]		"0.5"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"18 Nov 2024"
+// [cat]			"21 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -22,9 +22,6 @@
 // Application components - Shared between Server and client.
 #include "coAbc.hpp"
 
-
-//##############################################################################
-//namespace cat {
 
 
 // *****************************************************************************
@@ -56,23 +53,53 @@ cat::co::abc::~abc()
 //______________________________________________________________________________
 std::ostream& operator<<(std::ostream& os, const cat::co::abc& c)
 {
-	// Object status.
-	os << "Status: " << cat::cl::message();
-	switch (c._status) {
-		case cat::co::abc::state::abandoned: os << "abandoned"; break;
-		case cat::co::abc::state::modified: os << "modified"; break;
-		default: os << "unknown";
-	}
-	os << cat::cl::reset() << " ";
-		
-	// Object child(s).
-	os << "Child: {" << cat::cl::message();
-	for (size_t i = 0; i < c._child.size() - 1; i++) { 
-		os << cat::cl::message(std::to_string(c._child[i])) << cat::cl::reset() << ",";
-	}
-	if (c._child.size() > 0)
-	os << cat::cl::message(std::to_string(c._child.back())) << cat::cl::reset() << "} ";
 
+	// Bracketing.
+	os << "<";
+
+	// Object IDs
+	os << "ID: " << cat::cl::grass(std::to_string(c.id()));
+	os << " ptr: " << cat::cl::link() << c.ptrConst() << cat::cl::reset();
+
+
+	// Object status.
+	os << " St: " << cat::cl::message();
+	switch (c._status) {
+		case cat::co::abc::state::uninitialized: 
+			os << cat::cl::yellow("0"); 
+			break;
+		case cat::co::abc::state::abandoned: 
+			os << cat::cl::red("A"); 
+			break;
+		case cat::co::abc::state::modified: 
+			os << cat::cl::cyan("M");
+			break;
+		case cat::co::abc::state::unchanged:
+			os << cat::cl::green("U");
+			break;
+		default: os << cat::cl::critical("unknown");
+	}
+	os << cat::cl::reset();
+
+	// Object parent.
+	os << " Pr: " << cat::cl::grass(std::to_string(c.parent()));
+	
+	// Object child(s).
+	os << " Ch: {" << cat::cl::message();
+	if (c._child.size() > 0) {
+		for (size_t i = 0; i < c._child.size() - 1; i++) {
+			os << cat::cl::message(std::to_string(c._child[i])) 
+				<< cat::cl::reset() << ",";
+		}
+		os << cat::cl::message(std::to_string(c._child.back())) 
+			<< cat::cl::reset() << "}";
+	} else {
+		os << cat::cl::message("0") << "}";
+	}
+	
+	// Close bracketing.
+	os << ">";
+	
 	// Return the stream.
 	return os;
 }
@@ -86,20 +113,6 @@ std::ostream& operator<<(std::ostream& os, const cat::co::abc& c)
 // *****************************************************************************
 // **							Family public members						  **
 // *****************************************************************************
-
-//______________________________________________________________________________
-//gp::scene* GP::owner() const
-//{
-//	/*! Returns the GP owner handle (the scene containing the GP). */
-//	return _ownerPtr;
-//}
-
-//______________________________________________________________________________
-//void GP::owner(gp::scene* oPtr)
-//{
-//	/*! Returns the GP owner handle (the scene containing the GP). */
-//	_ownerPtr = oPtr;
-//}
 
 
 
@@ -162,16 +175,22 @@ size_t cat::co::abc::childCount() const
 }
 
 //______________________________________________________________________________
-cat::co::ID cat::co::abc::myID() const
+cat::co::ID cat::co::abc::id() const
 {
 	//! Returns the number of childs.
 	return _ID;
 }
 
 //______________________________________________________________________________
-cat::co::abc* cat::co::abc::myPtr()
+cat::co::abc* cat::co::abc::ptr()
 {
 	//! Returns the number of childs.
 	return this;
 }
 
+//______________________________________________________________________________
+const cat::co::abc* cat::co::abc::ptrConst() const
+{
+	//! Returns the number of childs.
+	return this;
+}
