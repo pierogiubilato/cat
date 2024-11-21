@@ -375,6 +375,29 @@ int appLoop(cat::context& ctx)
 //______________________________________________________________________________
 int doTest(cat::context& ctx)
 {
+
+    // Console tests.
+
+    std::cout << "\n\n*** CONSOLE TESTING ***\n";
+    cat::cl::verb::set(cat::cl::verb::all);
+
+    float val = 12.56;
+    std::cout << "This is a simple bright white color" << cat::cl::lwhite() << "format" 
+              << cat::cl::reset() << " example\n";
+    std::cout << "This is a self " << cat::cl::warning("formatted message") << " example\n";
+    std::cout << "A templating test: "  << cat::cl::message(val) << "\n";
+    std::cout << "A message templating test: " << cat::cl::messageMsg(val);
+    std::cout << cat::cl::error("This is an error message")<< "\n";
+    std::cout << cat::cl::criticalMsg("This is an explicit critical message");
+    std::cout << cat::cl::errorMsg("This is an explicit error message");
+    std::cout << cat::cl::warningMsg("This is an explicit warning message");
+    std::cout << cat::cl::messageMsg("This is an explicit message message");
+    std::cout << cat::cl::infoMsg("This is an explicit info message");
+    std::cout << cat::cl::debugMsg("This is an explicit debug message");
+
+    std::cout << "\n\n\n";
+
+
     //! This is the main application loop, which handles events from the user,
     //! calls from/to the clients, and display the outputs.
 

@@ -6,7 +6,7 @@
 //______________________________________________________________________________
 // [File name]		"console.hpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"0.9"
+// [Version]		"1.1"
 // [Modified by]	"Piero Giubilato"
 // [cat]			"21 Nov 2024"
 // [Language]		"C++"
@@ -144,11 +144,17 @@ public:
 	//! the console style afterward.
 	template <> cf(const std::string& str) : _sstr(str), _tag("") {}
 
-	//! Constructor specialization for aligned messages.
+	//! Template constructor specialization for aligned messages.
 	//! Applies the derived class formatting to the console ouput, 
 	//! explicitly print the type of message, and then the '_str'
 	//! string in default console format.
-	cf(const std::string& str, const std::string& tag) : _sstr(str), _tag(tag) {}
+	template<typename T> cf(const T& arg, const std::string& tag) : _tag(tag) { _sstr << arg; }
+
+	//! Template constructor specialization for aligned messages
+	//! handling strings. Applies the derived class formatting to 
+	//! the console ouput, explicitly print the type of message, 
+	//! and then the '_str' string in default console format.
+	template <> cf(const std::string& str, const std::string& tag) : _sstr(str), _tag(tag) {}
 
 
 	//! Basic ostream operator overload. When called by the derived class,
@@ -158,8 +164,8 @@ public:
 
 		// Explicit mode.
 		if (c._tag.size()) {
-			os << std::setw(16) << std::left << c._tag;
-			os << oof::reset_formatting();
+			os << std::setw(10) << std::right << c._tag
+				<< oof::reset_formatting() << "): ";
 			os << c._sstr.str() << "\n";
 			return os;
 
@@ -468,7 +474,7 @@ public:
 //______________________________________________________________________________
 class critical : cf { public:	
 	critical() : cf() {}
-	critical(const std::string& str) : cf(str) {}
+	template <typename T> critical(const T& arg) : cf(arg) {}
 
 	//if (verb)
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::critical& c) {
@@ -480,7 +486,7 @@ class critical : cf { public:
 //______________________________________________________________________________
 class error : cf { public:	
 	error() : cf() {}
-	error(const std::string& str) : cf(str) {}
+	template <typename T> error(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::error& c) {
 		if (verb::show(verb::error)) return (os << cl::lred() << (cf&)c);
@@ -491,7 +497,6 @@ class error : cf { public:
 //______________________________________________________________________________
 class warning : cf { public:	
 	warning() : cf() {}
-	//warning(const std::string& str) : cf(str) {}
 	template <typename T> warning(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::warning& c) {
@@ -514,7 +519,7 @@ class message : cf { public:
 //______________________________________________________________________________
 class info : cf { public:	
 	info() : cf() {}
-	info(const std::string& str) : cf(str) {}
+	template <typename T> info(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::info& c) {
 		if (verb::show(verb::info)) return (os << cl::lwhite() << (cf&)c);
@@ -525,7 +530,7 @@ class info : cf { public:
 //______________________________________________________________________________
 class debug : cf { public:	
 	debug() : cf() {}
-	debug(const std::string& str) : cf(str) {}
+	template <typename T> debug(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::debug& c) {
 		if (verb::show(verb::debug)) return (os << cl::white() << (cf&)c);
@@ -534,6 +539,74 @@ class debug : cf { public:
 };
 
 
+// Standard styles messages (TABBED, WITH verbosity check)
+//------------------------------------------------------------------------------
+
+//______________________________________________________________________________
+class criticalMsg : cf {
+public:
+	template <typename T> criticalMsg(const T& arg) : cf(arg, "critical") {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::criticalMsg& c) {
+		if (verb::show(verb::critical)) return (os << cl::lpurple() << (cf&)c);
+		else return os;
+	}
+};
+
+//______________________________________________________________________________
+class errorMsg: cf {
+public:
+	template <typename T> errorMsg(const T& arg) : cf(arg, "error") {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::errorMsg& c) {
+		if (verb::show(verb::error)) return (os << cl::lred() << (cf&)c);
+		else return os;
+	}
+};
+
+//______________________________________________________________________________
+class warningMsg : cf {
+public:
+	template <typename T> warningMsg(const T& arg) : cf(arg, "warning") {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::warningMsg& c) {
+		if (verb::show(verb::warning)) return (os << cl::lyellow() << (cf&)c);
+		else return os;
+	}
+};
+
+//______________________________________________________________________________
+class messageMsg: cf {
+public:
+	template <typename T> messageMsg(const T& arg) : cf(arg, "message") {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::messageMsg& c) {
+		if (verb::show(verb::message)) return (os << cl::lwhite() << cl::uline() << (cf&)c);
+		else return os;
+	}
+};
+
+//______________________________________________________________________________
+class infoMsg : cf {
+public:
+	template <typename T> infoMsg(const T& arg) : cf(arg, "info") {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::infoMsg& c) {
+		if (verb::show(verb::info)) return (os << cl::lwhite() << (cf&)c);
+		else return os;
+	}
+};
+
+//______________________________________________________________________________
+class debugMsg : cf {
+public:
+	template <typename T> debugMsg(const T& arg) : cf(arg, "debug") {}
+
+	friend std::ostream& operator<<(std::ostream& os, const cat::cl::debugMsg& c) {
+		if (verb::show(verb::debug)) return (os << cl::white() << (cf&)c);
+		else return os;
+	}
+};
 
 
 
