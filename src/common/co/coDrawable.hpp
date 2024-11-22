@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.2"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"21 Nov 2024"
+// [cat]			"22 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -37,7 +37,7 @@ namespace cat { namespace co {
 	//______________________________________________________________________________
 	//! \brief The 'cat::drawable' class implements the basic CAT drawable object
 	//!		traits. It is a virtual set of methods and properties.
-	class drawable : public streamable
+	class drawable : public abc
 	{
 		public:
 

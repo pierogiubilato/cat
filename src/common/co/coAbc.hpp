@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.5"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"21 Nov 2024"
+// [cat]			"22 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -55,11 +55,15 @@ namespace cat { namespace co {
 	//! which identifies the objects, and can be replicated among different 
 	//! trees (e.g. the client and server one).
 	//! The cat::co::ID is consistent only within a family tree.
-	typedef uint32_t ID;
+	typedef uint32_t ID_t;
 	
+	typedef uint32_t type_t;
+
+	typedef uint32_t version_t;
+
 	//__________________________________________________________________________
 	//! \brief The 'cat::co::abc' class implements the basic CAT object traits. 
-	//!		It is partiallya virtual set of methods and properties, aiming at 
+	//!		It is partially a virtual set of methods and properties, aiming at 
 	//!		the smallest footprint.
 	class abc
 	{
@@ -88,8 +92,16 @@ namespace cat { namespace co {
 				//! \brief Return the object tye, an unique integer identifying it 
 				//!		among all the 'co' objects.
 				//! \return a std::string containing the object unique stem.
-			virtual uint32_t type() const {
-				return (0);
+			virtual type_t type() const {
+				return (10);
+			}
+
+			//! Returns the object version.
+			//! \brief Return the object stem, i.e. an unique string identifying it 
+			//!		among all the 'co' objects.
+			//! \return a uint16_t containing the object version.
+			virtual version_t version() const {
+				return (11);
 			}
 
 			//! Returns the object unique stem.
@@ -100,14 +112,6 @@ namespace cat { namespace co {
 				return ("co");
 			}
 
-			//! Returns the object version.
-			//! \brief Return the object stem, i.e. an unique string identifying it 
-			//!		among all the 'co' objects.
-			//! \return a uint16_t containing the object version.
-			virtual uint16_t version() const {
-				return (0);
-			}
-		
 			//! Returns the object size in bytes.
 			//! \brief Returns the complete (full static + full dynamic) allocated 
 			//!		space for the object if \c dynamicOnly = false, which is the 
@@ -137,6 +141,15 @@ namespace cat { namespace co {
 				return _status;
 			}
 
+			//! Stream the object data.
+			//! \brief Stream the object data to (write) / from (read) a stream.
+			//! \argument 'read' is a boolean (default false) setting the stream
+			//!		direction: write to the stream when false, read from the
+			//!		stream when true.
+			//! \return 0 if everything fine, a code error otherwise.
+			virtual int stream(std::stringstream& ss, const bool& read = false);
+
+
 
 			// -----------------------------------------------------------------
 			// --						Family tree							  --
@@ -149,29 +162,29 @@ namespace cat { namespace co {
 			//! \brief returns the parent of the object, if any.
 			//! \return the cat::coID of the parent object within the family 
 			//!		tree, 0 if there is no parent.
-			ID parent() const;
+			ID_t parent() const;
 			
 			//! Sets the parent coID.
 			//! \brief sets the object parent.
 			//! \argument parent is a cat::coID of the parent object. the coID 
 			//!		always refers to the current object family.
 			//!	\return nothing.
-			void parent(const ID& pID);
+			void parent(const ID_t& pID);
 			
 			//! Adds a child to the GP.
-			int childAdd(const ID& cId);
+			int childAdd(const ID_t& cId);
 			
 			//! Deletes the child of handle cHnd from the GP.
-			int childDel(const ID& cId);				
+			int childDel(const ID_t& cId);				
 			
 			//! Returns the object childs.
-			std::vector<ID> childGet() const;
+			std::vector<ID_t> childGet() const;
 			
 			//! Returns the number of childs.
 			size_t childCount() const;
 
 			// Return the self-ID.
-			ID id() const;
+			ID_t id() const;
 
 			// Return the self-pointer.
 			abc* ptr();
@@ -179,13 +192,12 @@ namespace cat { namespace co {
 			// Return the self-pointer, constant version.
 			const abc* ptrConst() const;
 
-
 		protected:
 
-			state _status;			//!< Current status.
-			ID _parent;				//!< Parent (if any) within the same set.
-			ID _ID;					//!< ID within the set it is included in.
-			std::vector<ID> _child;	//!< Child(s) (if any).
+			ID_t _ID;					//!< ID within the set it is included in.
+			state _status;				//!< Current status.
+			ID_t _parent;				//!< Parent (if any) within the same set.
+			std::vector<ID_t> _child;	//!< Child(s) (if any).
 
 	};
 

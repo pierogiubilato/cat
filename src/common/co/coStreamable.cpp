@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.2"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"21 Nov 2024"
+// [cat]			"22 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -51,7 +51,7 @@ cat::co::streamable::~streamable()
 // *****************************************************************************
 // **							  Friend members							  **
 // *****************************************************************************
-
+/*
 //______________________________________________________________________________
 //! Write/Read the object into a stream.
 //! \brief write/read the object to/from a std::stringstream. This is used to 
@@ -115,14 +115,12 @@ int cat::co::streamable::stream(std::stringstream& ss, const bool& read)
 	// Everything fine!
 	return false;
 
-	*/
-
 
 	// Return the stream.
 	//return ss;
 	return 0;
 }
-
+*/
 // *****************************************************************************
 // **							  Public members							  **
 // *****************************************************************************

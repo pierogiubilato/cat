@@ -6,9 +6,9 @@
 //______________________________________________________________________________
 // [File name]		"console.hpp"
 // [Author]			"Piero Giubilato"
-// [Version]		"1.1"
+// [Version]		"1.2"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"21 Nov 2024"
+// [cat]			"22 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -233,6 +233,7 @@ class uline : cf { public:
 class black : cf { public:
 	black() : cf() {}
 	black(const std::string& str) : cf(str) {}
+	template <typename T> black(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::black& c) {
 		return (os << oof::fg_color({ 0, 0, 0 }) << (cf&)c);
@@ -243,6 +244,7 @@ class black : cf { public:
 class lblack : cf { public: 
 	lblack() : cf() {}
 	lblack(const std::string& str) : cf(str) {}
+	template <typename T> lblack(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lblack& c) {
 		return (os << oof::fg_color({ 64, 64, 64 }) << (cf&)c);
@@ -253,6 +255,7 @@ class lblack : cf { public:
 class red : cf { public: 
 	red() : cf() {}
 	red(const std::string& str) : cf(str) {}
+	template <typename T> red(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::red& c) {
 		return (os << oof::fg_color({ 128, 0, 0 }) << (cf&)c);
@@ -263,6 +266,7 @@ class red : cf { public:
 class lred : cf { public: 
 	lred() : cf() {}
 	lred(const std::string& str) : cf(str) {}
+	template <typename T> lred(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lred& c) {
 		return (os << oof::fg_color({ 255, 0, 64 }) << (cf&)c);
@@ -273,6 +277,7 @@ class lred : cf { public:
 class green : cf { public: 
 	green() : cf() {}
 	green(const std::string& str) : cf(str) {}
+	template <typename T> green(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::green& c) {
 		return (os << oof::fg_color({ 0, 128, 0 }) << (cf&)c);
@@ -283,6 +288,7 @@ class green : cf { public:
 class lgreen : cf { public: 
 	lgreen() : cf() {}
 	lgreen(const std::string& str) : cf(str) {}
+	template <typename T> lgreen(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lgreen& c) {
 		return (os << oof::fg_color({ 0, 255, 0 }) << (cf&)c);
@@ -293,6 +299,7 @@ class lgreen : cf { public:
 class blue : cf { public: 
 	blue() : cf() {}
 	blue(const std::string& str) : cf(str) {}
+	template <typename T> blue(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::blue& c) {
 		return (os << oof::fg_color({ 0, 0, 128 }) << (cf&)c);
@@ -303,6 +310,7 @@ class blue : cf { public:
 class lblue : cf { public: 
 	lblue() : cf() {}
 	lblue(const std::string& str) : cf(str) {}
+	template <typename T> lblue(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lblue& c) {
 		return (os << oof::fg_color({ 0, 0, 255 }) << (cf&)c);
@@ -313,6 +321,7 @@ class lblue : cf { public:
 class yellow : cf {	public: 
 	yellow() : cf() {}
 	yellow(const std::string& str) : cf(str) {}
+	template <typename T> yellow(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::yellow& c) {
 		return (os << oof::fg_color({ 128, 128, 0 }) << (cf&)c);
@@ -323,6 +332,7 @@ class yellow : cf {	public:
 class lyellow : cf { public: 
 	lyellow() : cf() {}
 	lyellow(const std::string& str) : cf(str) {}
+	template <typename T> lyellow(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lyellow& c) {
 		return (os << oof::fg_color({ 255, 255, 0 }) << (cf&)c);
@@ -333,6 +343,7 @@ class lyellow : cf { public:
 class cyan : cf { public: 
 	cyan() : cf() {}
 	cyan(const std::string& str) : cf(str) {}
+	template <typename T> cyan(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::cyan& c) {
 		return (os << oof::fg_color({ 0, 128, 128 }) << (cf&)c);
@@ -343,6 +354,7 @@ class cyan : cf { public:
 class lcyan : cf { public: 
 	lcyan() : cf() {}
 	lcyan(const std::string& str) : cf(str) {}
+	template <typename T> lcyan(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lcyan& c) {
 		return (os << oof::fg_color({ 0, 255, 255 }) << (cf&)c);
@@ -353,6 +365,7 @@ class lcyan : cf { public:
 class purple : cf {	public: 
 	purple() : cf() {}
 	purple(const std::string& str) : cf(str) {}
+	template <typename T> purple(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::purple& c) {
 		return (os << oof::fg_color({ 128, 0, 128 }) << (cf&)c);
@@ -363,6 +376,7 @@ class purple : cf {	public:
 class lpurple : cf { public: 
 	lpurple() : cf() {}
 	lpurple(const std::string& str) : cf(str) {}
+	template <typename T> lpurple(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lpurple& c) {
 		return (os << oof::fg_color({ 255, 0, 255 }) << (cf&)c);
@@ -373,6 +387,7 @@ class lpurple : cf { public:
 class avio : cf { public: 
 	avio() : cf() {}
 	avio(const std::string& str) : cf(str) {}
+	template <typename T> avio(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::avio& c) {
 		return (os << oof::fg_color({ 0, 64, 128 }) << (cf&)c);
@@ -383,6 +398,7 @@ class avio : cf { public:
 class lavio : cf { public: 
 	lavio() : cf() {}
 	lavio(const std::string& str) : cf(str) {}
+	template <typename T> lavio(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lavio& c) {
 		return (os << oof::fg_color({ 0, 128, 255 }) << (cf&)c);
@@ -393,6 +409,7 @@ class lavio : cf { public:
 class fucsia : cf {	public: 
 	fucsia() : cf() {}
 	fucsia(const std::string& str) : cf(str) {}
+	template <typename T> fucsia(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::fucsia& c) {
 		return (os << oof::fg_color({ 0, 64, 128 }) << (cf&)c);
@@ -403,7 +420,8 @@ class fucsia : cf {	public:
 class lfucsia : cf { public: 
 	lfucsia() : cf() {}
 	lfucsia(const std::string& str) : cf(str) {}
-	
+	template <typename T> lfucsia(const T& arg) : cf(arg) {}
+
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lfucsia& c) {
 		return (os << oof::fg_color({ 128, 0, 64 }) << (cf&)c);
 	}
@@ -413,6 +431,7 @@ class lfucsia : cf { public:
 class grass : cf { public: 
 	grass() : cf() {}
 	grass(const std::string& str) : cf(str) {}
+	template <typename T> grass(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::grass& c) {
 		return (os << oof::fg_color({ 64, 128, 0 }) << (cf&)c);
@@ -423,6 +442,7 @@ class grass : cf { public:
 class lgrass : cf { public: 
 	lgrass() : cf() {}
 	lgrass(const std::string& str) : cf(str) {}
+	template <typename T> lgrass(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lgrass& c) {
 		return (os << oof::fg_color({ 128, 255, 0 }) << (cf&)c);
@@ -433,6 +453,7 @@ class lgrass : cf { public:
 class white : cf { public: 
 	white() : cf() {}
 	white(const std::string& str) : cf(str) {}
+	template <typename T> white(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::white& c) {
 		return (os << oof::fg_color({ 128, 128, 128 }) << (cf&)c);
@@ -443,6 +464,7 @@ class white : cf { public:
 class lwhite : cf {	public: 
 	lwhite() : cf() {}
 	lwhite(const std::string& str) : cf(str) {}
+	template <typename T> lwhite(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::lwhite& c) {
 		return (os << oof::fg_color({ 255, 255, 255 }) << (cf&)c);
@@ -460,6 +482,7 @@ public:
 
 	link() : cf() {}
 	link(const std::string& str) : cf(str) {}
+	template <typename T> link(const T& arg) : cf(arg) {}
 
 	friend std::ostream& operator<<(std::ostream& os, const cat::cl::link& c) {
 		return (os << cl::lavio() << cl::uline() << (cf&)c);

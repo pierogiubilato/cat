@@ -55,7 +55,7 @@ namespace cat { namespace co {
 			//!		direction: write to the stream when false, read from the
 			//!		stream when true.
 			//! \return 0 if everything fine, a code error otherwise.
-			virtual int stream(std::stringstream& ss, const bool& read = false);
+			//virtual int stream(std::stringstream& ss, const bool& read = false);
 
 		protected:
 

@@ -376,8 +376,8 @@ int appLoop(cat::context& ctx)
 int doTest(cat::context& ctx)
 {
 
+    // ******************************************
     // Console tests.
-
     std::cout << "\n\n*** CONSOLE TESTING ***\n";
     cat::cl::verb::set(cat::cl::verb::all);
 
@@ -401,11 +401,33 @@ int doTest(cat::context& ctx)
     //! This is the main application loop, which handles events from the user,
     //! calls from/to the clients, and display the outputs.
 
-    
-    std::cout << cat::cl::message("Building a cat::co:abstract base object") << "\n";
-    cat::co::abc myCo;
-    std::cout << "Dumping my first object: " << myCo << "\n";
+    // ******************************************
+    // Objects tests.
+    std::cout << "\n\n*** OBJECT TESTING ***\n";
+    cat::cl::verb::set(cat::cl::verb::all);
 
+    
+    // Obj #1
+    std::stringstream ss(std::stringstream::in | std::stringstream::out | std::stringstream::binary);
+    std::cout << cat::cl::message("Building a cat::co:abstract base object") << "\n";
+    cat::co::abc coA;
+        coA.parent(33);
+        coA.childAdd(12);
+        coA.childAdd(43);
+        coA.childAdd(67);
+    std::cout << "Obj A: " << coA << "\n";
+        coA.stream(ss, false);
+    std::cout << "Obj A stream: " << ss.str().c_str() << "\n";
+    std::cout << "Obj A stream size: " << ss.str().size() << "\n";
+
+    // Obj #2
+    cat::co::abc coB;
+    std::cout << cat::cl::info("Streaming A into B") << "\n";
+        coB.stream(ss, true);
+    std::cout << "Obj B: " << coB << "\n";
+
+
+    std::cout << "\n";
     std::cout << cat::cl::message("Building a cat::co:set container") << "\n";
     cat::co::set mySet;
     std::cout << "Dumping my first object: " << mySet << "\n";
