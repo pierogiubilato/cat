@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.1"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"18 Nov 2024"
+// [cat]			"23 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -58,6 +58,12 @@ namespace cat { namespace co {
 			//! Dtor.
 			~set();
 			
+
+			//! Add an object.
+			//! \brief dump the  data content of the object into the console
+			//! \return nothing.
+			void add(cat::co::abc&);
+
 			//! Dump the object content into the console.
 			//! \brief dump the  data content of the object into the console
 			//! \return nothing.
@@ -66,7 +72,7 @@ namespace cat { namespace co {
 	private:
 
 			//! The linear vector containing all the objects.
-			std::vector<cat::co::abc> _set;
+			std::vector<cat::co::abc*> _obj;
 
 	};
 

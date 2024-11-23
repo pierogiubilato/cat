@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.5"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"18 Nov 2024"
+// [cat]			"23 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -16,6 +16,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+
 
 // SFML system/windowing library.
 //#include <SFML/Graphics/CircleShape.hpp>
@@ -427,10 +428,29 @@ int doTest(cat::context& ctx)
     std::cout << "Obj B: " << coB << "\n";
 
 
+
+
+    // ******************************************
+    // Typeinfo.
+    std::cout << "\n\n*** TYPE INFO ***\n";
+    std::cout << typeid(int).name() << "\n";
+    std::cout << "coA.typeid.name: " << typeid(coA).name() << "\n";
+    std::cout << "coA.typeid.hash: " << typeid(coA).hash_code() << "\n";
+    std::cout << "coA.typeid.type_index-name: " << std::type_index(typeid(coA)).name() << "\n";
+    std::cout << "co::abc.typeid.name: " << typeid(cat::co::abc).name() << "\n";
+    std::cout << "ui::button.typeid.name: " << typeid(cat::ui::button).name() << "\n";
+
+
+
     std::cout << "\n";
     std::cout << cat::cl::message("Building a cat::co:set container") << "\n";
     cat::co::set mySet;
     std::cout << "Dumping my first object: " << mySet << "\n";
+
+
+
+
+
 
 
     // Everything fine.

@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.5"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"22 Nov 2024"
+// [cat]			"23 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -23,6 +23,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <typeinfo>
+#include <typeindex>
 //#include <ostream>
 //#include <sstream>
 
@@ -45,21 +47,37 @@ std::ostream& operator<<(std::ostream& os, const cat::co::abc& c);
 // #############################################################################
 
 
+// #############################################################################
+// Forward declarations of the container class cat::co::set, which is given as
+// reference to any new object for the ownership.
+namespace cat {
+	namespace co {
+		class set;
+	}
+}
+// #############################################################################
 
 
 // #############################################################################
 namespace cat { namespace co {
 
 	//! Simply define a name for a cat::co::ABc object ID within a set. The
-	//! object ID is the index within the vector holding a family of object
+	//! object ID is the index within the vector holding a family of objects,
 	//! which identifies the objects, and can be replicated among different 
-	//! trees (e.g. the client and server one).
-	//! The cat::co::ID is consistent only within a family tree.
+	//! containers (e.g. the client and server one).
+	//! The cat::co::ID_t is consistent only within synchronized containers.
 	typedef uint32_t ID_t;
 	
+	//! Object type unique identifier. Used mostly for object creation. This
+	//! is used instead of a more modern std::type_info and/or std::type_index
+	//! to ensure consistent width between different system/compilers when 
+	//! streaming the object across different domains.
 	typedef uint32_t type_t;
 
+	//! Object version. Used mostly for streams verification when loading
+	//! data from another object of the same type.
 	typedef uint32_t version_t;
+
 
 	//__________________________________________________________________________
 	//! \brief The 'cat::co::abc' class implements the basic CAT object traits. 
@@ -69,8 +87,25 @@ namespace cat { namespace co {
 	{
 		public:
 
-			//! Ctor.
+			//! Friend classes
+			friend cat::co::set;
+			
+			//! Default Ctor.
+			//! \brief containerless constructor. Used only for stand-alone
+			//!		objects.
 			abc();
+			
+			//! Container Ctor.
+			//! \brief Creates a new cat::co::abc object with information 
+			//!		about the container it has been stored into. The new object 
+			//!		will communicate to the owner container its state changes, 
+			//!		and other events as well.
+			//! \argument 'set' is the reference to a cat::co:set container 
+			//!		object, which the new object will become an element.
+			//! \argument 'id' is the unique index of the object within the 
+			//!		'set' container, guaranteed to not change for the entire
+			//!		life of the object.
+			//abc(set* set, const ID_t& id);
 
 			//! Dtor.
 			~abc();
@@ -89,11 +124,11 @@ namespace cat { namespace co {
 			};
 
 			//! Returns the object unique type.
-				//! \brief Return the object tye, an unique integer identifying it 
-				//!		among all the 'co' objects.
-				//! \return a std::string containing the object unique stem.
+			//! \brief Return the object tye, an unique integer identifying it 
+			//!		among all the 'co' objects.
+			//! \return a std::string containing the object unique stem.
 			virtual type_t type() const {
-				return (10);
+				return (0);
 			}
 
 			//! Returns the object version.
@@ -101,16 +136,16 @@ namespace cat { namespace co {
 			//!		among all the 'co' objects.
 			//! \return a uint16_t containing the object version.
 			virtual version_t version() const {
-				return (11);
+				return (1);
 			}
 
 			//! Returns the object unique stem.
 			//! \brief Return the object stem, i.e. an unique string identifying it 
 			//!		among all the 'co' objects.
 			//! \return a std::string containing the object unique stem.
-			virtual std::string stem() const {
-				return ("co");
-			}
+			//virtual std::string stem() const {
+			//	return ("co");
+			//}
 
 			//! Returns the object size in bytes.
 			//! \brief Returns the complete (full static + full dynamic) allocated 
@@ -150,7 +185,6 @@ namespace cat { namespace co {
 			virtual int stream(std::stringstream& ss, const bool& read = false);
 
 
-
 			// -----------------------------------------------------------------
 			// --						Family tree							  --
 			// -----------------------------------------------------------------
@@ -169,7 +203,7 @@ namespace cat { namespace co {
 			//! \argument parent is a cat::coID of the parent object. the coID 
 			//!		always refers to the current object family.
 			//!	\return nothing.
-			void parent(const ID_t& pID);
+			void parent(const ID_t& pId);
 			
 			//! Adds a child to the GP.
 			int childAdd(const ID_t& cId);
@@ -178,13 +212,10 @@ namespace cat { namespace co {
 			int childDel(const ID_t& cId);				
 			
 			//! Returns the object childs.
-			std::vector<ID_t> childGet() const;
+			std::vector<ID_t> childList() const;
 			
 			//! Returns the number of childs.
 			size_t childCount() const;
-
-			// Return the self-ID.
-			ID_t id() const;
 
 			// Return the self-pointer.
 			abc* ptr();
@@ -194,10 +225,33 @@ namespace cat { namespace co {
 
 		protected:
 
-			ID_t _ID;					//!< ID within the set it is included in.
+			// Owner-related.
+			set* _owner;				//!< Pointer to the owner container.
+			ID_t _oId;					//!< ID within the owner the object is included in.
 			state _status;				//!< Current status.
+			
+			// Family tree.
 			ID_t _parent;				//!< Parent (if any) within the same set.
 			std::vector<ID_t> _child;	//!< Child(s) (if any).
+
+		private:
+
+			// -----------------------------------------------------------------
+			// --						Container related					  --
+			// -----------------------------------------------------------------
+
+			//! Return the owner.
+			//! \brief returns a pointer to the containe owning the object, if 
+			//!		any. If there is no owner container, returns a nullptr.
+			//! \return	the pointer to the owner if any, a nullptr if there is 
+			//!		no owner.
+			set* owner() const;
+
+			//! Return the container-referred ID.
+			//! \brief reurn the ID used by the container to identify the object.
+			//!		if there is no owner container, returns 0.
+			//! \return	the owner container ID, 0 if there is no owner.
+			ID_t id() const;
 
 	};
 

@@ -30,14 +30,24 @@
 // *****************************************************************************
 
 //______________________________________________________________________________
-//! Ctor.
-cat::co::abc::abc(): _ID(0), 
-					 _parent(0), 
-					_status(cat::co::abc::state::uninitialized)
+//! Default Ctor.
+cat::co::abc::abc() : _owner(nullptr), _oId(0),_parent(0),
+					  _status(cat::co::abc::state::uninitialized)
 {
 
-
 }
+
+//______________________________________________________________________________
+//! Container Ctor.
+//cat::co::abc::abc(cat::co::set* set, const cat::co::ID_t& id) : 
+//					_owner(set),
+//					_ID(id), 
+//					_parent(0), 
+//					_status(cat::co::abc::state::uninitialized)
+//{
+//
+//
+//}
 
 //______________________________________________________________________________
 //! Dtor.
@@ -161,13 +171,32 @@ int cat::co::abc::stream(std::stringstream & ss, const bool& read)
 	//cat::co::stream::rw(ss, _status, read);
 
 	// Family.
-	cat::co::stream::rw(read, ss, _ID);
+	cat::co::stream::rw(read, ss, _oId);
 	cat::co::stream::rw(read, ss, _parent);
 	cat::co::stream::rw(read, ss, _child);
 
 
 	// Everything fine!
 	return 0;
+}
+
+
+// *****************************************************************************
+// **							Owner private members						  **
+// *****************************************************************************
+
+//______________________________________________________________________________
+cat::co::set* cat::co::abc::owner() const
+{
+	//! Returns the object owner (the contair which manages it).
+	return _owner;
+}
+
+//______________________________________________________________________________
+cat::co::ID_t cat::co::abc::id() const
+{
+	//! Returns ID used by the owner to identify the object.
+	return _oId;
 }
 
 
@@ -222,7 +251,7 @@ int cat::co::abc::childDel(const cat::co::ID_t& cID)
 }
 
 //______________________________________________________________________________
-std::vector<uint32_t> cat::co::abc::childGet() const
+std::vector<uint32_t> cat::co::abc::childList() const
 {
 	// Return a copy of the private container.
 	return _child;
@@ -235,12 +264,7 @@ size_t cat::co::abc::childCount() const
 	return _child.size();
 }
 
-//______________________________________________________________________________
-cat::co::ID_t cat::co::abc::id() const
-{
-	//! Returns the number of childs.
-	return _ID;
-}
+
 
 //______________________________________________________________________________
 cat::co::abc* cat::co::abc::ptr()
