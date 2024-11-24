@@ -78,6 +78,13 @@ namespace cat { namespace co {
 	//! data from another object of the same type.
 	typedef uint32_t version_t;
 
+	//! Possible object states.
+	enum class state : uint16_t {
+		uninitialized = 0,
+		unchanged = 1,
+		modified = 2,
+		abandoned = 3
+	};
 
 	//__________________________________________________________________________
 	//! \brief The 'cat::co::abc' class implements the basic CAT object traits. 
@@ -110,34 +117,17 @@ namespace cat { namespace co {
 			//! Dtor.
 			~abc();
 			
-			// -----------------------------------------------------------------
-			// --						Basic properties					  --
-			// -----------------------------------------------------------------
-
-			//! Returns the object unique stem.
-			//! \brief the state of the object
-			enum class state : uint16_t {
-				uninitialized = 0,
-				unchanged = 1,
-				modified = 2,
-				abandoned = 3
-			};
-
 			//! Returns the object unique type.
 			//! \brief Return the object tye, an unique integer identifying it 
 			//!		among all the 'co' objects.
 			//! \return a std::string containing the object unique stem.
-			virtual type_t type() const {
-				return (0);
-			}
+			virtual type_t type() const;
 
 			//! Returns the object version.
 			//! \brief Return the object stem, i.e. an unique string identifying it 
 			//!		among all the 'co' objects.
 			//! \return a uint16_t containing the object version.
-			virtual version_t version() const {
-				return (1);
-			}
+			virtual version_t version() const;
 
 			//! Returns the object unique stem.
 			//! \brief Return the object stem, i.e. an unique string identifying it 
@@ -155,13 +145,7 @@ namespace cat { namespace co {
 			//!		static part.
 			//! \argument dynamicOnly is a bool (default false) which restrict the 
 			//!		returned object size to the dynamically allocated part only.
-			virtual size_t size(const bool& dynamicOnly = false) const {
-				if (dynamicOnly) {
-					return 0;
-				} else {
-					return sizeof(*this);
-				}
-			}
+			virtual size_t size(const bool& dynamicOnly = false) const;
 
 			//! Dump the object content into the console.
 			//! \brief dump the  data content of the object into the console
@@ -172,24 +156,27 @@ namespace cat { namespace co {
 			//! \brief Return the object stem, i.e. an unique string identifying it 
 			//!		among all the 'co' objects.
 			//! \return a uint16_t containing the object version.
-			virtual state status() const {
-				return _status;
-			}
+			virtual state status() const;
 
-			//! Stream the object data.
-			//! \brief Stream the object data to (write) / from (read) a stream.
-			//! \argument 'read' is a boolean (default false) setting the stream
-			//!		direction: write to the stream when false, read from the
-			//!		stream when true.
-			//! \return 0 if everything fine, a code error otherwise.
+			//! Write/Read the object into a stream.
+			//! \brief write/read the object to/from a std::stringstream. This is used to 
+			//!		save/load the object and/or duplicate it across sockets or other means.
+			//!		Important: thw function writes all the object data, except the object 
+			//!		type, which MUST be pre-happened to the writing call, so that a factory
+			//!		will create the right object in the read phase, and then call the stream
+			//!		read function to recreate it.
+			//! \argument \c ss is the std::stringstream the object must be written into, or
+			//!		read from.
+			//! \argument \c read is a boolean (default false) setting whether the operation
+			//!		is a write (default) or read one.
+			//! \return \c 0 if everything right, error code otherwise.
 			virtual int stream(std::stringstream& ss, const bool& read = false);
 
 
 			// -----------------------------------------------------------------
 			// --						Family tree							  --
 			// -----------------------------------------------------------------
-
-			
+						
 			//! Retrieves the parent pointer.
 			//! \brief returns the pointer to the object parent, if any.
 			//! \return the cat::co::abc pointer of the parent object if any,
@@ -201,13 +188,13 @@ namespace cat { namespace co {
 			//! \argument parent is a cat::coID of the parent object. the coID 
 			//!		always refers to the current object family.
 			//!	\return nothing.
-			void parent(abc* pId);
+			void parent(abc* ptr);
 
 			//! Adds a child to the GP.
-			void childAdd(abc* cId);
+			void childAdd(abc* ptr);
 
 			//! Deletes the child of handle cHnd from the GP.
-			int childDel(abc* cId);
+			int childDel(abc* ptr);
 
 			//! Returns the object childs.
 			std::vector<abc*> childList() const;

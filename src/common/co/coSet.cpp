@@ -46,8 +46,6 @@ cat::co::set::~set()
 
 
 
-
-
 // *****************************************************************************
 // **							  Friend members							  **
 // *****************************************************************************
@@ -59,4 +57,71 @@ std::ostream& operator<<(std::ostream& os, const cat::co::set& c)
 {
 	// Object status.
 	return (os << "cat::co::set");
+}
+
+
+// *****************************************************************************
+// **							Objects access								  **
+// *****************************************************************************
+
+//______________________________________________________________________________
+void cat::co::set::add(cat::co::abc*)
+{
+
+}
+
+//______________________________________________________________________________
+int cat::co::set::del(cat::co::abc*)
+{
+	// Everything fine.
+	return static_cast<int>(cat::error::free);
+}
+
+//______________________________________________________________________________
+int cat::co::set::del(const cat::co::ID_t& ptr)
+{
+	// Everything fine.
+	return static_cast<int>(cat::error::free);
+}
+
+//______________________________________________________________________________
+cat::co::abc* cat::co::set::get(const cat::co::ID_t& id) const
+{
+	// Everything fine.
+	return nullptr;
+}
+
+//______________________________________________________________________________
+cat::co::ID_t cat::co::set::get(const cat::co::abc* ptr) const
+{
+	// Everything fine.
+	return 0;
+}
+
+
+
+// *****************************************************************************
+// **						Container(s) operations						      **
+// *****************************************************************************
+
+
+//______________________________________________________________________________
+int cat::co::set::clear(const bool& del)
+{
+	// Everything fine.
+	return static_cast<int>(cat::error::free);
+}
+
+//______________________________________________________________________________
+int cat::co::set::pushTo(cat::co::set* target) const
+{
+	// Everything fine.
+	return static_cast<int>(cat::error::free);
+}
+
+//______________________________________________________________________________
+int cat::co::set::pullFrom(cat::co::set* source)
+{
+	// Everything fine.
+	return static_cast<int>(cat::error::free);
 }

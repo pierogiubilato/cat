@@ -34,7 +34,7 @@
 //! Default Ctor.
 cat::co::abc::abc() : _ownerPtr(nullptr), _ownId(0), _parentId(0),
 					_parentPtr(nullptr),
-					  _status(cat::co::abc::state::uninitialized)
+					  _status(cat::co::state::uninitialized)
 {
 
 }
@@ -81,16 +81,16 @@ std::ostream& operator<<(std::ostream& os, const cat::co::abc& c)
 	// Object status.
 	os << " St: " << cat::cl::message();
 	switch (c._status) {
-		case cat::co::abc::state::uninitialized: 
+		case cat::co::state::uninitialized: 
 			os << cat::cl::yellow("0"); 
 			break;
-		case cat::co::abc::state::abandoned: 
+		case cat::co::state::abandoned: 
 			os << cat::cl::red("A"); 
 			break;
-		case cat::co::abc::state::modified: 
+		case cat::co::state::modified: 
 			os << cat::cl::cyan("M");
 			break;
-		case cat::co::abc::state::unchanged:
+		case cat::co::state::unchanged:
 			os << cat::cl::green("U");
 			break;
 		default: os << cat::cl::critical("unknown");
@@ -121,27 +121,36 @@ std::ostream& operator<<(std::ostream& os, const cat::co::abc& c)
 }
 
 // *****************************************************************************
-// **							  Public members							  **
+// **						Public basic members							  **
 // *****************************************************************************
 
+//______________________________________________________________________________
+cat::co::type_t cat::co::abc::type() const {
+	return (0);
+}
 
 //______________________________________________________________________________
-//! Write/Read the object into a stream.
-//! \brief write/read the object to/from a std::stringstream. This is used to 
-//!		save/load the object and/or duplicate it across sockets or other means.
-//!		Important: thw function writes all the object data, except the object 
-//!		type, which MUST be pre-happened to the writing call, so that a factory
-//!		will create the right object in the read phase, and then call the stream
-//!		read function to recreate it.
-//! \argument \c ss is the std::stringstream the object must be written into, or
-//!		read from.
-//! \argument \c read is a boolean (default false) setting whether the operation
-//!		is a write (default) or read one.
-//! \return \c 0 if everything right, error code otherwise.
-//! 
+cat::co::version_t cat::co::abc::version() const {
+	return (1);
+}
+
+//______________________________________________________________________________
+size_t cat::co::abc::size(const bool& dynamicOnly) const {
+	if (dynamicOnly) {
+		return 0;
+	} else {
+		return sizeof(*this);
+	}
+}
+
+//______________________________________________________________________________
+cat::co::state cat::co::abc::status() const {
+	return _status;
+}
+
+//______________________________________________________________________________
 int cat::co::abc::stream(std::stringstream & ss, const bool& read)
 {
-
 	// First, read/write the object type and version.
 	if (read) {
 
@@ -184,6 +193,14 @@ int cat::co::abc::stream(std::stringstream & ss, const bool& read)
 
 
 // *****************************************************************************
+// **						Public family members							  **
+// *****************************************************************************
+
+
+
+
+
+// *****************************************************************************
 // **					 Owner / Family private members						  **
 // *****************************************************************************
 
@@ -220,7 +237,6 @@ void cat::co::abc::parentId(const cat::co::ID_t& pId)
 }
 
 //______________________________________________________________________________
-
 int cat::co::abc::childIdAdd(const cat::co::ID_t& cID)
 {
 	
