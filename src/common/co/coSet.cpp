@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.2"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"18 Nov 2024"
+// [cat]			"24 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -20,6 +20,7 @@
 
 // Application components - Shared between Server and Client.
 #include "coSet.hpp"
+#include "error.hpp"
 
 
 
@@ -32,6 +33,8 @@
 cat::co::set::set()
 {
 
+	// The first object within the objects vector is an empty one..
+	_obj.push_back(nullptr);
 }
 
 //______________________________________________________________________________

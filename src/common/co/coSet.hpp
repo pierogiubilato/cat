@@ -62,7 +62,18 @@ namespace cat { namespace co {
 			//! Add an object.
 			//! \brief dump the  data content of the object into the console
 			//! \return nothing.
-			void add(cat::co::abc&);
+			void add(cat::co::abc*);
+
+			
+			//! Gen an object.
+			//! \brief get an object pointer by issuing its ID.
+			//! \return a pointer to the object if it exists, a nullptr otherwise.
+			abc* get(cat::co::ID_t) const;
+			
+			//! Gen an object.
+			//! \brief get an object ID by issuing its pointer.
+			//! \return the object ID if it exists, 0 otherwise.
+			ID_t* get(const cat::co::abc*) const;
 
 			//! Dump the object content into the console.
 			//! \brief dump the  data content of the object into the console

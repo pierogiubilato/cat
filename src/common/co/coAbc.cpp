@@ -22,6 +22,7 @@
 // Application components - Shared between Server and client.
 #include "coAbc.hpp"
 #include "coStream.hpp"
+#include "error.hpp"
 
 
 
@@ -31,7 +32,8 @@
 
 //______________________________________________________________________________
 //! Default Ctor.
-cat::co::abc::abc() : _owner(nullptr), _oId(0),_parent(0),
+cat::co::abc::abc() : _ownerPtr(nullptr), _ownId(0), _parentId(0),
+					_parentPtr(nullptr),
 					  _status(cat::co::abc::state::uninitialized)
 {
 
@@ -69,8 +71,8 @@ std::ostream& operator<<(std::ostream& os, const cat::co::abc& c)
 	os << "<";
 
 	// Object ID and pointer.
-	os << "ID: " << cat::cl::grass(c.id());
-	os << " ptr: " << cat::cl::link() << c.ptrConst() << cat::cl::reset();
+	os << "ID: " << cat::cl::grass(c.ownId());
+	os << " ptr: " << cat::cl::link() << c.ownPtrConst() << cat::cl::reset();
 
 	// Object size.
 	os << " Size: " << cat::cl::lpurple(c.size());
@@ -100,12 +102,12 @@ std::ostream& operator<<(std::ostream& os, const cat::co::abc& c)
 	
 	// Object child(s).
 	os << " Ch: {" << cat::cl::message();
-	if (c._child.size() > 0) {
-		for (size_t i = 0; i < c._child.size() - 1; i++) {
-			os << cat::cl::message(std::to_string(c._child[i])) 
+	if (c._childId.size() > 0) {
+		for (size_t i = 0; i < c._childId.size() - 1; i++) {
+			os << cat::cl::message(std::to_string(c._childId[i])) 
 				<< cat::cl::reset() << ",";
 		}
-		os << cat::cl::message(c._child.back()) 
+		os << cat::cl::message(c._childId.back()) 
 			<< cat::cl::reset() << "}";
 	} else {
 		os << cat::cl::message("0") << "}";
@@ -150,7 +152,7 @@ int cat::co::abc::stream(std::stringstream & ss, const bool& read)
 		if (typeCheck != type()) {
 			std::cout << cat::cl::errorMsg("Invalid type while reading object ") << cat::cl::lavio(this) << "\n";
 			//throw std::runtime_error("cat::GP::stream incorrect Type!");
-			return -1;
+			//return -1;
 		}
 		
 		// Check version.
@@ -158,7 +160,7 @@ int cat::co::abc::stream(std::stringstream & ss, const bool& read)
 		if (versionCheck != version()) {
 			std::cout << cat::cl::errorMsg("Invalid version while reading object ") << cat::cl::lavio(this) << "\n";
 			//throw std::runtime_error("cat::GP::Stream incorrect Version!");
-			return -1;
+			//return -1;
 		}
 
 		// Write type and version for later checking.
@@ -170,33 +172,95 @@ int cat::co::abc::stream(std::stringstream & ss, const bool& read)
 	// Read/Write all the GP properties from/into the stream.
 	//cat::co::stream::rw(ss, _status, read);
 
-	// Family.
-	cat::co::stream::rw(read, ss, _oId);
-	cat::co::stream::rw(read, ss, _parent);
-	cat::co::stream::rw(read, ss, _child);
+	// Saves the relevant family IDs with respect the current container.
+	cat::co::stream::rw(read, ss, _ownId);
+	cat::co::stream::rw(read, ss, _parentId);
+	cat::co::stream::rw(read, ss, _childId);
 
 
 	// Everything fine!
-	return 0;
+	return static_cast<int>(cat::error::free);
 }
 
 
 // *****************************************************************************
-// **							Owner private members						  **
+// **					 Owner / Family private members						  **
 // *****************************************************************************
 
 //______________________________________________________________________________
-cat::co::set* cat::co::abc::owner() const
+cat::co::set* cat::co::abc::ownerPtr() const
 {
-	//! Returns the object owner (the contair which manages it).
-	return _owner;
+	//! Returns the object owner (the container which manages it).
+	return _ownerPtr;
 }
 
 //______________________________________________________________________________
-cat::co::ID_t cat::co::abc::id() const
+cat::co::ID_t cat::co::abc::ownId() const
 {
 	//! Returns ID used by the owner to identify the object.
-	return _oId;
+	return _ownId;
+}
+
+//______________________________________________________________________________
+cat::co::ID_t cat::co::abc::parentId() const
+{
+	//! Returns the GP parent pointer (if any).
+	return _parentId;
+}
+
+//______________________________________________________________________________
+void cat::co::abc::parentId(const cat::co::ID_t& pId)
+{
+
+	_parentId = pId;
+
+	// Retrieves and store parent pointer.
+	//if (_parentHnd && _ownerPtr) _parentPtr = _ownerPtr->gpGet(_parentHnd);
+	//else _parentPtr = NULL;
+}
+
+//______________________________________________________________________________
+
+int cat::co::abc::childIdAdd(const cat::co::ID_t& cID)
+{
+	
+	// check there is an owner.
+	if (_ownerPtr == nullptr) return static_cast<int>(cat::error::coNoOwner);
+	
+	// Store the child ID.
+	_childId.push_back(cID);
+	
+	// *** TODO: Update the child pointer.
+	//_childPtr.push_back(_ownerPtr.);
+	
+	// Everything fine.
+	return static_cast<int>(cat::error::free);;
+	// DEBUG: Do we need to notify the child? Or check for multiple parents?
+}
+
+//______________________________________________________________________________
+int cat::co::abc::childIdDel(const cat::co::ID_t& cID)
+{
+	// Search the children.
+	auto pos = std::find(_childId.begin(), _childId.end(), cID);
+
+	// The children was found.
+	if (pos != _childId.end()) {
+		_childId.erase(pos);
+		return 0;
+
+		// cID children was not found.
+	}
+	else {
+		return static_cast<int>(cat::error::coNoThisChild);
+	}
+}
+
+//______________________________________________________________________________
+std::vector<cat::co::ID_t> cat::co::abc::childIdList() const
+{
+	// Return a copy of the private container.
+	return _childId;
 }
 
 
@@ -206,75 +270,23 @@ cat::co::ID_t cat::co::abc::id() const
 
 
 
-//______________________________________________________________________________
-cat::co::ID_t cat::co::abc::parent() const
-{
-	//! Returns the GP parent pointer (if any).
-	return _parent;
-}
-
-//______________________________________________________________________________
-void cat::co::abc::parent(const cat::co::ID_t& pID)
-{
-	
-   _parent = pID;
-	
-	// Retrieves and store parent pointer.
-	//if (_parentHnd && _ownerPtr) _parentPtr = _ownerPtr->gpGet(_parentHnd);
-	//else _parentPtr = NULL;
-}
-
-//______________________________________________________________________________
-
-int cat::co::abc::childAdd(const cat::co::ID_t& cID)
-{
-	_child.push_back(cID);
-	return 0;
-	// DEBUG: Do we need to notify the child? Or check for multiple parents?
-}
-
-//______________________________________________________________________________
-int cat::co::abc::childDel(const cat::co::ID_t& cID)
-{
-	// Search the children.
-	auto pos = std::find(_child.begin(), _child.end(), cID);
-	
-	// The children was found.
-	if (pos != _child.end()) {
-		_child.erase(pos);
-		return 0;
-	
-	// cID children was not found.
-	} else {
-		return -1;
-	}
-}
-
-//______________________________________________________________________________
-std::vector<uint32_t> cat::co::abc::childList() const
-{
-	// Return a copy of the private container.
-	return _child;
-}
 
 //______________________________________________________________________________
 size_t cat::co::abc::childCount() const
 {
 	//! Returns the number of childs.
-	return _child.size();
+	return _childPtr.size();
 }
 
-
-
 //______________________________________________________________________________
-cat::co::abc* cat::co::abc::ptr()
+cat::co::abc* cat::co::abc::ownPtr()
 {
 	//! Returns the number of childs.
 	return this;
 }
 
 //______________________________________________________________________________
-const cat::co::abc* cat::co::abc::ptrConst() const
+const cat::co::abc* cat::co::abc::ownPtrConst() const
 {
 	//! Returns the number of childs.
 	return this;

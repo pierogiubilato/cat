@@ -8,7 +8,7 @@
 // [Author]			"Piero Giubilato"
 // [Version]		"0.5"
 // [Modified by]	"Piero Giubilato"
-// [cat]			"23 Nov 2024"
+// [cat]			"24 Nov 2024"
 // [Language]		"C++"
 //______________________________________________________________________________
 
@@ -189,50 +189,52 @@ namespace cat { namespace co {
 			// --						Family tree							  --
 			// -----------------------------------------------------------------
 
-			//co* owner() const;					//!< Retrieves the owner pointer.
-			//void owner(scene*);					//!< Sets the owner pointer.
 			
-			//! Retrieves the parent coID.
-			//! \brief returns the parent of the object, if any.
-			//! \return the cat::coID of the parent object within the family 
-			//!		tree, 0 if there is no parent.
-			ID_t parent() const;
-			
+			//! Retrieves the parent pointer.
+			//! \brief returns the pointer to the object parent, if any.
+			//! \return the cat::co::abc pointer of the parent object if any,
+			//!		0 if there is no parent.
+			abc* parent() const;
+
 			//! Sets the parent coID.
 			//! \brief sets the object parent.
 			//! \argument parent is a cat::coID of the parent object. the coID 
 			//!		always refers to the current object family.
 			//!	\return nothing.
-			void parent(const ID_t& pId);
-			
+			void parent(abc* pId);
+
 			//! Adds a child to the GP.
-			int childAdd(const ID_t& cId);
-			
+			void childAdd(abc* cId);
+
 			//! Deletes the child of handle cHnd from the GP.
-			int childDel(const ID_t& cId);				
-			
+			int childDel(abc* cId);
+
 			//! Returns the object childs.
-			std::vector<ID_t> childList() const;
-			
+			std::vector<abc*> childList() const;
+
 			//! Returns the number of childs.
 			size_t childCount() const;
 
 			// Return the self-pointer.
-			abc* ptr();
+			abc* ownPtr();
 
 			// Return the self-pointer, constant version.
-			const abc* ptrConst() const;
+			const abc* ownPtrConst() const;
 
 		protected:
 
 			// Owner-related.
-			set* _owner;				//!< Pointer to the owner container.
-			ID_t _oId;					//!< ID within the owner the object is included in.
+			set* _ownerPtr;				//!< Pointer to the owner container.
+			ID_t _ownId;				//!< ID within the owner the object is included in.
 			state _status;				//!< Current status.
 			
-			// Family tree.
-			ID_t _parent;				//!< Parent (if any) within the same set.
-			std::vector<ID_t> _child;	//!< Child(s) (if any).
+			// Family tree pointers.
+			abc* _parentPtr;			//!< Parent (if any) within the same set.
+			std::vector<abc*> _childPtr;//!< Child(s) (if any).
+
+			// Family tree IDs.
+			ID_t _parentId;				//!< Parent (if any) within the same set.
+			std::vector<ID_t> _childId;	//!< Child(s) (if any).
 
 		private:
 
@@ -245,13 +247,53 @@ namespace cat { namespace co {
 			//!		any. If there is no owner container, returns a nullptr.
 			//! \return	the pointer to the owner if any, a nullptr if there is 
 			//!		no owner.
-			set* owner() const;
+			set* ownerPtr() const;
 
 			//! Return the container-referred ID.
 			//! \brief reurn the ID used by the container to identify the object.
 			//!		if there is no owner container, returns 0.
 			//! \return	the owner container ID, 0 if there is no owner.
-			ID_t id() const;
+			ID_t ownId() const;
+
+			// -----------------------------------------------------------------
+			// --						Family related						  --
+			// -----------------------------------------------------------------
+
+			//! Retrieves the parent coID.
+			//! \brief returns the parent of the object, if any.
+			//! \return the cat::coID of the parent object within the family 
+			//!		tree, 0 if there is no parent.
+			ID_t parentId() const;
+
+			//! Sets the parent coID.
+			//! \brief sets the object parent.
+			//! \argument parent is a cat::coID of the parent object. the coID 
+			//!		always refers to the current object family.
+			//!	\return nothing.
+			void parentId(const ID_t& pId);
+
+			//! Adds a child to the GP.
+			//! \brief add a child referencing it to the common owner container.
+			//!		If the current object has no owner container, returns an error.
+			//! \argument 'cId' is the index of the child within the owner 
+			//!		container.
+			//! \return 0 if everything fine, error code otherwise.
+			int childIdAdd(const ID_t& cId);
+
+			//! Deletes the child of handle cHnd from the GP.
+			//! \brief delete a child identified by the 'cId' argument. If the
+			//!		child is not found, return an error.
+			//! \argument 'cId' is the index of the child within the owner
+			//!		container.
+			//! \return 0 if everything fine, error code otherwise.
+			int childIdDel(const ID_t& cId);
+
+			//! Returns the object childs by IDs.
+			//! \brief Returns a vector containing all the object childs IDs.
+			//!		If the object has no child, return an empty vector.
+			//! \return a 'cat::co::ID_t' vector with all children IDs.
+			std::vector<ID_t> childIdList() const;
+
 
 	};
 
